@@ -3,7 +3,7 @@ package ro.ubbcluj.map.service;
 import ro.ubbcluj.map.domain.Friendship;
 import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.repository.Repository;
-import ro.ubbcluj.map.utils.Graph;
+import ro.ubbcluj.map.utils.NetworkGraph;
 import ro.ubbcluj.map.utils.Pair;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class Service {
     public Service(Repository<Pair, Friendship> friendshipsRepo, Repository<Long, User> userRepo) {
         this.friendshipsRepo = friendshipsRepo;
         this.userRepo = userRepo;
-        connectUsersFriendships();
+        //connectUsersFriendships();
     }
 
     /**
@@ -31,24 +31,21 @@ public class Service {
         for (Friendship friendship : friendshipsRepo.findAll()) {
             User u1 = userRepo.findOne(friendship.getPair().getId1());
             User u2 = userRepo.findOne(friendship.getPair().getId2());
-            if(u1==null || u2== null ){
+            if (u1 == null || u2 == null) {
                 throw new ServiceException("No user for friendship!\n");
             }
-            u1.addFriend(u2);
-            u2.addFriend(u1);
+            u1.addFriend(u2.getId());
+            u2.addFriend(u1.getId());
         }
     }
 
     /**
      * methode for the number of social communities
      *
-     * @return - a int
+     * @return - an int
      */
     public int communitiesNumber() {
-        Graph network = new Graph(userRepo.size());
-        for (User user : userRepo.findAll()) {
-            network.addUser(user);
-        }
+        NetworkGraph<Long, User> network = new NetworkGraph(userRepo.getAllData());
         return network.connectedComponents();
     }
 
@@ -57,12 +54,9 @@ public class Service {
      *
      * @return - a list of users
      */
-    public List<User> largestCommunity() {
-        Graph network = new Graph(userRepo.size());
-        for (User user : userRepo.findAll()) {
-            network.addUser(user);
-        }
-        return network.largestCommunity();
+    public List<Long> largestCommunity() {
+        NetworkGraph<Long, User> network = new NetworkGraph(userRepo.getAllData());
+        return network.longestPath();
     }
 
     /**
@@ -130,8 +124,12 @@ public class Service {
             throw new ServiceException("User does not exist!\n");
         else {
             if (us.getFriends() != null) {
-                for (User i : us.getFriends())
-                    friendshipsRepo.delete(new Pair(id, i.getId()));
+                for (Long i : us.getFriends()) {
+                    friendshipsRepo.delete(new Pair(id, i));
+                    User friend = userRepo.findOne(i);
+                    friend.removeFriend(id);
+                    userRepo.update(friend);
+                }
             }
             us = userRepo.delete(id);
         }
@@ -157,8 +155,10 @@ public class Service {
             throw new ServiceException("Friendship already exists!\n");
         User u1 = userRepo.findOne(id1);
         User u2 = userRepo.findOne(id2);
-        u1.addFriend(u2);
-        u2.addFriend(u1);
+        u1.addFriend(u2.getId());
+        u2.addFriend(u1.getId());
+        userRepo.update(u1);
+        userRepo.update(u2);
     }
 
     public void deleteFriendship(Long id1, Long id2) {
@@ -167,8 +167,10 @@ public class Service {
             throw new ServiceException("Friendship does not exist!\n");
         User u1 = userRepo.findOne(id1);
         User u2 = userRepo.findOne(id2);
-        u1.removeFriend(u2);
-        u2.removeFriend(u1);
+        u1.removeFriend(u2.getId());
+        u2.removeFriend(u1.getId());
+        userRepo.update(u1);
+        userRepo.update(u2);
     }
 
 

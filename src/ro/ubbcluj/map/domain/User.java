@@ -8,7 +8,7 @@ public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
     private String email;
-    private List<User> friends;
+    private List<Long> friends;
 
     /**
      * user constructor , creates a user
@@ -82,29 +82,33 @@ public class User extends Entity<Long> {
      *
      * @return - a list of friends, list
      */
-    public List<User> getFriends() {
+    public List<Long> getFriends() {
         return friends;
+    }
+
+    public void setFriends(List<Long> friends) {
+        this.friends=new ArrayList<>(friends);
     }
 
     /**
      * adds a friend to the user's list
      *
-     * @param u - a user
+     * @param id - an id
      */
-    public void addFriend(User u) {
+    public void addFriend(Long id) {
         if(friends==null)
             friends=new ArrayList<>();
-        this.friends.add(u);
+        this.friends.add(id);
     }
 
     /**
      * removes a friend from the user's list
      *
-     * @param us - a user
+     * @param id - an id
      */
-    public void removeFriend(User us) {
+    public void removeFriend(Long id) {
         if (friends != null)
-            friends.removeIf(user -> user.equals(us));
+            friends.removeIf(id1 -> id1.equals(id));
     }
 
     /**

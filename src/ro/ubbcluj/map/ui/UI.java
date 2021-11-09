@@ -79,9 +79,9 @@ public class UI {
     }
 
     private void largestCommunity() {
-        List<User> path = serv.largestCommunity();
-        if (path != null) {
-            for (User u : path) {
+        List<Long> path = serv.largestCommunity();
+        if(path != null) {
+            for (Long u : path) {
                 System.out.println(u);
             }
         }
@@ -148,8 +148,6 @@ public class UI {
                 System.out.println(ve.getMessage());
             } catch (ServiceException se) {
                 System.out.println(se.getMessage());
-            }catch (NullPointerException ne){
-                System.out.println(ne.getMessage());
             }
         }
     }

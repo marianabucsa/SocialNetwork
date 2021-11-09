@@ -5,6 +5,8 @@ import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.domain.validator.FriendshipValidator;
 import ro.ubbcluj.map.domain.validator.UserValidator;
 import ro.ubbcluj.map.domain.validator.ValidatorException;
+import ro.ubbcluj.map.repository.DB.FriendshipsDBRepository;
+import ro.ubbcluj.map.repository.DB.UserDBRepository;
 import ro.ubbcluj.map.repository.Repository;
 import ro.ubbcluj.map.repository.RepositoryException;
 import ro.ubbcluj.map.repository.file.FriendshipsFileRepository;
@@ -22,9 +24,12 @@ public class Main {
         try {
             UserValidator userValidator = new UserValidator();
             FriendshipValidator friendshipValidator = new FriendshipValidator();
-            Repository<Long, User> userFileRepository = new UserFileRepository(userValidator, "data/users.csv");
-            Repository<Pair, Friendship> friendshipsFileRepository = new FriendshipsFileRepository(friendshipValidator, "data/friendships.csv");
-            Service service = new Service(friendshipsFileRepository, userFileRepository);
+            //Repository<Long, User> userFileRepository = new UserFileRepository(userValidator, "data/users.csv");
+            //Repository<Pair, Friendship> friendshipsFileRepository = new FriendshipsFileRepository(friendshipValidator, "data/friendships.csv");
+            //Service service = new Service(friendshipsFileRepository, userFileRepository);
+            Repository<Long, User> userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
+            Repository<Pair, Friendship> friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
+            Service service = new Service(friendshipsDBRepository, userDBRepository);
             UI ui = new UI(service);
             ui.run();
         } catch (RepositoryException re) {
@@ -35,8 +40,6 @@ public class Main {
             System.out.println(ve.getMessage());
         } catch (ServiceException se) {
             System.out.println(se.getMessage());
-        } catch (NullPointerException ne) {
-            System.out.println(ne.getMessage());
         }
     }
 }

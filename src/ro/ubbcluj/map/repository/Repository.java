@@ -3,6 +3,8 @@ package ro.ubbcluj.map.repository;
 import ro.ubbcluj.map.domain.Entity;
 import ro.ubbcluj.map.domain.validator.ValidatorException;
 
+import java.util.HashMap;
+
 public interface Repository<ID, E extends Entity<ID>> {
 
     /**
@@ -53,4 +55,6 @@ public interface Repository<ID, E extends Entity<ID>> {
      * @return - a integer that represents the size of the repository
      */
     int size();
+
+    public HashMap<ID,E> getAllData();
 }

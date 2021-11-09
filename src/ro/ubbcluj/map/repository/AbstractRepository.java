@@ -32,6 +32,9 @@ public abstract class AbstractRepository<ID, E extends Entity<ID>> implements Re
     }
 
     @Override
+    public HashMap<ID,E> getAllData(){return entities;}
+
+    @Override
     public E save(E entity) {
         if (entity == null)
             throw new RepositoryException("Entity must not be null!\n");
