@@ -2,50 +2,24 @@ package ro.ubbcluj.map.repository.DB;
 
 import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.domain.validator.Validator;
-import ro.ubbcluj.map.repository.AbstractRepository;
 import ro.ubbcluj.map.repository.RepositoryException;
 
 import java.sql.*;
 import java.util.*;
 
-public class UserDBRepository extends AbstractRepository<Long, User> {
-    private String url;
-    private String username;
-    private String password;
-    private Validator<User> validator;
+public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
 
+    /**
+     * repository constructor
+     * @param url - database information
+     * @param username - database information
+     * @param password - database information
+     * @param validator - database information
+     */
     public UserDBRepository(String url, String username, String password, Validator<User> validator) {
-        super(validator);
-        this.url = url;
-        this.username = username;
-        this.password = password;
-        this.validator = validator;
+        super(url,username,password,validator);
     }
 
-    private ArrayList<Long> stringToList(String arg) {
-        List<String> attributes = Arrays.asList(arg.split(","));
-        ArrayList<Long> ids = null;
-        if (attributes.size()!=0) {
-            ids= new ArrayList<>();
-            for (String i : attributes) {
-                if(!i.equals(""))
-                    ids.add(Long.parseLong(i));
-            }
-        }
-        return ids;
-    }
-
-    private String listToString(List<Long> list) {
-        String rez = "";
-        if (list == null)
-            return null;
-        for (Long id : list) {
-            rez += id + ",";
-        }
-        if (rez.length() != 0)
-            return rez.substring(0, rez.length() - 1);
-        else return "";
-    }
 
     @Override
     public User findOne(Long aLong) {
@@ -55,22 +29,19 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
                 try (ResultSet resultSet = statement.executeQuery()) {
 
                     resultSet.next();
+                    if(resultSet.wasNull())
+                        throw new RepositoryException("User not found!");
                     Long id = resultSet.getLong("ID");
                     String nume = resultSet.getString("Nume");
                     String prenume = resultSet.getString("Prenume");
                     String email = resultSet.getString("Email");
-                    String atributtes = resultSet.getString("friends");
                     User user = new User(prenume, nume, email);
                     user.setId(id);
-                    if (atributtes != null) {
-                        ArrayList<Long> friends = new ArrayList<>(stringToList(atributtes));
-                        user.setFriends(friends);
-                    }
                     return user;
                 }
             }
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error finding user!");
         }
     }
 
@@ -86,18 +57,13 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
                 String nume = resultSet.getString("Nume");
                 String prenume = resultSet.getString("Prenume");
                 String email = resultSet.getString("Email");
-                String atributtes = resultSet.getString("friends");
                 User user = new User(prenume, nume, email);
                 user.setId(id);
-                if (atributtes != null) {
-                    ArrayList<Long> friends = new ArrayList<>(stringToList(atributtes));
-                    user.setFriends(friends);
-                }
                 users.add(user);
             }
             return users;
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error finding users!");
         }
     }
 
@@ -113,20 +79,14 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
                 String nume = resultSet.getString("Nume");
                 String prenume = resultSet.getString("Prenume");
                 String email = resultSet.getString("Email");
-                String atributtes = resultSet.getString("friends");
                 User user = new User(prenume, nume, email);
                 user.setId(id);
-                if (atributtes != null) {
-                    ArrayList<Long> friends = new ArrayList<>(stringToList(atributtes));
-                    user.setFriends(friends);
-                }
                 users.put(user.getId(), user);
             }
             return users;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RepositoryException("Error finding data!");
         }
-        return users;
     }
 
     @Override
@@ -135,20 +95,19 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
             throw new RepositoryException("Entity must not be null!\n");
         validator.validate(entity);
 
-        String sql = "insert into Users (id, Nume, Prenume,Email ) values (?, ?, ?, ?)";
+        String sql = "insert into Users (Nume, Prenume,Email ) values (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setLong(1, entity.getId());
-            ps.setString(2, entity.getLastName());
-            ps.setString(3, entity.getFirstName());
-            ps.setString(4, entity.getEmail());
+            ps.setString(1, entity.getLastName());
+            ps.setString(2, entity.getFirstName());
+            ps.setString(3, entity.getEmail());
 
             ps.executeUpdate();
             return null;
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error saving user!");
         }
     }
 
@@ -167,7 +126,7 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
             ps.executeUpdate();
             return us;
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error deleting user!");
         }
     }
 
@@ -177,7 +136,7 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
             throw new RepositoryException("Entity must be not null!");
         validator.validate(entity);
 
-        String sql = "update Users set Nume=?, Prenume=?, Email=?, friends=? where ID=?";
+        String sql = "update Users set Nume=?, Prenume=?, Email=? where ID=?";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -185,14 +144,13 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
             ps.setString(1, entity.getLastName());
             ps.setString(2, entity.getFirstName());
             ps.setString(3, entity.getEmail());
-            ps.setString(4, listToString(entity.getFriends()));
-            ps.setLong(5, entity.getId());
+            ps.setLong(4, entity.getId());
 
 
             ps.executeUpdate();
             return null;
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error updating user!");
         }
     }
 
@@ -208,7 +166,53 @@ public class UserDBRepository extends AbstractRepository<Long, User> {
             }
             return len;
         } catch (SQLException e) {
-            throw new RepositoryException(e.getMessage());
+            throw new RepositoryException("Error getting data!");
+        }
+    }
+
+    /**
+     * getter for email of a user
+     * @param id - id of the user
+     * @return - a String
+     */
+    public String getEmailFromId(Long id){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Users where ID=?")) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    resultSet.next();
+                    String email=resultSet.getString("Email");
+                    if(resultSet.wasNull())
+                        throw new RepositoryException("User does not exist!");
+                    return email;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("User does not exist!");
+        }
+    }
+
+    /**
+     * getter for id of a user
+     * @param email - email of the user
+     * @return - a Long
+     */
+    public Long getIdFromEmail(String email){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Users where Email=?")) {
+                statement.setString(1, email);
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    resultSet.next();
+                    Long id=resultSet.getLong("ID");
+                    if(resultSet.wasNull())
+                        throw new RepositoryException("User does not exist!");
+                    return id;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("User does not exist!");
         }
     }
 }

@@ -24,22 +24,20 @@ public class Main {
         try {
             UserValidator userValidator = new UserValidator();
             FriendshipValidator friendshipValidator = new FriendshipValidator();
-            //Repository<Long, User> userFileRepository = new UserFileRepository(userValidator, "data/users.csv");
-            //Repository<Pair, Friendship> friendshipsFileRepository = new FriendshipsFileRepository(friendshipValidator, "data/friendships.csv");
-            //Service service = new Service(friendshipsFileRepository, userFileRepository);
-            Repository<Long, User> userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
-            Repository<Pair, Friendship> friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
+            UserDBRepository userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
+            FriendshipsDBRepository friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
             Service service = new Service(friendshipsDBRepository, userDBRepository);
             UI ui = new UI(service);
             ui.run();
-        } catch (RepositoryException re) {
-            System.out.println(re.getMessage());
-        } catch (InputMismatchException ime) {
-            System.out.println("\nData type not valid!\n");
         } catch (ValidatorException ve) {
             System.out.println(ve.getMessage());
         } catch (ServiceException se) {
             System.out.println(se.getMessage());
+        } catch (RepositoryException re) {
+            System.out.println(re.getMessage());
+        } catch (InputMismatchException ime) {
+            System.out.println("\nData type not valid!\n");
         }
+
     }
 }

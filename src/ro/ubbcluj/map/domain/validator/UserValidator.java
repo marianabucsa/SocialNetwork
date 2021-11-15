@@ -11,8 +11,6 @@ public class UserValidator implements Validator<User> {
     @Override
     public void validate(User entity) throws ValidatorException {
         String err = "";
-        if (entity.getId() < 1)
-            err += "Incorrect id!\n";
         if (!entity.getFirstName().matches("^[A-Za-z]+")) {
             err += "Incorrect first name!\n";
         }

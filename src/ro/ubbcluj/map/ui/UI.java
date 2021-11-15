@@ -79,12 +79,8 @@ public class UI {
     }
 
     private void largestCommunity() {
-        List<Long> path = serv.largestCommunity();
-        if(path != null) {
-            for (Long u : path) {
-                System.out.println(u);
-            }
-        }
+        for(Long id:serv.largestCommunity())
+            System.out.println(serv.getEmailFromId(id));
     }
 
     private void communitiesNumber(){
@@ -92,43 +88,40 @@ public class UI {
         System.out.println(nr+"\n");
     }
     private void deleteFriendship() {
-        Long id1,id2;
-        id1=readLong("Enter user id : ");
-        id2=readLong("Enter friend to be deleted : ");
-        serv.deleteFriendship(id1,id2);
+        String email1,email2;
+        email1=readString("Enter user email : ");
+        email2=readString("Enter friend to be deleted : ");
+        serv.deleteFriendship(serv.getIdFromEmail(email1), serv.getIdFromEmail(email2));
     }
 
     private void addFriendship() {
-        Long id1,id2;
-        id1=readLong("Enter user id : ");
-        id2=readLong("Enter friend to be added : ");
-        serv.addFriendship(id1,id2);
+        String email1,email2;
+        email1=readString("Enter user email : ");
+        email2=readString("Enter friend to be add : ");
+        serv.addFriendship(serv.getIdFromEmail(email1), serv.getIdFromEmail(email2));
     }
 
     private void deleteUser() {
-        Long id;
-        id=readLong("Enter user id : ");
-        User us= serv.deleteUser(id);
+        String email;
+        email=readString("Enter user email : ");
+        User us= serv.deleteUser(serv.getIdFromEmail(email));
     }
 
     private void updateUser() {
-        Long id;
         String firstName,lastName,email;
-        id=readLong("Enter user id : ");
+        email=readString("Enter email : ");
         firstName= readString("Enter first name : ");
         lastName= readString("Enter last name : ");
-        email=readString("Enter email : ");
-        User us= serv.updateUser(id,firstName,lastName,email);
+        serv.findOneUser(serv.getIdFromEmail(email));
+        User us= serv.updateUser(serv.getIdFromEmail(email),firstName,lastName,email);
     }
 
     private void addUser() {
-        Long id;
         String firstName,lastName,email;
-        id=readLong("Enter user id : ");
         firstName= readString("Enter first name : ");
         lastName= readString("Enter last name : ");
         email=readString("Enter email : ");
-        User us= serv.addUser(id,firstName,lastName,email);
+        User us= serv.addUser(firstName,lastName,email);
     }
 
     public void run(){

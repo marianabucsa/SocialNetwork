@@ -2,27 +2,23 @@ package ro.ubbcluj.map.repository.DB;
 
 import ro.ubbcluj.map.domain.Friendship;
 import ro.ubbcluj.map.domain.validator.Validator;
-import ro.ubbcluj.map.repository.AbstractRepository;
 import ro.ubbcluj.map.repository.RepositoryException;
 import ro.ubbcluj.map.utils.Pair;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class FriendshipsDBRepository extends AbstractRepository<Pair, Friendship> {
-    private String url;
-    private String username;
-    private String password;
-    private Validator<Friendship> validator;
+public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendship> {
 
+    /**
+     * repository constructor
+     * @param url - database information
+     * @param username - database information
+     * @param password - database information
+     * @param validator - database information
+     */
     public FriendshipsDBRepository(String url, String username, String password, Validator<Friendship> validator) {
-        super(validator);
-        this.url = url;
-        this.username = username;
-        this.password = password;
-        this.validator = validator;
+        super(url,username,password,validator);
     }
 
     @Override
@@ -69,6 +65,7 @@ public class FriendshipsDBRepository extends AbstractRepository<Pair, Friendship
         }
     }
 
+
     @Override
     public HashMap<Pair, Friendship> getAllData() {
         HashMap<Pair, Friendship> friendships = new HashMap<>();
@@ -90,7 +87,6 @@ public class FriendshipsDBRepository extends AbstractRepository<Pair, Friendship
             throw new RepositoryException(e.getMessage());
         }
     }
-
 
     @Override
     public Friendship save(Friendship entity) {
@@ -145,6 +141,11 @@ public class FriendshipsDBRepository extends AbstractRepository<Pair, Friendship
         return null;
     }
 
+    @Override
+    public Friendship update(Friendship entity) {
+        return null;
+    }
+
 
     @Override
     public int size() {
@@ -157,6 +158,36 @@ public class FriendshipsDBRepository extends AbstractRepository<Pair, Friendship
                 len++;
             }
             return len;
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    /**
+     * getter for all friends of a user
+     * @param id - user id
+     * @return a list of ids
+     */
+    public List<Long> getFriendsUser(Long id){
+        List<Long> friends=new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where Id1=? or Id2=?")) {
+                statement.setLong(1, id);
+                statement.setLong(2, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    while (resultSet.next()) {
+                        Long id1 = resultSet.getLong("Id1");
+                        Long id2 = resultSet.getLong("Id2");
+
+                        if(id1.equals(id))
+                            friends.add(id2);
+                        else
+                            friends.add(id1);
+                    }
+                    return friends;
+                }
+            }
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage());
         }

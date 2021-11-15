@@ -56,5 +56,10 @@ public interface Repository<ID, E extends Entity<ID>> {
      */
     int size();
 
-    public HashMap<ID,E> getAllData();
+    /**
+     * gets all data from repository
+     * @return - a hash map
+     */
+    HashMap<ID,E> getAllData();
+
 }

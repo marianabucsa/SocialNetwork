@@ -4,13 +4,12 @@ import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.domain.validator.Validator;
 import ro.ubbcluj.map.repository.AbstractRepository;
 import ro.ubbcluj.map.repository.RepositoryException;
-import ro.ubbcluj.map.repository.memory.UserMemoryRepository;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserFileRepository extends AbstractRepository<Long,User> {
+public class UserFileRepository extends AbstractRepository<Long, User> {
     private String fileName;
 
     /**
