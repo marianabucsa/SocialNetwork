@@ -87,7 +87,6 @@ public class Service {
     /**
      * adds a user
      *
-     * @param -         id of the user
      * @param firstName - first name of the user
      * @param lastName  - last name of the user
      * @param email     - email of the user
@@ -105,7 +104,6 @@ public class Service {
     /**
      * uppdates a user
      *
-     * @param -         id of the user
      * @param firstName - first nema of the user
      * @param lastName  - last name of the user
      * @param email     - email of the user
