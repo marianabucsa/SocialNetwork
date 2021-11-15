@@ -27,7 +27,8 @@ public class UI {
                 "4.Add friendship to user\n" +
                 "5.Delete friendship from user\n" +
                 "6.Number of communities\n"+
-                "7.Largest community\n");
+                "7.Largest community\n"+
+                "8.Find friends for user");
         System.out.println("Command: ");
     }
 
@@ -74,8 +75,18 @@ public class UI {
             case 7 -> {
                 largestCommunity();
             }
+            case 8 -> {
+                findFriendsforUser();
+            }
             default ->  System.out.println("Command not found!\n");
         }
+    }
+
+    private void findFriendsforUser() {
+        Long id;
+        id = readLong("Enter user id : ");
+        serv.findFriendsForUser(id)
+                .forEach(System.out::println);
     }
 
     private void largestCommunity() {

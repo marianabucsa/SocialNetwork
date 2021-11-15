@@ -24,8 +24,8 @@ public class Main {
         try {
             UserValidator userValidator = new UserValidator();
             FriendshipValidator friendshipValidator = new FriendshipValidator();
-            UserDBRepository userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
-            FriendshipsDBRepository friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
+            UserDBRepository userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",userValidator);
+            FriendshipsDBRepository friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",friendshipValidator);
             Service service = new Service(friendshipsDBRepository, userDBRepository);
             UI ui = new UI(service);
             ui.run();

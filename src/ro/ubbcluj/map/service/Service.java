@@ -5,11 +5,15 @@ import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.repository.DB.FriendshipsDBRepository;
 import ro.ubbcluj.map.repository.DB.UserDBRepository;
 import ro.ubbcluj.map.repository.Repository;
+import ro.ubbcluj.map.repository.RepositoryException;
 import ro.ubbcluj.map.utils.NetworkGraph;
 import ro.ubbcluj.map.utils.Pair;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Service {
     private final FriendshipsDBRepository friendshipsRepo;
@@ -43,6 +47,43 @@ public class Service {
         }
     }
     */
+
+    /**
+     * Find all friends for an user
+     * @param id user id
+     * @return last name, first name of user's friends
+     */
+    public Stream<String> findFriendsForUser(Long id){
+        User us = findOneUser(id);
+        List<Long> friends = friendshipsRepo.getFriendsUser(id);
+        return friends.stream()
+                .map(x->findOneUser(x))
+                .filter(x->FriendshipDate(x.getId(),id)!=null)
+                .map(x->x.getFirstName()+"|"+x.getLastName()+"|"
+                        +FriendshipDate(x.getId(),id).toString());
+
+
+    }
+
+    /**
+     * Find a friendship date
+     * @param u1 first user id
+     * @param u2 second user id
+     * @return Friendship date between the two users
+     */
+    public Timestamp FriendshipDate(Long u1, Long u2){
+        Timestamp timestamp=null;
+        try{
+            timestamp=friendshipsRepo.getFriendshipDate(new Pair(u1,u2));
+        }catch (RepositoryException re){
+            try {
+                timestamp = friendshipsRepo.getFriendshipDate(new Pair(u2,u1));
+            }catch (RepositoryException re2){
+
+            }
+        }
+        return timestamp;
+    }
 
     /**
      * methode for the number of social communities
