@@ -3,9 +3,9 @@ package ro.ubbcluj.map.domain;
 import java.util.List;
 
 public class ReplyMessage extends Message {
-    private Message messageToReplay;
+    private Long messageToReplay;
 
-    public ReplyMessage(Long from, List<Long> to, String message,Message messageToReplay) {
+    public ReplyMessage(Long from, List<Long> to, String message,Long messageToReplay) {
         super(from, to, message);
         this.messageToReplay=messageToReplay;
     }
@@ -53,5 +53,13 @@ public class ReplyMessage extends Message {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    public Long getMessageToReplay() {
+        return messageToReplay;
+    }
+
+    public void setMessageToReplay(Long messageToReplay) {
+        this.messageToReplay = messageToReplay;
     }
 }
