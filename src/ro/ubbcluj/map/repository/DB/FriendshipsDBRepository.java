@@ -3,9 +3,11 @@ package ro.ubbcluj.map.repository.DB;
 import ro.ubbcluj.map.domain.Friendship;
 import ro.ubbcluj.map.domain.validator.Validator;
 import ro.ubbcluj.map.repository.RepositoryException;
+import ro.ubbcluj.map.utils.Constants;
 import ro.ubbcluj.map.utils.Pair;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendship> {
@@ -94,16 +96,17 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
             throw new RepositoryException("Entity must not be null!\n");
         validator.validate(entity);
 
-        String sql = "insert into Friendships (Id1, Id2) values (?, ?)";
+        String sql = "insert into Friendships (Id1, Id2, date) values (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setLong(1, entity.getPair().getId1());
             ps.setLong(2, entity.getPair().getId2());
+            ps.setTimestamp(3, Timestamp.valueOf( LocalDateTime.now()));//.format(Constants.DATE_TIME_FORMATTER)));
 
             ps.executeUpdate();
-           return null;
+            return null;
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage());
         }
@@ -186,6 +189,31 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
                             friends.add(id1);
                     }
                     return friends;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    /**
+     * Find a friendship date
+     * @param pair  pair of user id's
+     * @return timestamp ()
+     */
+    public Timestamp getFriendshipDate(Pair pair){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where Id1=? and Id2=?")) {
+                statement.setLong(1, pair.getId1());
+                statement.setLong(2, pair.getId2());
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    resultSet.next();
+                    //Long id1 = resultSet.getLong("Id1");
+                    // Long id2 = resultSet.getLong("Id2");
+                    Timestamp timestamp = resultSet.getTimestamp("date");
+
+                    return timestamp;
                 }
             }
         } catch (SQLException e) {

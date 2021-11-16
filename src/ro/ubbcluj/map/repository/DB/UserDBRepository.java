@@ -41,7 +41,8 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
                 }
             }
         } catch (SQLException e) {
-            throw new RepositoryException("Error finding user!");
+            //throw new RepositoryException("Error finding user!");
+            throw new RepositoryException(e.getMessage());
         }
     }
 

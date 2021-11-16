@@ -1,13 +1,19 @@
 package ro.ubbcluj.map.domain;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ReplyMessage extends Message {
-    private Long messageToReplay;
+    private Long replyingToMessage;
 
-    public ReplyMessage(Long from, List<Long> to, String message,Long messageToReplay) {
+    public ReplyMessage(Long from, List<Long> to, LocalDateTime data, String message, Long replyingToMessage) {
+        super(from, to, data, message);
+        this.replyingToMessage=replyingToMessage;
+    }
+
+    public ReplyMessage(Long from, List<Long> to, String message, Long replyingToMessage) {
         super(from, to, message);
-        this.messageToReplay=messageToReplay;
+        this.replyingToMessage=replyingToMessage;
     }
 
     @Override
@@ -55,11 +61,22 @@ public class ReplyMessage extends Message {
         return super.toString();
     }
 
-    public Long getMessageToReplay() {
-        return messageToReplay;
+    @Override
+    public LocalDateTime getData() {
+        return super.getData();
     }
 
-    public void setMessageToReplay(Long messageToReplay) {
-        this.messageToReplay = messageToReplay;
+    @Override
+    public void setData(LocalDateTime data) {
+        super.setData(data);
+    }
+
+
+    public Long getReplyingToMessage() {
+        return replyingToMessage;
+    }
+
+    public void setReplyingToMessage(Long replyingToMessage) {
+        this.replyingToMessage = ReplyMessage.this.replyingToMessage;
     }
 }

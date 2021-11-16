@@ -1,7 +1,6 @@
 package ro.ubbcluj.map.domain;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,13 +10,19 @@ public class Message extends Entity<Long> {
     protected String message;
     protected LocalDateTime data;
 
-    public Message(Long from, List<Long> to, String message) {
+    public Message(Long from, List<Long> to, LocalDateTime data, String message) {
         this.from = from;
         this.to = to;
         this.message = message;
-        this.data= LocalDateTime.now();
+        this.data = data;
     }
 
+    public Message(Long from, List<Long> to,  String message) {
+        this.from = from;
+        this.to = to;
+        this.message = message;
+        this.data = null;
+    }
     public Long getFrom() {
         return from;
     }
@@ -59,8 +64,17 @@ public class Message extends Entity<Long> {
     @Override
     public String toString() {
         return "Message:\n" +
-                "From: " + from +"\n"+
-                "To: " + to +"\n"+
+                "From: " + from + "\n" +
+                "To: " + to + "\n" +
+                "Data: " + data + "\n" +
                 "Message= " + message + "\n";
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
     }
 }

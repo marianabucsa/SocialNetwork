@@ -6,9 +6,6 @@ public class MessageValidator implements Validator<ReplyMessage> {
     @Override
     public void validate(ReplyMessage entity) throws ValidatorException {
         String err = "";
-        if (entity.getId()<1) {
-            err += "Incorrect id!\n";
-        }
         if (entity.getFrom()<0) {
             err += "Incorrect user id!\n";
         }

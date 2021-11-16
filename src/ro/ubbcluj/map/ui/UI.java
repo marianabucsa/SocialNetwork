@@ -1,15 +1,14 @@
 package ro.ubbcluj.map.ui;
 
 import ro.ubbcluj.map.domain.Friendship;
+import ro.ubbcluj.map.domain.ReplyMessage;
 import ro.ubbcluj.map.domain.User;
 import ro.ubbcluj.map.domain.validator.ValidatorException;
 import ro.ubbcluj.map.repository.RepositoryException;
 import ro.ubbcluj.map.service.Service;
 import ro.ubbcluj.map.service.ServiceException;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class UI {
     private Service serv;
@@ -27,7 +26,14 @@ public class UI {
                 "4.Add friendship to user\n" +
                 "5.Delete friendship from user\n" +
                 "6.Number of communities\n"+
-                "7.Largest community\n");
+                "7.Largest community\n"+
+                "8.Find friends for user\n"+
+                "9.Find friends for user by month\n"+
+                "10.Send message\n"+
+                "11.Reply message\n"+
+                "12.Reply all\n"+
+                "13.Delete message\n"+
+                "14.Show conversation\n");
         System.out.println("Command: ");
     }
 
@@ -74,10 +80,82 @@ public class UI {
             case 7 -> {
                 largestCommunity();
             }
+            case 8 -> {
+                findFriendsforUser();
+            }
+            case 9 ->{
+                findFriendsByMonth();
+            }
+            case 10 ->{
+                sendMessage();
+            }
+            case 11 ->{
+                replyMessage();
+            }
+            case 12->{
+                replyAllMessage();
+            }
+            case 13 ->{
+                deleteMessage();
+            }
+            case 14 ->{
+                showConversation();
+            }
             default ->  System.out.println("Command not found!\n");
         }
     }
 
+    private void findFriendsforUser() {
+        Long id;
+        id = readLong("Enter user id : ");
+        serv.findFriendsForUser(id)
+                .forEach(System.out::println);
+    }
+
+    private void findFriendsByMonth(){
+        String email;
+        email =readString("Enter user email : ");
+        Long month = readLong("Enter month: ");
+        serv.findFriendsByMonth(serv.getIdFromEmail(email), month).forEach(System.out::println);
+    }
+    private void sendMessage(){
+        String emailFrom = readString("Enter sender email: ");
+        String emailTo = readString("Enter receiver email or 0 to end receivers:");
+        List<String> to = new ArrayList<>();
+        while(!Objects.equals(emailTo, "0")){
+            to.add(emailTo);
+            emailTo= readString("Enter receiver email or 0 to end receivers:");
+        }
+        String message =readString("Write message: \n");
+        serv.sendMessage(emailFrom,to,message);
+    }
+
+    private void replyMessage(){
+        String emailFrom = readString("Enter sender email: ");
+        Long idMsg=readLong("Enter id of message to reply: ");
+        String message =readString("Write message: \n");
+        serv.replyMessage(emailFrom,idMsg,message);
+    }
+
+    private void replyAllMessage(){
+        String emailFrom = readString("Enter sender email: ");
+        Long idMsg=readLong("Enter id of message to reply: ");
+        String message =readString("Write message: \n");
+        serv.replyAllMessage(emailFrom,idMsg,message);
+    }
+
+    private void deleteMessage(){
+        Long idMsg =readLong("Enter id of message to delete: ");
+        serv.deleteMessage(idMsg);
+    }
+
+    private void showConversation(){
+        String email1=readString("Enter first user email: ");
+        String email2=readString("Enter second user email: ");
+        for (ReplyMessage replyMessage:serv.showConversation(email1,email2)){
+            System.out.println(replyMessage);
+        }
+    }
     private void largestCommunity() {
         for(Long id:serv.largestCommunity())
             System.out.println(serv.getEmailFromId(id));
