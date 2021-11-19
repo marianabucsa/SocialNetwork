@@ -6,6 +6,7 @@ import ro.ubbcluj.map.domain.validator.ValidatorException;
 import ro.ubbcluj.map.repository.RepositoryException;
 import ro.ubbcluj.map.service.Service;
 import ro.ubbcluj.map.service.ServiceException;
+import ro.ubbcluj.map.utils.Pair;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -28,7 +29,8 @@ public class UI {
                 "5.Delete friendship from user\n" +
                 "6.Number of communities\n"+
                 "7.Largest community\n"+
-                "8.Find friends for user");
+                "8.Find friends for user\n"+
+                "9.Login");
         System.out.println("Command: ");
     }
 
@@ -49,6 +51,18 @@ public class UI {
         Scanner scanner = new Scanner(System.in);
         System.out.println(message);
         return scanner.nextLine();
+    }
+
+    private void printSubMeniu(User user){
+        String userName = user.getFirstName()+" "+user.getLastName();
+        System.out.println("\t\t\t\t\t\t\t\t\t\tWelcome ~~~"+userName+"~~~\t\t\t\t\t\t\t\t\t\t\t\t\n");
+        System.out.println("0.  Exit");
+        System.out.println("1.Show friend requests\n" +
+                "2.Accept one\n" +
+                "3.Accept all\n" +
+                "4.Reject one\n" +
+                "5.Reject all\n");
+        System.out.println("Command: ");
     }
 
     private void execute(int cmd){
@@ -78,14 +92,116 @@ public class UI {
             case 8 -> {
                 findFriendsforUser();
             }
+            case 9 -> {
+                login();
+            }
             default ->  System.out.println("Command not found!\n");
         }
     }
 
+    private void execute_user_comand(int cmd,User user){
+        switch (cmd) {
+            case 1 -> {
+                System.out.println("Show all friend requests!");
+                showAllFriendRequests(user);
+            }
+            case 2 -> {
+                System.out.println("Accept one friend request!");
+                acceptOneRequest(user);
+            }
+            case 3 -> {
+                System.out.println("Accept all friend requests!");
+                acceptAllRequests(user);
+            }
+            case 4 -> {
+                System.out.println("Reject one friend request");
+                rejectOneRequest(user);
+            }
+            case 5 -> {
+                System.out.println("Reject all friend requests!");
+                rejectAllRequests(user);
+            }
+            default ->  System.out.println("Command not found!\n");
+        }
+    }
+
+    private void rejectAllRequests(User user){
+        List<Long> friends= serv.findFriendRequests(serv.getIdFromEmail(user.getEmail()));
+        String email1, email2;
+        email1 = user.getEmail();
+        for(Long id:friends){
+            Pair pair = new Pair(serv.getIdFromEmail(email1),id);
+            serv.updateFriendship(pair,"rejected");
+        }
+    }
+
+    private void acceptAllRequests(User user){
+        List<Long> friends= serv.findFriendRequests(serv.getIdFromEmail(user.getEmail()));
+        String email1, email2;
+        email1 = user.getEmail();
+        for(Long id:friends){
+            Pair pair = new Pair(serv.getIdFromEmail(email1),id);
+            serv.updateFriendship(pair,"approved");
+        }
+
+    }
+
+    private void rejectOneRequest(User user){
+        String email1,email2;
+        email1= user.getEmail();
+        email2=readString("Enter friend to be reject : ");
+        Pair pair = new Pair(serv.getIdFromEmail(email1),serv.getIdFromEmail(email2));
+        serv.updateFriendship(pair,"rejected");
+        System.out.println("Friendship rejected!");
+    }
+
+    private void acceptOneRequest(User user){
+        String email1,email2;
+        email1= user.getEmail();
+        email2=readString("Enter friend to be add : ");
+        Pair pair = new Pair(serv.getIdFromEmail(email1),serv.getIdFromEmail(email2));
+        serv.updateFriendship(pair,"approved");
+        System.out.println("Friendship accepted!");
+    }
+
+    private void showAllFriendRequests(User user){
+        List<Long> friends= serv.findFriendRequests(serv.getIdFromEmail(user.getEmail()));
+        friends.stream()
+                .map(x->serv.findOneUser(x))
+                .filter(x->serv.FriendshipStatus(x.getId(), user.getId()).equals("pending"))
+                .map(x-> x.getFirstName()+" "+x.getLastName()+" wants to be your friend!")
+                .forEach(System.out::println);
+    }
+
+    private void login(){
+        String email;
+        email=readString("Enter user email : ");
+        User user = serv.findOneUser(serv.getIdFromEmail(email));
+        //printSubMeniu(user);
+        int cmd;
+        while (true) {
+            try {
+                printSubMeniu(user);
+                cmd = readCmd();
+                if (cmd == 0)
+                    return;
+                execute_user_comand(cmd,user);
+            } catch (RepositoryException re) {
+                System.out.println(re.getMessage());
+            } catch (InputMismatchException ime) {
+                System.out.println("\nData type not valid!\n");
+            } catch (ValidatorException ve) {
+                System.out.println(ve.getMessage());
+            } catch (ServiceException se) {
+                System.out.println(se.getMessage());
+            }
+        }
+    }
+
     private void findFriendsforUser() {
-        Long id;
-        id = readLong("Enter user id : ");
-        serv.findFriendsForUser(id)
+        String email;
+        email=readString("Enter user email : ");
+        serv.findFriendsForUser(serv.getIdFromEmail(email))
                 .forEach(System.out::println);
     }
 
