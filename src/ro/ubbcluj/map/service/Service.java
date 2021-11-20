@@ -52,6 +52,23 @@ public class Service {
     }
     */
 
+    /*public Stream<String> findFriendRequests(Long id){
+        List<Long> friends = friendshipsRepo.getFriendRequests(id);
+        return friends.stream()
+                .map(x->findOneUser(x))
+                .filter(x->FriendshipStatus(x.getId(),id).equals("pending"))
+                .map(x-> x.getFirstName()+" "+x.getLastName()+" wants to be your friend!");
+    }*/
+
+    /**
+     * Find all friend requests for an user
+     * @param id user id
+     * @return  list of id's
+     */
+    public List<Long> findFriendRequests(Long id){
+        return friendshipsRepo.getFriendRequests(id);
+    }
+
     /**
      * Find all friends for an user
      *
@@ -68,6 +85,26 @@ public class Service {
                         + FriendshipDate(x.getId(), id).toString());
 
 
+    }
+
+    /**
+     * Find the status of a friendship
+     * @param u1 first user id
+     * @param u2 second user id
+     * @return friendship status
+     */
+    public String FriendshipStatus(Long u1, Long u2){
+        String status=null;
+        try{
+            status=friendshipsRepo.getFriendshipStatus(new Pair(u1,u2));
+        }catch (RepositoryException re){
+            try {
+                status = friendshipsRepo.getFriendshipStatus(new Pair(u2,u1));
+            }catch (RepositoryException re2){
+
+            }
+        }
+        return status;
     }
 
     /**
@@ -216,6 +253,15 @@ public class Service {
         if (us != null)
             throw new ServiceException("User does not exist!\n");
         return us;
+    }
+
+    public Friendship updateFriendship(Pair pair,String status){
+        Friendship fr = new Friendship(pair.getId2(),pair.getId1());
+        fr.setStatus(status);
+        fr = friendshipsRepo.update(fr);
+        if(fr!=null)
+            throw new ServiceException("Friendship not found!\n");
+        return fr;
     }
 
     /**

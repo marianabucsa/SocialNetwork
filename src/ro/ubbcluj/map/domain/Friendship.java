@@ -2,11 +2,13 @@ package ro.ubbcluj.map.domain;
 
 import ro.ubbcluj.map.utils.Pair;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Friendship extends Entity<Pair>{
 
     private Pair pair;
+    private String status;
 
     /**
      * constructor for friendship
@@ -14,7 +16,9 @@ public class Friendship extends Entity<Pair>{
      * @param id2 - id of the second user
      */
     public Friendship(Long id1,Long id2) {
+
         pair = new Pair(id1,id2);
+        status="pending";
     }
 
     /**
@@ -28,6 +32,13 @@ public class Friendship extends Entity<Pair>{
         if (!(o instanceof Friendship)) return false;
         Friendship that = (Friendship) o;
         return (this.pair.getId1().equals(that.pair.getId1()) && this.pair.getId2().equals(that.pair.getId2())) || (this.pair.getId1().equals(that.pair.getId2()) && this.pair.getId2().equals(that.pair.getId1())) ;
+    }
+
+    public String getStatus(){
+        return status;
+    }
+    public void setStatus(String status){
+        this.status=status;
     }
 
     /**

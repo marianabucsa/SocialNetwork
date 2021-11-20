@@ -146,7 +146,26 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
 
     @Override
     public Friendship update(Friendship entity) {
-        return null;
+
+        if (entity == null)
+            throw new RepositoryException("Entity must be not null!");
+        validator.validate(entity);
+
+        String sql = "update Friendships set Status=? where id1=? and id2=?";
+
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, entity.getStatus());
+            ps.setLong(2, entity.getPair().getId1());
+            ps.setLong(3, entity.getPair().getId2());
+
+
+            ps.executeUpdate();
+            return null;
+        } catch (SQLException e) {
+            throw new RepositoryException("Error updating friendship!");
+        }
     }
 
 
@@ -167,6 +186,38 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
     }
 
     /**
+     * Getter for friend requests
+     * @param id user id
+     * @return All friend requests for an user
+     */
+    public List<Long> getFriendRequests(Long id){
+        List<Long> friends=new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where (Id1=? or Id2=?) and status='pending'")) {
+                statement.setLong(1, id);
+                statement.setLong(2, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    while (resultSet.next()) {
+                        Long id1 = resultSet.getLong("Id1");
+                        Long id2 = resultSet.getLong("Id2");
+
+                        if(!id1.equals(id))
+                            friends.add(id1);
+                        //if(id1.equals(id))
+                        // friends.add(id2);
+                        // else
+                        //   friends.add(id1);
+                    }
+                    return friends;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    /**
      * getter for all friends of a user
      * @param id - user id
      * @return a list of ids
@@ -174,7 +225,7 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
     public List<Long> getFriendsUser(Long id){
         List<Long> friends=new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where Id1=? or Id2=?")) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where (Id1=? or Id2=?) and status='approved'")) {
                 statement.setLong(1, id);
                 statement.setLong(2, id);
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -189,6 +240,31 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
                             friends.add(id1);
                     }
                     return friends;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    /**
+     * Get the status of a friendship
+     * @param pair pair of user id's
+     * @return friendship status(string)
+     */
+    public String getFriendshipStatus(Pair pair){
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            try (PreparedStatement statement = connection.prepareStatement("select * from Friendships where Id1=? and Id2=?")) {
+                statement.setLong(1, pair.getId1());
+                statement.setLong(2, pair.getId2());
+                try (ResultSet resultSet = statement.executeQuery()) {
+
+                    resultSet.next();
+                    //Long id1 = resultSet.getLong("Id1");
+                    // Long id2 = resultSet.getLong("Id2");
+                    String status = resultSet.getString("status");
+
+                    return status;
                 }
             }
         } catch (SQLException e) {
