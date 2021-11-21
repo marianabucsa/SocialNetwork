@@ -39,14 +39,6 @@ public class Service {
         //connectUsersFriendships();
     }
 
-    /*public Stream<String> findFriendRequests(Long id){
-        List<Long> friends = friendshipsRepo.getFriendRequests(id);
-        return friends.stream()
-                .map(x->findOneUser(x))
-                .filter(x->FriendshipStatus(x.getId(),id).equals("pending"))
-                .map(x-> x.getFirstName()+" "+x.getLastName()+" wants to be your friend!");
-    }*/
-
     /**
      * Find all friend requests for an user
      *
@@ -363,6 +355,21 @@ public class Service {
      * @param email2 - an email, string
      */
     public void addFriendship(String email1, String email2) {
+        Friendship exists=null;
+        try {
+            exists = findOneFriendship(email1, email2);
+        }catch (RepositoryException repositoryException){
+
+        }
+        if (exists != null)
+            throw new ServiceException("Friendship already exists!\n");
+        try {
+            exists = findOneFriendship(email2, email1);
+        }catch (RepositoryException repositoryException){
+
+        }
+        if (exists != null)
+            throw new ServiceException("Friendship already exists!\n");
         Long id1 = getIdFromEmail(email1);
         Long id2 = getIdFromEmail(email2);
         Friendship friendship = new Friendship(id1, id2);
