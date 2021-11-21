@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class Service {
@@ -314,10 +315,13 @@ public class Service {
         if (us == null)
             throw new ServiceException("User does not exist!\n");
         else {
-            if (friendshipsRepo.getFriendsUser(id).size() != 0) {
-                for (Long i : friendshipsRepo.getFriendsUser(id)) {
-                    friendshipsRepo.delete(new Pair(id, i));
+            if(friendshipsRepo.getAllData().size()!=0){
+                HashMap<Pair,Friendship> hashMap = friendshipsRepo.getAllData();
+                for(Pair p:hashMap.keySet()){
+                    if (Objects.equals(p.getId1(), id) || Objects.equals(p.getId2(), id))
+                        friendshipsRepo.delete(p);
                 }
+
             }
             if (messagesRepo.findMessagesUser(id).size() != 0) {
                 for (ReplyMessage rm : messagesRepo.findMessagesUser(id)) {
