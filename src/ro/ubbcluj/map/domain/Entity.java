@@ -1,6 +1,5 @@
 package ro.ubbcluj.map.domain;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 
@@ -10,6 +9,7 @@ public class Entity<ID> {
 
     /**
      * getter methode for id
+     *
      * @return - the id of the entity
      */
     public ID getId() {
@@ -18,12 +18,19 @@ public class Entity<ID> {
 
     /**
      * setter methode for id
+     *
      * @param id - the id of the entity
      */
     public void setId(ID id) {
         this.id = id;
     }
 
+    /**
+     * verifies if 2 object are equal
+     *
+     * @param o - an object
+     * @return - true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -32,6 +39,11 @@ public class Entity<ID> {
         return Objects.equals(id, entity.id);
     }
 
+    /**
+     * gives hash code for an object
+     *
+     * @return - a hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(id);

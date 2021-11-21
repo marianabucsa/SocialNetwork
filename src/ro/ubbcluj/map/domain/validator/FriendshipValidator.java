@@ -6,6 +6,7 @@ public class FriendshipValidator implements Validator<Friendship> {
 
     /**
      * validates a friendship
+     *
      * @param entity - object to be validated
      * @throws ValidatorException - if the friendship is not valid
      */

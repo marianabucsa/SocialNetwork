@@ -5,6 +5,7 @@ import ro.ubbcluj.map.domain.User;
 public class UserValidator implements Validator<User> {
     /**
      * validates a user
+     *
      * @param entity - user to be validated
      * @throws ValidatorException if the id, first name, last name or email of the user is not valid
      */

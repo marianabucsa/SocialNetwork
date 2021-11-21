@@ -7,6 +7,7 @@ package ro.ubbcluj.map.domain.validator;
 public class ValidatorException extends RuntimeException {
     /**
      * constructor for a Validator Exception
+     *
      * @param err - string of the error message
      */
     public ValidatorException(String err) {

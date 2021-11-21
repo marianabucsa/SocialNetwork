@@ -80,14 +80,19 @@ public class User extends Entity<Long> {
     /**
      * getter methode for friends list
      *
-     * @return - a list of friends, list
+     * @return - a list of user ids, list of friends
      */
     public List<Long> getFriends() {
         return friends;
     }
 
+    /**
+     * setter methode for friends list
+     *
+     * @param friends - a list of user ids, list of long
+     */
     public void setFriends(List<Long> friends) {
-        this.friends=new ArrayList<>(friends);
+        this.friends = new ArrayList<>(friends);
     }
 
     /**
@@ -96,8 +101,8 @@ public class User extends Entity<Long> {
      * @param id - an id
      */
     public void addFriend(Long id) {
-        if(friends==null)
-            friends=new ArrayList<>();
+        if (friends == null)
+            friends = new ArrayList<>();
         this.friends.add(id);
     }
 
@@ -136,7 +141,7 @@ public class User extends Entity<Long> {
     /**
      * hashing methode for a user
      *
-     * @return- a hash cade
+     * @return - a hash cade
      */
     @Override
     public int hashCode() {
@@ -146,11 +151,11 @@ public class User extends Entity<Long> {
     /**
      * creates a string from the object's attributes
      *
-     * @return- a string
+     * @return - a string
      */
     @Override
     public String toString() {
-        return "User{" +"ID= "+ getId()+'\''+
+        return "User{" + "ID= " + getId() + '\'' +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

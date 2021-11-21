@@ -43,7 +43,7 @@ public interface Repository<ID, E extends Entity<ID>> {
     /**
      * @param entity entity must not be null
      * @return null - if the entity is updated,
-     * otherwise  returns the entity  - (e.g id does not exist).
+     * otherwise  returns the entity  - (e.g. id does not exist).
      * @throws RepositoryException if the given entity is null.
      * @throws ValidatorException  if the entity is not valid.
      */
@@ -52,14 +52,15 @@ public interface Repository<ID, E extends Entity<ID>> {
     /**
      * getter for the size of the repository
      *
-     * @return - a integer that represents the size of the repository
+     * @return - an integer that represents the size of the repository
      */
     int size();
 
     /**
      * gets all data from repository
+     *
      * @return - a hash map
      */
-    HashMap<ID,E> getAllData();
+    HashMap<ID, E> getAllData();
 
 }
