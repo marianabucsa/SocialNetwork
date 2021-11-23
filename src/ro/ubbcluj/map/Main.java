@@ -19,9 +19,9 @@ public class Main {
             FriendshipValidator friendshipValidator = new FriendshipValidator();
             MessageValidator messageValidator = new MessageValidator();
             EmailValidator emailValidator = new EmailValidator();
-            UserDBRepository userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "postgres", userValidator);
-            FriendshipsDBRepository friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "postgres", friendshipValidator);
-            MessagesDBRepository messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "postgres", messageValidator);
+            UserDBRepository userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "luceafarul1", userValidator);
+            FriendshipsDBRepository friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "luceafarul1", friendshipValidator);
+            MessagesDBRepository messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network", "postgres", "luceafarul1", messageValidator);
             Service service = new Service(friendshipsDBRepository, userDBRepository, messagesDBRepository, emailValidator);
             FrontUI frontUI=new FrontUI(service);
             frontUI.run();

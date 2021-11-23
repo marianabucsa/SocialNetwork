@@ -222,6 +222,15 @@ public class UserUI extends AbstractUI {
      * send reply from current user
      */
     private void replyMessage() {
+        for (ReplyMessage replyMessage : serv.getToReplyForUser(userEmail)) {
+            System.out.print("Message: "+ replyMessage.getId()+"\n" +
+                    "From: " + serv.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            for(Long id: replyMessage.getTo())
+                System.out.print(serv.getEmailFromId(id)+" ");
+            System.out.println("\nData: " + replyMessage.getData() + "\n\n"
+                    + replyMessage.getMessage() + "\n");
+        }
         Long idMsg = readLong("Enter id of message to reply: ");
         String message = readString("Write message: \n");
         serv.replyMessage(userEmail, idMsg, message);
@@ -232,6 +241,15 @@ public class UserUI extends AbstractUI {
      * send reply all from current user
      */
     private void replyAllMessage() {
+        for (ReplyMessage replyMessage : serv.getToReplyForUser(userEmail)) {
+            System.out.print("Message: "+ replyMessage.getId()+"\n" +
+                    "From: " + serv.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            for(Long id: replyMessage.getTo())
+                System.out.print(serv.getEmailFromId(id)+" ");
+            System.out.println("\nData: " + replyMessage.getData() + "\n\n"
+                    + replyMessage.getMessage() + "\n");
+        }
         Long idMsg = readLong("Enter id of message to reply: ");
         String message = readString("Write message: \n");
         serv.replyAllMessage(userEmail, idMsg, message);
@@ -242,6 +260,15 @@ public class UserUI extends AbstractUI {
      * delete message for current user
      */
     private void deleteMessage() {
+        for (ReplyMessage replyMessage : serv.getMessagesForUser(userEmail)) {
+            System.out.print("Message: "+ replyMessage.getId()+"\n" +
+                    "From: " + serv.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            for(Long id: replyMessage.getTo())
+                System.out.print(serv.getEmailFromId(id)+" ");
+            System.out.println("\nData: " + replyMessage.getData() + "\n\n"
+                    + replyMessage.getMessage() + "\n");
+        }
         Long idMsg = readLong("Enter id of message to delete: ");
         serv.deleteMessage(idMsg);
         System.out.println("Message successfully deleted!\n");
@@ -253,7 +280,13 @@ public class UserUI extends AbstractUI {
     private void showConversation() {
         String friendEmail = readString("Enter user email: ");
         for (ReplyMessage replyMessage : serv.showConversation(userEmail, friendEmail)) {
-            System.out.println(replyMessage);
+            System.out.print("Message:\n" +
+                    "From: " + serv.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            for(Long id: replyMessage.getTo())
+                System.out.print(serv.getEmailFromId(id)+" ");
+            System.out.println("\nData: " + replyMessage.getData() + "\n\n"
+                    + replyMessage.getMessage() + "\n");
         }
     }
 

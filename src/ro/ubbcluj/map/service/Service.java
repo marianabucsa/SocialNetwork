@@ -404,6 +404,33 @@ public class Service {
     }
 
     /**
+     * gets messages to reply for user from repository
+     *
+     * @return - a list of reply messages
+     */
+    public List<ReplyMessage> getToReplyForUser(String email){
+        return messagesRepo.getToReplyForUser(getIdFromEmail(email));
+    }
+
+    /**
+     * gets messages sent by user from repository
+     *
+     * @return - a list of reply messages
+     */
+    public List<ReplyMessage> getSentForUser(String email){
+        return messagesRepo.getSentForUser(getIdFromEmail(email));
+    }
+
+    /**
+     * gets messages sent and received by user from repository
+     *
+     * @return - a list of reply messages
+     */
+    public List<ReplyMessage> getMessagesForUser(String email){
+        return messagesRepo.findMessagesUser(getIdFromEmail(email));
+    }
+
+    /**
      * gets id from a user email
      *
      * @param email - an email, string

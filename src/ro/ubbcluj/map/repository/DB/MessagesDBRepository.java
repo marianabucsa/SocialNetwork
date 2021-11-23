@@ -327,4 +327,68 @@ public class MessagesDBRepository extends AbstractRepoDatabase<Long, ReplyMessag
         String rez1 = rez.toString();
         return rez1.substring(0, rez1.length() - 1);
     }
+
+    /**
+     * gets all messages received by the user
+     *
+     * @param id - a user id
+     * @return - a list of reply messages
+     */
+    public List<ReplyMessage> getToReplyForUser(Long id) {
+        Set<ReplyMessage> messages = new HashSet<>();
+        try (PreparedStatement ps = getConnection().prepareStatement("SELECT * from Messages where receiver like ?")) {
+            ps.setString(1, "%" + id + "%");
+            try (ResultSet resultSet = ps.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Long id1 = resultSet.getLong("id");
+                    Long from = resultSet.getLong("sender");
+                    String toUsers = resultSet.getString("receiver");
+                    String message = resultSet.getString("message");
+                    LocalDateTime data = resultSet.getObject(5, LocalDateTime.class);
+                    Long replyId = resultSet.getLong("replyingto");
+                    ReplyMessage replyMessage = new ReplyMessage(from, stringToList(toUsers), data, message, replyId);
+                    replyMessage.setId(id1);
+                    validator.validate(replyMessage);
+                    messages.add(replyMessage);
+                }
+                return messages.stream().sorted(Comparator.comparing(ReplyMessage::getData))
+                        .collect(Collectors.toList());
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error getting conversation in database!\n");
+        }
+    }
+
+    /**
+     * gets all messages sent by the user
+     *
+     * @param id - a user id
+     * @return - a list of reply messages
+     */
+    public List<ReplyMessage> getSentForUser(Long id) {
+        Set<ReplyMessage> messages = new HashSet<>();
+        try (PreparedStatement ps = getConnection().prepareStatement("SELECT * from Messages where sender= ?")) {
+            ps.setLong(1, id);
+            try (ResultSet resultSet = ps.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Long id1 = resultSet.getLong("id");
+                    Long from = resultSet.getLong("sender");
+                    String toUsers = resultSet.getString("receiver");
+                    String message = resultSet.getString("message");
+                    LocalDateTime data = resultSet.getObject(5, LocalDateTime.class);
+                    Long replyId = resultSet.getLong("replyingto");
+                    ReplyMessage replyMessage = new ReplyMessage(from, stringToList(toUsers), data, message, replyId);
+                    replyMessage.setId(id1);
+                    validator.validate(replyMessage);
+                    messages.add(replyMessage);
+                }
+                return messages.stream().sorted(Comparator.comparing(ReplyMessage::getData))
+                        .collect(Collectors.toList());
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error getting conversation in database!\n");
+        }
+    }
 }
