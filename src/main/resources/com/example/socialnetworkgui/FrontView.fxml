@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="214.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.FrontController">
+   <children>
+      <Button layoutX="101.0" layoutY="49.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="89.0" text="Log In" textFill="#9c1919">
+         <font>
+            <Font name="Lucida Handwriting Italic" size="12.0" />
+         </font>
+      </Button>
+      <Button layoutX="101.0" layoutY="127.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="89.0" text="Sign Up" textFill="#8b1515">
+         <font>
+            <Font name="Lucida Handwriting Italic" size="12.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

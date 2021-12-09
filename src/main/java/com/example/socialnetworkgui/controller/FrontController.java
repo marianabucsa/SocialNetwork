@@ -3,7 +3,7 @@ package com.example.socialnetworkgui.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class FrontController {
     @FXML
     private Label welcomeText;
 
