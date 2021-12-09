@@ -7,11 +7,10 @@
 *.log
 
 # Gradle files
-*.gradle
-*.bat
+
 build/
 gradle/
-gradlew
+.gradle/
 
 
 # BlueJ files
