@@ -252,8 +252,9 @@ public class Service {
      * @return - the user if it was successfully added
      * @throws ServiceException if the user already exists
      */
-    public User addUser(String firstName, String lastName, String email) {
+    public User addUser(String firstName, String lastName, String email,String password) {
         User us = new User(firstName, lastName, email);
+        us.setPassword(password);
         us = userRepo.save(us);
         if (us != null)
             throw new ServiceException("User already exists!\n");
@@ -269,9 +270,10 @@ public class Service {
      * @return - the user if it was successfully updates
      * @throws ServiceException if the user does not exist
      */
-    public User updateUser(Long id, String firstName, String lastName, String email) {
+    public User updateUser(Long id, String firstName, String lastName, String email,String password) {
         User us = new User(firstName, lastName, email);
         us.setId(id);
+        us.setPassword(password);
         us = userRepo.update(us);
         if (us != null)
             throw new ServiceException("User does not exist!\n");
