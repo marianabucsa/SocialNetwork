@@ -9,6 +9,7 @@ public class User extends Entity<Long> {
     private String lastName;
     private String email;
     private List<Long> friends;
+    private String password;
 
     /**
      * user constructor , creates a user
@@ -21,7 +22,22 @@ public class User extends Entity<Long> {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password=null;
     }
+
+    /**
+     * Setter methode for password
+     * @param password password of the user, string
+     */
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    /**
+     *  getter methode for password
+     * @return user password, string
+     */
+    public String getPassword(){return password;}
 
     /**
      * getter methode for firstName

@@ -1,5 +1,6 @@
 package com.example.socialnetworkgui;
 
+import com.example.socialnetworkgui.utils.AES256;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,6 +19,14 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        String originalString = "howtodoinjava.com";
+
+        String encryptedString = AES256.encrypt(originalString);
+        String decryptedString = AES256.decrypt(encryptedString);
+
+        System.out.println(originalString);
+        System.out.println(encryptedString);
+        System.out.println(decryptedString);
+        //launch();
     }
 }
