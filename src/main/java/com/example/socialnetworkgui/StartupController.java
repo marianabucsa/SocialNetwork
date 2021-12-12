@@ -1,12 +1,8 @@
 package com.example.socialnetworkgui;
 
 import com.example.socialnetworkgui.controller.RegisterController;
-import com.example.socialnetworkgui.controller.UserController;
 import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.validator.*;
-import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
-import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
-import com.example.socialnetworkgui.repository.DB.UserDBRepository;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;

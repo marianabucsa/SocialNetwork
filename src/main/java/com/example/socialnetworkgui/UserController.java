@@ -1,5 +1,6 @@
-package com.example.socialnetworkgui.controller;
+package com.example.socialnetworkgui;
 
+import com.example.socialnetworkgui.controller.FriendRequestsController;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
@@ -201,19 +202,15 @@ public class UserController {
     }
 
     public void showFriendRequestsView() {
-        System.out.println(getClass().getResource("views/register-view.fxml"));
-        System.out.println(getClass().getResource("views/friend-requests.fxml"));
-        System.out.println(getClass().getResource("startup-view.fxml"));
-        System.out.println(getClass().getResource("UserView.fxml"));
-        /*try {
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("views/friend-requests.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 
             FriendRequestsController friendRequestsController = loader.getController();
-            friendRequestsController.setService(service);
             friendRequestsController.setCurrentUser(currentUser);
+            friendRequestsController.setService(service);
 
             Stage friendRequestsStage = new Stage();
             Scene scene = new Scene(root, 651, 400);
@@ -222,7 +219,5 @@ public class UserController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-         */
     }
 }
