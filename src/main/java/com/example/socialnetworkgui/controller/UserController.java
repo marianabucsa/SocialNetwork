@@ -1,0 +1,186 @@
+package com.example.socialnetworkgui.controller;
+
+import com.example.socialnetworkgui.domain.UserDto;
+import com.example.socialnetworkgui.domain.validator.ValidatorException;
+import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.service.Service;
+import com.example.socialnetworkgui.service.ServiceException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Paint;
+
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+
+public class UserController {
+    String currentUser = "george.marcu@yahoo.com";
+    Service service;
+    ObservableList<UserDto> usersList = FXCollections.observableArrayList();
+
+    @FXML
+    private Label errorLabelText;
+
+    @FXML
+    private TableView<UserDto> friendsTable;
+
+    @FXML
+    private TableColumn<UserDto, String> columnFriendFirstName;
+
+    @FXML
+    private TableColumn<UserDto, String> columnFriendLastName;
+
+    @FXML
+    private TableColumn<UserDto, String> columnFriendEmail;
+    @FXML
+    private TextField textSearchByName;
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    private List<UserDto> getFriendsList() {
+        List<UserDto> friends = service.findFriends(service.getIdFromEmail(currentUser));
+        if (friends.size() == 0)
+            throw new ServiceException("No friends found!");
+        return friends;
+    }
+
+    private List<UserDto> getUsersList() {
+        List<UserDto> users = StreamSupport.stream(service.findAllUsers().spliterator(), false)
+                .map(n -> new UserDto(n.getFirstName(), n.getLastName(), n.getEmail()))
+                .collect(Collectors.toList());
+        if (users.size() == 0)
+            throw new ServiceException("No user with that name!");
+        return users;
+    }
+
+    private void nameFilter() {
+        if (Objects.equals(textSearchByName.getText(), ""))
+            usersList.clear();
+        else {
+            List<String> names = List.of(textSearchByName.getText().split(" "));
+            for (String name : names) {
+                Predicate<UserDto> p1 = n -> n.getFirstName().startsWith(name);
+                Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name);
+                usersList.setAll(getUsersList().stream()
+                        .filter(p1.or(p2)).collect(Collectors.toList()));
+            }
+        }
+    }
+
+    @FXML
+    private void initialize() {
+        columnFriendFirstName.setCellValueFactory(new PropertyValueFactory<UserDto, String>("FirstName"));
+        columnFriendLastName.setCellValueFactory(new PropertyValueFactory<UserDto, String>("LastName"));
+        columnFriendEmail.setCellValueFactory(new PropertyValueFactory<UserDto, String>("Email"));
+
+        friendsTable.setItems(usersList);
+
+        textSearchByName.textProperty().addListener(o -> nameFilter());
+    }
+
+
+    @FXML
+    protected void onAddFriendClick() {
+        try {
+            UserDto selectedUser = (UserDto) friendsTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                service.addFriendship(currentUser, selectedUser.getEmail());
+                errorLabelText.setAlignment(Pos.CENTER);
+                errorLabelText.setTextFill(Paint.valueOf("green"));
+                errorLabelText.setText("Friend request sent!");
+            } else {
+                errorLabelText.setAlignment(Pos.CENTER);
+                errorLabelText.setTextFill(Paint.valueOf("red"));
+                errorLabelText.setText("Please select a user!");
+            }
+        } catch (ValidatorException ve) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ve.getMessage());
+        } catch (ServiceException se) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(se.getMessage());
+        } catch (RepositoryException re) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(re.getMessage());
+        } catch (InputMismatchException ime) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ime.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onDeleteFriendClick() {
+        try {
+            UserDto selectedUser = (UserDto) friendsTable.getSelectionModel().getSelectedItem();
+            if (selectedUser != null) {
+                service.deleteFriendship(currentUser, selectedUser.getEmail());
+                errorLabelText.setAlignment(Pos.CENTER);
+                errorLabelText.setTextFill(Paint.valueOf("green"));
+                errorLabelText.setText("Friend/Friend request deleted!");
+            } else {
+                errorLabelText.setAlignment(Pos.CENTER);
+                errorLabelText.setTextFill(Paint.valueOf("red"));
+                errorLabelText.setText("Please select a user!");
+            }
+        } catch (ValidatorException ve) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ve.getMessage());
+        } catch (ServiceException se) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(se.getMessage());
+        } catch (RepositoryException re) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(re.getMessage());
+        } catch (InputMismatchException ime) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ime.getMessage());
+        }
+    }
+
+    @FXML
+    protected void onShowFriendsClick() {
+        try {
+            usersList.setAll(getFriendsList());
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("green"));
+            errorLabelText.setText("Friends shown above!");
+        } catch (ValidatorException ve) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ve.getMessage());
+        } catch (ServiceException se) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(se.getMessage());
+        } catch (RepositoryException re) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(re.getMessage());
+        } catch (InputMismatchException ime) {
+            errorLabelText.setAlignment(Pos.CENTER);
+            errorLabelText.setTextFill(Paint.valueOf("red"));
+            errorLabelText.setText(ime.getMessage());
+        }
+    }
+}

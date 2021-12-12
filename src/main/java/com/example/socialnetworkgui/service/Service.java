@@ -3,6 +3,7 @@ package com.example.socialnetworkgui.service;
 import com.example.socialnetworkgui.domain.Friendship;
 import com.example.socialnetworkgui.domain.ReplyMessage;
 import com.example.socialnetworkgui.domain.User;
+import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.EmailValidator;
 import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
 import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Service {
@@ -50,7 +52,7 @@ public class Service {
     }
 
     /**
-     * Find all friends for an user
+     * Find all friends for a user
      *
      * @param id user id
      * @return last name, first name of user's friends
@@ -63,8 +65,21 @@ public class Service {
                 .filter(x -> FriendshipDate(x.getId(), id) != null)
                 .map(x -> x.getFirstName() + "|" + x.getLastName() + "|"
                         + FriendshipDate(x.getId(), id).toString());
+    }
 
-
+    /**
+     * Find all friends for a user
+     *
+     * @param id user id
+     * @return last name, first name and email of user's friends
+     */
+    public List<UserDto> findFriends(Long id) {
+        User us = userRepo.findOne(id);
+        List<Long> friends = friendshipsRepo.getFriendsUser(id);
+        return friends.stream()
+                .map(this::findOneUser)
+                .map(x -> new UserDto(x.getFirstName(), x.getLastName(),
+                        x.getEmail())).collect(Collectors.toList());
     }
 
     /**
