@@ -4,6 +4,7 @@ import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.utils.AES256;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,8 +47,10 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
                 String nume = resultSet.getString("Nume");
                 String prenume = resultSet.getString("Prenume");
                 String email = resultSet.getString("Email");
+                String password = resultSet.getString("Password");
                 User user = new User(prenume, nume, email);
                 user.setId(id);
+                user.setPassword(AES256.decrypt( password));
                 return user;
             }
         } catch (SQLException e) {
@@ -69,8 +72,10 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
                 String nume = resultSet.getString("Nume");
                 String prenume = resultSet.getString("Prenume");
                 String email = resultSet.getString("Email");
+                String password = resultSet.getString("Password");
                 User user = new User(prenume, nume, email);
                 user.setId(id);
+                user.setPassword( AES256.decrypt(password));
                 users.add(user);
             }
             return users;
@@ -93,13 +98,14 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
             throw new RepositoryException("Entity must not be null!\n");
         validator.validate(entity);
 
-        String sql = "insert into Users (Nume, Prenume,Email ) values (?, ?, ?)";
+        String sql = "insert into Users (Nume, Prenume,Email,Password ) values (?, ?, ?,?)";
 
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
 
             ps.setString(1, entity.getLastName());
             ps.setString(2, entity.getFirstName());
             ps.setString(3, entity.getEmail());
+            ps.setString(4, AES256.encrypt(entity.getPassword()));
 
             ps.executeUpdate();
             return null;
@@ -146,14 +152,16 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
             throw new RepositoryException("Entity must be not null!");
         validator.validate(entity);
 
-        String sql = "update Users set Nume=?, Prenume=?, Email=? where ID=?";
+        String sql = "update Users set Nume=?, Prenume=?, Email=?,Password=? where ID=?";
 
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
 
             ps.setString(1, entity.getLastName());
             ps.setString(2, entity.getFirstName());
             ps.setString(3, entity.getEmail());
-            ps.setLong(4, entity.getId());
+           // ps.setLong(4, entity.getId());
+            ps.setString(4,AES256.encrypt( entity.getPassword()));
+            ps.setLong(5, entity.getId());
 
 
             ps.executeUpdate();
@@ -199,8 +207,10 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
                 String nume = resultSet.getString("Nume");
                 String prenume = resultSet.getString("Prenume");
                 String email = resultSet.getString("Email");
+                String password = resultSet.getString("Password");
                 User user = new User(prenume, nume, email);
                 user.setId(id);
+                user.setPassword(AES256.decrypt( password));
                 users.put(user.getId(), user);
             }
             return users;
