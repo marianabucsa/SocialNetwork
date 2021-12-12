@@ -18,14 +18,16 @@ import javafx.scene.paint.Paint;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
+
 public class UserController {
-    String currentUser = "george.marcu@yahoo.com";
+    String currentUser;
     Service service;
     ObservableList<UserDto> usersList = FXCollections.observableArrayList();
 
@@ -46,8 +48,9 @@ public class UserController {
     @FXML
     private TextField textSearchByName;
 
-    public void setService(Service service) {
+    public void setService(Service service,String userEmail) {
         this.service = service;
+        this.currentUser=userEmail;
     }
 
     private List<UserDto> getFriendsList() {
@@ -72,10 +75,12 @@ public class UserController {
         else {
             List<String> names = List.of(textSearchByName.getText().split(" "));
             for (String name : names) {
-                Predicate<UserDto> p1 = n -> n.getFirstName().startsWith(name);
-                Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name);
+                Predicate<UserDto> p1 = n -> n.getFirstName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
+                Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
+                Predicate<UserDto> p3 = n -> n.getFirstName().startsWith(name.toLowerCase());
+                Predicate<UserDto> p4 = n -> n.getLastName().startsWith(name.toLowerCase());
                 usersList.setAll(getUsersList().stream()
-                        .filter(p1.or(p2)).collect(Collectors.toList()));
+                        .filter(p1.or(p2).or(p3).or(p4)).collect(Collectors.toList()));
             }
         }
     }

@@ -1,8 +1,12 @@
 package com.example.socialnetworkgui;
 
 import com.example.socialnetworkgui.controller.RegisterController;
+import com.example.socialnetworkgui.controller.UserController;
 import com.example.socialnetworkgui.domain.User;
-import com.example.socialnetworkgui.domain.validator.ValidatorException;
+import com.example.socialnetworkgui.domain.validator.*;
+import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
+import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
+import com.example.socialnetworkgui.repository.DB.UserDBRepository;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
@@ -48,19 +52,20 @@ public class StartupController {
             }
 
             //Check if the passwords are the same
-            if(u_password.equals(password))
-                //Logare pe pagina utilizatorului!!!
-                appName.setText(user.toString());
+            if(u_password.equals(password)) {
+                showUserView(user);
+                Stage stage = (Stage) appName.getScene().getWindow();
+                stage.close();
+            }
             else
                 appName.setText("Incorrect password!");
         } catch (ServiceException se){
             appName.setText(se.getMessage());
         }catch (ValidatorException ve){
             appName.setText(ve.getMessage());
-        }catch (RepositoryException re){
+        }catch (RepositoryException re) {
             appName.setText("User not found!");
         }
-
     }
 
     @FXML
@@ -69,6 +74,25 @@ public class StartupController {
         textPassword.clear();
         appName.setText("");
         showRegisterDialog(null);
+    }
+
+    public void showUserView(User user)  {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("UserView.fxml"));
+        AnchorPane root= null;
+        try {
+            root = (AnchorPane) fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        UserController userController = fxmlLoader.getController();
+        userController.setService(this.service,user.getEmail());
+
+        Stage userStage = new Stage();
+        Scene scene = new Scene(root, 600, 400);
+        userStage.setScene(scene);
+        userStage.show();
     }
 
     public void showRegisterDialog(User user){
