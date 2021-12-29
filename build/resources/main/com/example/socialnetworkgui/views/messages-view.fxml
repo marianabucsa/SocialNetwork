@@ -12,9 +12,12 @@
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <TableView layoutX="1.0" layoutY="1.0" prefHeight="400.0" prefWidth="511.0">
+                        <TableView fx:id="messagesTable" layoutX="1.0" layoutY="1.0" prefHeight="400.0" prefWidth="511.0">
                             <columns>
-                                <TableColumn prefWidth="487.20003056526184" />
+                                <TableColumn fx:id="columnFrom" prefWidth="67.999995470047" text="From" />
+                        <TableColumn fx:id="columnTo" prefWidth="67.19995880126953" text="To" />
+                        <TableColumn fx:id="columnMessage" prefWidth="277.59999084472656" text="Message" />
+                        <TableColumn fx:id="columnDate" prefWidth="94.4000244140625" text="Date" />
                             </columns>
                         </TableView>
                     </children>

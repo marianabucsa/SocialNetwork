@@ -221,8 +221,9 @@ public class UserController {
     @FXML
     protected void onShowMessagesClick(){
         Stage stage = (Stage) errorLabelText.getScene().getWindow();
-        stage.hide();
+
         showMessagesView();
+        stage.hide();
     }
 
     private void showMessagesView(){
@@ -233,7 +234,7 @@ public class UserController {
             AnchorPane root = (AnchorPane) loader.load();
 
             MessagesController messagesController = loader.getController();
-            messagesController.setService(this.service,currentUser);
+            messagesController.setService(service,currentUser);
 
             Stage messageStage = new Stage();
             Scene scene = new Scene(root, 600, 400);
