@@ -24,7 +24,9 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <Button fx:id="btnBack" layoutX="14.0" layoutY="359.0" onAction="#onGoBackClick" mnemonicParsing="false" text="Back" />
+                  <Button fx:id="btnBack" layoutX="10.0" layoutY="339.0" mnemonicParsing="false" onAction="#onGoBackClick" prefHeight="26.0" prefWidth="66.0" text="Back" />
+                  <Button layoutX="11.0" layoutY="59.0" onAction="#onComposeClick" mnemonicParsing="false" text="Compose" />
+                  <Button layoutX="10.0" layoutY="120.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="66.0" text="Reply" />
                </children></AnchorPane>
             </items>
         </SplitPane>

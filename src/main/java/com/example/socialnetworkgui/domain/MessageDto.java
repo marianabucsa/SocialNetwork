@@ -31,4 +31,6 @@ public class MessageDto {
     public LocalDateTime getData() {
         return data;
     }
+    public void setFrom(Long From){this.from=From;}
+    public void setMessage(String Message){this.message=Message;}
 }
