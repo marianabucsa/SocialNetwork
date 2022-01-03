@@ -9,12 +9,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,6 +43,8 @@ public class MessagesController {
 
     @FXML
     private TableView<MessageDto> messagesTable;
+    @FXML
+    private Label lblErrors;
 
 
     public void setService(Service servicee,String userEmail) {
@@ -117,6 +122,50 @@ public class MessagesController {
         showComposeMessageView(currentUser);
         Stage stage = (Stage) btnBack.getScene().getWindow();
         stage.hide();
+    }
+
+
+
+    @FXML
+    protected void onReplyClick(){
+        try{
+            MessageDto selectedMessage = (MessageDto) messagesTable.getSelectionModel().getSelectedItem();
+            if (selectedMessage != null) {
+                String from = currentUser;
+               // Long idMsg = service.getToReplyForUser(currentUser);
+                showReplyMessageView(currentUser,selectedMessage);
+                Stage stage = (Stage) btnBack.getScene().getWindow();
+                stage.hide();
+
+            } else {
+                lblErrors.setAlignment(Pos.CENTER);
+                lblErrors.setTextFill(Paint.valueOf("red"));
+                lblErrors.setText("Please select a messege!");
+            }
+        }catch (ServiceException se){
+            lblErrors.setAlignment(Pos.CENTER);
+            lblErrors.setTextFill(Paint.valueOf("red"));
+            lblErrors.setText(se.getMessage());
+        }
+    }
+
+    public void showReplyMessageView(String user, MessageDto selectedMessage){
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("views/replyMessage-view.fxml"));
+        AnchorPane root= null;
+        try {
+            root = (AnchorPane) fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ReplyMessageController replyMessageController = fxmlLoader.getController();
+        replyMessageController.setService(this.service,user,selectedMessage);
+
+        Stage replyMessageStage = new Stage();
+        Scene scene = new Scene(root, 600, 400);
+        replyMessageStage.setScene(scene);
+        replyMessageStage.show();
     }
 
     public void showComposeMessageView(String user){

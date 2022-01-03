@@ -1,5 +1,8 @@
 package com.example.socialnetworkgui;
 
+import com.example.socialnetworkgui.domain.Message;
+import com.example.socialnetworkgui.domain.MessageDto;
+import com.example.socialnetworkgui.domain.ReplyMessage;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
@@ -8,10 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -22,16 +22,13 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class ComposeMessageController {
+public class ReplyMessageController {
     String currentUser;
     Service service;
+    MessageDto message;
 
     @FXML
     protected Label lblTo;
-    @FXML
-    protected Label lblCC;
-    @FXML
-    protected Label lblSubject;
     @FXML
     protected TextArea textArea;
     @FXML
@@ -39,15 +36,14 @@ public class ComposeMessageController {
     @FXML
     protected TextField textTo;
     @FXML
-    protected TextField textCC;
-    @FXML
-    protected TextField textSubject;
-    @FXML
     protected Label lblErrors;
+    @FXML
+    protected CheckBox checkBoxReplyAll;
 
-    public void setService(Service service, String user) {
+    public void setService(Service service, String user, MessageDto message) {
         this.service=service;
         this.currentUser=user;
+        this.message = message;
     }
 
     @FXML
@@ -55,6 +51,23 @@ public class ComposeMessageController {
         showMessagesView();
         Stage stage = (Stage) lblTo.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    protected void onCheckReplyAllClick(){
+        for (ReplyMessage replyMessage : service.getToReplyForUser(currentUser)) {
+            System.out.print("Message: "+ replyMessage.getId()+"\n" +
+                    "From: " + service.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            lblErrors.setText("Message: "+ replyMessage.getId()+"\n" +
+                    "From: " + service.getEmailFromId(replyMessage.getFrom()) + "\n" +
+                    "To: " );
+            for(Long id: replyMessage.getTo())
+                System.out.print(service.getEmailFromId(id)+" ");
+            System.out.println("\nData: " + replyMessage.getData() + "\n\n"
+                    + replyMessage.getMessage() + "\n");
+        }
+
     }
 
     @FXML
@@ -69,19 +82,29 @@ public class ComposeMessageController {
             }
             else {
                 ArrayList<String> alls = new ArrayList<>();
-                alls.add(to);
+                String to_users = textTo.getText();
+                List<String> ccList = Arrays.asList(to_users.split(";"));
+                //ccList.add(cc);
+                if (!ccList.isEmpty() && !to_users.isEmpty()) {
+                    //alls = ccList;
+                    for(String c:ccList) {
+                        //System.out.println(ccList);
+                        //System.out.println(c);
+                        alls.add(c);
+                    }
+                }
+                /*alls.add(to);
                 String cc = textCC.getText();
                 List<String> ccList = Arrays.asList(cc.split(";"));
                 //ccList.add(cc);
                 if (!ccList.isEmpty() && !cc.isEmpty()) {
                     //alls = ccList;
                     for(String c:ccList) {
-                       // System.out.println(ccList);
-                        //System.out.println(c);
+                        System.out.println(ccList);
+                        System.out.println(c);
                         alls.add(c);
                     }
-                }
-                String subject = textSubject.getText();
+                }*/
                 String message = textArea.getText();
                 service.sendMessage(currentUser, alls, message);
                 lblErrors.setAlignment(Pos.CENTER);
@@ -126,5 +149,4 @@ public class ComposeMessageController {
             e.printStackTrace();
         }
     }
-
 }
