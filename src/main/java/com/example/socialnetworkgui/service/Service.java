@@ -4,6 +4,7 @@ import com.example.socialnetworkgui.domain.Friendship;
 import com.example.socialnetworkgui.domain.ReplyMessage;
 import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.UserDto;
+import com.example.socialnetworkgui.domain.*;
 import com.example.socialnetworkgui.domain.validator.EmailValidator;
 import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
 import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
@@ -115,6 +116,14 @@ public class Service {
                 .map(this::findOneUser)
                 .map(x -> new UserDto(x.getFirstName(), x.getLastName(),
                         x.getEmail())).collect(Collectors.toList());
+    }
+
+    public List<MessageDto> findMessages(Long id){
+        User us = userRepo.findOne(id);
+        List<ReplyMessage> messages = messagesRepo.findMessagesUser(id);
+        return messages.stream()
+                .map(x->new MessageDto(x.getFrom(),x.getTo(),x.getMessage(),x.getData()))
+                .collect(Collectors.toList());
     }
 
     /**
