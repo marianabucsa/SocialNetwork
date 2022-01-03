@@ -1,8 +1,7 @@
-package com.example.socialnetworkgui;
+package com.example.socialnetworkgui.controller;
 
-import com.example.socialnetworkgui.controller.RegisterController;
 import com.example.socialnetworkgui.domain.User;
-import com.example.socialnetworkgui.domain.validator.*;
+import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
@@ -21,8 +20,8 @@ import java.io.IOException;
 public class StartupController {
     Service service;
 
-    public void setService(Service serv){
-        service=serv;
+    public void setService(Service serv) {
+        service = serv;
     }
 
     @FXML
@@ -34,7 +33,7 @@ public class StartupController {
     private TextField textPassword;
 
     @FXML
-    protected void onLoginButtonClick(){
+    protected void onLoginButtonClick() {
         String id = textEmail.getText();
         String password = textPassword.getText();
         try {
@@ -42,56 +41,57 @@ public class StartupController {
             String u_password = user.getPassword();
 
             //if user password is null -> not an encrypted password in DB
-            if(u_password == null) {
+            if (u_password == null) {
                 appName.setText("ERROR -- not an encrypted password!");
                 return;
             }
 
             //Check if the passwords are the same
-            if(u_password.equals(password)) {
+            if (u_password.equals(password)) {
                 showUserView(user);
                 Stage stage = (Stage) appName.getScene().getWindow();
                 stage.close();
-            }
-            else
+            } else
                 appName.setText("Incorrect password!");
-        } catch (ServiceException se){
+        } catch (ServiceException se) {
             appName.setText(se.getMessage());
-        }catch (ValidatorException ve){
+        } catch (ValidatorException ve) {
             appName.setText(ve.getMessage());
-        }catch (RepositoryException re) {
+        } catch (RepositoryException re) {
             appName.setText("User not found!");
         }
     }
 
     @FXML
-    protected void onRegisterButtonClick(ActionEvent ev){
+    protected void onRegisterButtonClick(ActionEvent ev) {
         textEmail.clear();
         textPassword.clear();
         appName.setText("");
         showRegisterDialog(null);
     }
 
-    public void showUserView(User user)  {
+    public void showUserView(User user) {
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("UserView.fxml"));
-        AnchorPane root= null;
+
+        fxmlLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/UserProfile.fxml"));
+
+        AnchorPane root = null;
         try {
             root = (AnchorPane) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        UserController userController = fxmlLoader.getController();
-        userController.setService(this.service,user.getEmail());
+        AbstractUserController userProfileController = fxmlLoader.getController();
+        userProfileController.setUserController(null, user.getEmail(),this.service);
 
         Stage userStage = new Stage();
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root);
         userStage.setScene(scene);
         userStage.show();
     }
 
-    public void showRegisterDialog(User user){
+    public void showRegisterDialog(User user) {
         try {
             // create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();

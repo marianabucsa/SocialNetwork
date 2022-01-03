@@ -1,6 +1,7 @@
 package com.example.socialnetworkgui;
 
 
+import com.example.socialnetworkgui.controller.StartupController;
 import com.example.socialnetworkgui.domain.validator.EmailValidator;
 import com.example.socialnetworkgui.domain.validator.FriendshipValidator;
 import com.example.socialnetworkgui.domain.validator.MessageValidator;
@@ -25,7 +26,6 @@ public class StartApplication extends Application{
     MessagesDBRepository messagesDBRepository;
     Service service;
     public static void main(String[] args) {
-        System.out.println("ok");
         launch();
     }
 
@@ -34,9 +34,9 @@ public class StartApplication extends Application{
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
         MessageValidator messageValidator = new MessageValidator();
-        userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/SocialNetwork","postgres","postgres",userValidator);
-        friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/SocialNetwork","postgres","postgres",friendshipValidator);
-        messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/SocialNetwork","postgres","postgres",messageValidator);
+        userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
+        friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
+        messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",messageValidator);
         service = new Service(friendshipsDBRepository,userDBRepository,messagesDBRepository, new EmailValidator());
         initView(primaryStage);
         primaryStage.show();
@@ -45,7 +45,7 @@ public class StartApplication extends Application{
     private void initView(Stage primaryStage) throws IOException {
 
         FXMLLoader startupLoader = new FXMLLoader();
-        startupLoader.setLocation(getClass().getResource("startup-view.fxml"));
+        startupLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/startup-view.fxml"));
         AnchorPane startTaskLayout = startupLoader.load();
         primaryStage.setScene(new Scene(startTaskLayout));
 

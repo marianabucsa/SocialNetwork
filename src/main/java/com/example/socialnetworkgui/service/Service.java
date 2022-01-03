@@ -37,7 +37,7 @@ public class Service {
         this.friendshipsRepo = friendshipsRepo;
         this.userRepo = userRepo;
         this.messagesRepo = messagesRepo;
-        this.emailValidator= emailValidator;
+        this.emailValidator = emailValidator;
         //connectUsersFriendships();
     }
 
@@ -47,8 +47,43 @@ public class Service {
      * @param id user id
      * @return list of id's
      */
-    public List<Long> findFriendRequests(Long id) {
-        return friendshipsRepo.getFriendRequests(id);
+    public List<UserDto> findFriendRequests(Long id) {
+        User us = userRepo.findOne(id);
+        List<Long> friends = friendshipsRepo.getFriendRequests(id);
+        return friends.stream()
+                .map(this::findOneUser)
+                .map(x -> new UserDto(x.getFirstName(), x.getLastName(),
+                        x.getEmail())).collect(Collectors.toList());
+    }
+
+    /**
+     * Find sent friend requests for an user
+     *
+     * @param id user id
+     * @return list of id's
+     */
+    public List<UserDto> findSentFriendRequests(Long id) {
+        User us = userRepo.findOne(id);
+        List<Long> friends = friendshipsRepo.getSentFriendRequests(id);
+        return friends.stream()
+                .map(this::findOneUser)
+                .map(x -> new UserDto(x.getFirstName(), x.getLastName(),
+                        x.getEmail())).collect(Collectors.toList());
+    }
+
+    /**
+     * Find sent friend requests for an user
+     *
+     * @param id user id
+     * @return list of id's
+     */
+    public List<UserDto> findReceivedFriendRequests(Long id) {
+        User us = userRepo.findOne(id);
+        List<Long> friends = friendshipsRepo.getReceivedFriendRequests(id);
+        return friends.stream()
+                .map(this::findOneUser)
+                .map(x -> new UserDto(x.getFirstName(), x.getLastName(),
+                        x.getEmail())).collect(Collectors.toList());
     }
 
     /**
@@ -267,7 +302,7 @@ public class Service {
      * @return - the user if it was successfully added
      * @throws ServiceException if the user already exists
      */
-    public User addUser(String firstName, String lastName, String email,String password) {
+    public User addUser(String firstName, String lastName, String email, String password) {
         User us = new User(firstName, lastName, email);
         us.setPassword(password);
         us = userRepo.save(us);
@@ -285,7 +320,7 @@ public class Service {
      * @return - the user if it was successfully updates
      * @throws ServiceException if the user does not exist
      */
-    public User updateUser(Long id, String firstName, String lastName, String email,String password) {
+    public User updateUser(Long id, String firstName, String lastName, String email, String password) {
         User us = new User(firstName, lastName, email);
         us.setId(id);
         us.setPassword(password);
@@ -319,14 +354,14 @@ public class Service {
      * @throws ServiceException if the user is not fond
      */
     public User deleteUser(String email) {
-        Long id=getIdFromEmail(email);
+        Long id = getIdFromEmail(email);
         User us = userRepo.findOne(id);
         if (us == null)
             throw new ServiceException("User does not exist!\n");
         else {
-            if(friendshipsRepo.getAllData().size()!=0){
-                HashMap<Pair,Friendship> hashMap = friendshipsRepo.getAllData();
-                for(Pair p:hashMap.keySet()){
+            if (friendshipsRepo.getAllData().size() != 0) {
+                HashMap<Pair, Friendship> hashMap = friendshipsRepo.getAllData();
+                for (Pair p : hashMap.keySet()) {
                     if (Objects.equals(p.getId1(), id) || Objects.equals(p.getId2(), id))
                         friendshipsRepo.delete(p);
                 }
@@ -372,17 +407,17 @@ public class Service {
      * @param email2 - an email, string
      */
     public void addFriendship(String email1, String email2) {
-        Friendship exists=null;
+        Friendship exists = null;
         try {
             exists = findOneFriendship(email1, email2);
-        }catch (RepositoryException repositoryException){
+        } catch (RepositoryException repositoryException) {
 
         }
         if (exists != null)
             throw new ServiceException("Friendship already exists!\n");
         try {
             exists = findOneFriendship(email2, email1);
-        }catch (RepositoryException repositoryException){
+        } catch (RepositoryException repositoryException) {
 
         }
         if (exists != null)
@@ -425,7 +460,7 @@ public class Service {
      *
      * @return - a list of reply messages
      */
-    public List<ReplyMessage> getToReplyForUser(String email){
+    public List<ReplyMessage> getToReplyForUser(String email) {
         return messagesRepo.getToReplyForUser(getIdFromEmail(email));
     }
 
@@ -434,7 +469,7 @@ public class Service {
      *
      * @return - a list of reply messages
      */
-    public List<ReplyMessage> getSentForUser(String email){
+    public List<ReplyMessage> getSentForUser(String email) {
         return messagesRepo.getSentForUser(getIdFromEmail(email));
     }
 
@@ -443,7 +478,7 @@ public class Service {
      *
      * @return - a list of reply messages
      */
-    public List<ReplyMessage> getMessagesForUser(String email){
+    public List<ReplyMessage> getMessagesForUser(String email) {
         return messagesRepo.findMessagesUser(getIdFromEmail(email));
     }
 
