@@ -198,26 +198,93 @@ public class UserUsersController extends AbstractController {
     public void update(ServiceEvent serviceEvent) throws IOException {
         switch (serviceEvent.getEventType()) {
             case ADD_FRIEND: {
-                usersFriendsList.add((UserDto) serviceEvent.getData());
-                break;
+                try {
+                    usersSentRequestsList.setAll(getSentRequestsList());
+                    initializeVBox(getUserSentRequestsFormat(), usersSentRequestsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ve.getMessage()));
+                } catch (ServiceException se) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(se.getMessage()));
+                } catch (RepositoryException re) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(re.getMessage()));
+                } catch (InputMismatchException ime) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ime.getMessage()));
+                } catch (IOException e) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(e.getMessage()));
+                }
             }
             case DELETE_FRIEND: {
-                usersFriendsList.remove(serviceEvent.getData());
-                break;
+                try {
+                    usersFriendsList.setAll(getFriendsList());
+                    initializeVBox(getUserFriendFormat(), usersFriendsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ve.getMessage()));
+                } catch (ServiceException se) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(se.getMessage()));
+                } catch (RepositoryException re) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(re.getMessage()));
+                } catch (InputMismatchException ime) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ime.getMessage()));
+                } catch (IOException e) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(e.getMessage()));
+                }
             }
-            case ACCEPT_FRIENDSHIP: {
-                usersReceivedRequestsList.remove(serviceEvent.getOldData());
-                usersFriendsList.add((UserDto) serviceEvent.getData());
-                initializeVBox(getUserFriendFormat(), usersFriendsList);
-                break;
-            }
+            case ACCEPT_FRIENDSHIP:
             case DECLINE_FRIENDSHIP: {
-                usersReceivedRequestsList.remove(serviceEvent.getData());
-                break;
+                try {
+                    usersReceivedRequestsList.setAll(getReceivedRequestsList());
+                    initializeVBox(getUserReceivedRequestsFormat(), usersReceivedRequestsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ve.getMessage()));
+                } catch (ServiceException se) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(se.getMessage()));
+                } catch (RepositoryException re) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(re.getMessage()));
+                } catch (InputMismatchException ime) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ime.getMessage()));
+                } catch (IOException e) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(e.getMessage()));
+                }
             }
             case CANCEL_FRIENDSHIP: {
-                usersSentRequestsList.remove(serviceEvent.getData());
-                break;
+                try {
+                    usersSentRequestsList.setAll(getSentRequestsList());
+                    initializeVBox(getUserFriendFormat(), usersFriendsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ve.getMessage()));
+                } catch (ServiceException se) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(se.getMessage()));
+                } catch (RepositoryException re) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(re.getMessage()));
+                } catch (InputMismatchException ime) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ime.getMessage()));
+                } catch (IOException e) {
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(e.getMessage()));
+                }
             }
         }
     }
