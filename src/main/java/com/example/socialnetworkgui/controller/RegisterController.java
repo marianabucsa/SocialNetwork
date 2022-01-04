@@ -4,6 +4,7 @@ import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
@@ -11,9 +12,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
-public class RegisterController {
+public class RegisterController extends AbstractController{
 
     @FXML
     private TextField textFirstName;
@@ -24,12 +26,11 @@ public class RegisterController {
     @FXML
     private TextField textPassword;
 
-    private Service service;
     Stage dialogStage;
     User user;
 
     public void setService(Service service,  Stage stage, User u) {
-        this.service = service;
+        super.setUserController(null,u.getEmail(),service);
         this.dialogStage=stage;
         this.user=u;
         if (null != u) {
@@ -77,6 +78,11 @@ public class RegisterController {
             MessageAlert.showErrorMessage(null, re.getMessage()+"Email already exists!");
         }
         dialogStage.close();
+
+    }
+
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
 
     }
 }

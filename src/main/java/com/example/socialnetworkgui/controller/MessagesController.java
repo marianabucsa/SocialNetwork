@@ -1,10 +1,8 @@
-package com.example.socialnetworkgui;
+package com.example.socialnetworkgui.controller;
 
 import com.example.socialnetworkgui.domain.MessageDto;
-import com.example.socialnetworkgui.domain.User;
-import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.service.Service;
-import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class MessagesController {
+public class MessagesController extends AbstractController {
     String currentUser;
     Service service;
     ObservableList<MessageDto> messagesList = FXCollections.observableArrayList();
@@ -42,10 +40,8 @@ public class MessagesController {
     private TableView<MessageDto> messagesTable;
 
 
-    public void setService(Service servicee,String userEmail) {
-        this.service = servicee;
-        //System.out.println(service.communitiesNumber()+"a");
-        this.currentUser=userEmail;
+    public void setMessagesController(Service service, String userEmail) {
+        super.setUserController(null,userEmail,service);
         messagesList.setAll(getMessagesList());
 
     }
@@ -102,7 +98,6 @@ public class MessagesController {
         columnDate.setCellValueFactory(new PropertyValueFactory<>("Data"));
 
         messagesTable.setItems(messagesList);
-
     }
 
     @FXML
@@ -121,7 +116,7 @@ public class MessagesController {
 
     public void showComposeMessageView(String user){
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("views/composeMessage-view.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/composeMessage-view.fxml"));
         AnchorPane root= null;
         try {
             root = (AnchorPane) fxmlLoader.load();
@@ -149,12 +144,17 @@ public class MessagesController {
             e.printStackTrace();
         }
 
-        UserController userController = fxmlLoader.getController();
-        userController.setService(this.service,user);
+        AbstractController userMessagesController = fxmlLoader.getController();
+        userMessagesController.setUserController(null, user,this.service);
 
         Stage userStage = new Stage();
         Scene scene = new Scene(root, 600, 400);
         userStage.setScene(scene);
         userStage.show();
+    }
+
+    @Override
+    public void update(ServiceEvent serviceEvent) {
+
     }
 }

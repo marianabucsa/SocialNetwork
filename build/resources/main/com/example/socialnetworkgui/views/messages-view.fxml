@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.MessagesController">
+<AnchorPane prefHeight="476.0" prefWidth="564.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.MessagesController">
     <children>
         <SplitPane dividerPositions="0.8501984126984127" layoutX="-5.0" layoutY="-2.0" prefHeight="400.0" prefWidth="606.0">
             <items>

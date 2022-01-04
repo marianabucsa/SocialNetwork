@@ -12,7 +12,13 @@ import com.example.socialnetworkgui.repository.DB.UserDBRepository;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.utils.NetworkGraph;
 import com.example.socialnetworkgui.utils.Pair;
+import com.example.socialnetworkgui.utils.event.Event;
+import com.example.socialnetworkgui.utils.event.EventType;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
+import com.example.socialnetworkgui.utils.observer.Observable;
+import com.example.socialnetworkgui.utils.observer.Observer;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +27,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Service {
+public class Service implements Observable<ServiceEvent> {
     private final FriendshipsDBRepository friendshipsRepo;
     private final UserDBRepository userRepo;
     private final MessagesDBRepository messagesRepo;
     private final EmailValidator emailValidator;
+    public List<Observer<ServiceEvent>> observers=new ArrayList<>();
 
     /**
      * service constructor
@@ -455,6 +462,7 @@ public class Service {
     }
 
 
+
     /**
      * gets all friendship from repository
      *
@@ -510,6 +518,27 @@ public class Service {
      */
     public String getEmailFromId(Long id) {
         return userRepo.getEmailFromId(id);
+    }
+
+    @Override
+    public void addObserver(Observer<ServiceEvent> e) {
+        observers.add(e);
+    }
+
+    @Override
+    public void removeObserver(Observer<ServiceEvent> e) {
+        observers.remove(e);
+    }
+
+    @Override
+    public void notifyObservers(ServiceEvent e) {
+        observers.stream().forEach(x-> {
+            try {
+                x.update(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
 

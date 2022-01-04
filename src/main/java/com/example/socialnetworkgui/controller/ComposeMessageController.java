@@ -1,10 +1,9 @@
-package com.example.socialnetworkgui;
+package com.example.socialnetworkgui.controller;
 
 import com.example.socialnetworkgui.service.Service;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -45,7 +44,7 @@ public class ComposeMessageController {
             AnchorPane root = (AnchorPane) loader.load();
 
             MessagesController messagesController = loader.getController();
-            messagesController.setService(service,currentUser);
+            messagesController.setMessagesController(service,currentUser);
 
             Stage messageStage = new Stage();
             Scene scene = new Scene(root, 600, 400);

@@ -1,10 +1,13 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.EventType;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,7 +19,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.InputMismatchException;
 
-public class UserSentRequestsController extends AbstractUserController{
+public class UserSentRequestsController extends UserUsersController {
     String workingUser;
 
     @FXML
@@ -32,7 +35,7 @@ public class UserSentRequestsController extends AbstractUserController{
     public void setUserController(UserDto user, String currentUser, Service service) {
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         circleProfilePicture.setFill(new ImagePattern(profilePicture));
-        super.setUserController(user,currentUser, service);
+        super.setUserUsersController(service,currentUser);
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
@@ -40,6 +43,9 @@ public class UserSentRequestsController extends AbstractUserController{
     public void onCancelClick(ActionEvent actionEvent) {
         try {
             service.deleteFriendship(currentUser, workingUser);
+            User user = service.findOneUser(service.getIdFromEmail(workingUser));
+            UserDto userDto = new UserDto(user.getFirstName(), user.getLastName(), user.getEmail());
+            service.notifyObservers(new ServiceEvent(EventType.CANCEL_FRIENDSHIP,userDto));
             errorUserSearchLabel.setAlignment(Pos.CENTER);
             errorUserSearchLabel.setTextFill(Paint.valueOf("green"));
             errorUserSearchLabel.setText("Friend request canceled!");
@@ -64,4 +70,5 @@ public class UserSentRequestsController extends AbstractUserController{
 
     public void onSendMessageClick(ActionEvent actionEvent) {
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.socialnetworkgui.controller;
 
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.service.Service;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -12,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
@@ -24,7 +24,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 
-public class UserProfileController extends AbstractUserController {
+public class UserProfileController extends AbstractController {
 
     @FXML
     private Circle circleProfilePicture;
@@ -61,7 +61,8 @@ public class UserProfileController extends AbstractUserController {
         loginStage.show();
     }
 
-    public void onMessagesClick(ActionEvent actionEvent) {
+    public void onMessagesClick(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/messages-view.fxml"));
     }
 
     public void onNotificationClick(ActionEvent actionEvent) {
@@ -84,8 +85,8 @@ public class UserProfileController extends AbstractUserController {
         FXMLLoader sceneLoader = new FXMLLoader();
         sceneLoader.setLocation(formatURL);
         Parent sceneToOpen = sceneLoader.load();
-        UserUsersController userUsersController = sceneLoader.getController();
-        userUsersController.setUserUsersController(service,currentUser);
+        AbstractController abstractController = sceneLoader.getController();
+        abstractController.setUserController(null,currentUser,service);
         return sceneToOpen;
     }
 
@@ -106,4 +107,8 @@ public class UserProfileController extends AbstractUserController {
         timeline.play();
     }
 
+    @Override
+    public void update(ServiceEvent serviceEvent) {
+
+    }
 }

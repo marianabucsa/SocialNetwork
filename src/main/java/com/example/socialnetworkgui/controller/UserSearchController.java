@@ -1,10 +1,13 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.EventType;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,7 +19,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.InputMismatchException;
 
-public class UserSearchController extends AbstractUserController{
+public class UserSearchController extends UserUsersController {
     String workingUser;
 
     @FXML
@@ -31,6 +34,9 @@ public class UserSearchController extends AbstractUserController{
     public void onDeleteFriendClick(ActionEvent actionEvent) {
         try {
             service.deleteFriendship(currentUser, workingUser);
+            User user = service.findOneUser(service.getIdFromEmail(workingUser));
+            UserDto userDto = new UserDto(user.getFirstName(), user.getLastName(), user.getEmail());
+            service.notifyObservers(new ServiceEvent(EventType.DELETE_FRIEND,userDto));
             errorUserSearchLabel.setAlignment(Pos.CENTER);
             errorUserSearchLabel.setTextFill(Paint.valueOf("green"));
             errorUserSearchLabel.setText("Friend deleted!");
@@ -56,6 +62,9 @@ public class UserSearchController extends AbstractUserController{
     public void onAddFriendClick(ActionEvent actionEvent) {
         try {
             service.addFriendship(currentUser, workingUser);
+            User user = service.findOneUser(service.getIdFromEmail(workingUser));
+            UserDto userDto = new UserDto(user.getFirstName(), user.getLastName(), user.getEmail());
+            service.notifyObservers(new ServiceEvent(EventType.ADD_FRIEND,userDto));
             errorUserSearchLabel.setAlignment(Pos.CENTER);
             errorUserSearchLabel.setTextFill(Paint.valueOf("green"));
             errorUserSearchLabel.setText("Friend request sent!");
@@ -89,4 +98,5 @@ public class UserSearchController extends AbstractUserController{
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
+
 }

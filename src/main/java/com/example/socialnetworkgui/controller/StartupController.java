@@ -5,6 +5,7 @@ import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,11 +18,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class StartupController {
-    Service service;
+public class StartupController extends AbstractController {
 
     public void setService(Service serv) {
-        service = serv;
+        super.setUserController(null,null,serv);
     }
 
     @FXML
@@ -49,8 +49,8 @@ public class StartupController {
             //Check if the passwords are the same
             if (u_password.equals(password)) {
                 showUserView(user);
-                Stage stage = (Stage) appName.getScene().getWindow();
-                stage.close();
+                //Stage stage = (Stage) appName.getScene().getWindow();
+                //stage.close();
             } else
                 appName.setText("Incorrect password!");
         } catch (ServiceException se) {
@@ -82,7 +82,7 @@ public class StartupController {
             e.printStackTrace();
         }
 
-        AbstractUserController userProfileController = fxmlLoader.getController();
+        AbstractController userProfileController = fxmlLoader.getController();
         userProfileController.setUserController(null, user.getEmail(),this.service);
 
         Stage userStage = new Stage();
@@ -95,7 +95,7 @@ public class StartupController {
         try {
             // create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("views/register-view.fxml"));
+            loader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/register-view.fxml"));
 
             AnchorPane root = (AnchorPane) loader.load();
 
@@ -115,5 +115,10 @@ public class StartupController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
+
     }
 }

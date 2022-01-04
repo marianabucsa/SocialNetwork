@@ -1,11 +1,11 @@
 package com.example.socialnetworkgui.controller;
 
-import com.example.socialnetworkgui.domain.FriendshipDto;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,8 +25,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class UserUsersController extends AbstractUserController{
-    protected ObservableList<UserDto> usersList = FXCollections.observableArrayList();
+public class UserUsersController extends AbstractController {
+    protected ObservableList<UserDto> usersSearchList = FXCollections.observableArrayList();
+    protected ObservableList<UserDto> usersFriendsList = FXCollections.observableArrayList();
+    protected ObservableList<UserDto> usersSentRequestsList = FXCollections.observableArrayList();
+    protected ObservableList<UserDto> usersReceivedRequestsList = FXCollections.observableArrayList();
 
     @FXML
     private TextField textSearchByName;
@@ -34,20 +37,20 @@ public class UserUsersController extends AbstractUserController{
     private VBox usersVBox;
 
     public void setUserUsersController(Service service, String currentUser) {
-        super.setUserController(null,currentUser, service);
+        super.setUserController(null, currentUser, service);
     }
 
     @FXML
-    private void initializeVBox(URL formatURL) throws IOException {
+    private void initializeVBox(URL formatURL, ObservableList<UserDto> usersList) throws IOException {
         usersVBox.getChildren().clear();
         for (UserDto user : usersList) {
-            usersVBox.getChildren().add(getSearchFormatView(user,formatURL));
+            usersVBox.getChildren().add(getSearchFormatView(user, formatURL));
         }
     }
 
     public void onSearchClick(ActionEvent actionEvent) {
         if (Objects.equals(textSearchByName.getText(), ""))
-            usersList.clear();
+            usersSearchList.clear();
         else {
             List<String> names = List.of(textSearchByName.getText().split(" "));
             for (String name : names) {
@@ -55,11 +58,11 @@ public class UserUsersController extends AbstractUserController{
                 Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
                 Predicate<UserDto> p3 = n -> n.getFirstName().startsWith(name.toLowerCase());
                 Predicate<UserDto> p4 = n -> n.getLastName().startsWith(name.toLowerCase());
-                usersList.setAll(getUsersList().stream()
+                usersSearchList.setAll(getUsersList().stream()
                         .filter(p1.or(p2).or(p3).or(p4)).collect(Collectors.toList()));
             }
             try {
-                initializeVBox(getUserSearchFormat());
+                initializeVBox(getUserSearchFormat(), usersSearchList);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -68,8 +71,8 @@ public class UserUsersController extends AbstractUserController{
 
     public void onShowFriendsClick(ActionEvent actionEvent) {
         try {
-            usersList.setAll(getFriendsList());
-            initializeVBox(getUserFriendFormat());
+            usersFriendsList.setAll(getFriendsList());
+            initializeVBox(getUserFriendFormat(), usersFriendsList);
         } catch (ValidatorException ve) {
             usersVBox.getChildren().clear();
             usersVBox.getChildren().add(new Text(ve.getMessage()));
@@ -91,8 +94,8 @@ public class UserUsersController extends AbstractUserController{
 
     public void onSentRequests(ActionEvent actionEvent) {
         try {
-            usersList.setAll(getSentRequestsList());
-            initializeVBox(getUserSentRequestsFormat());
+            usersSentRequestsList.setAll(getSentRequestsList());
+            initializeVBox(getUserSentRequestsFormat(), usersSentRequestsList);
         } catch (ValidatorException ve) {
             usersVBox.getChildren().clear();
             usersVBox.getChildren().add(new Text(ve.getMessage()));
@@ -114,8 +117,8 @@ public class UserUsersController extends AbstractUserController{
 
     public void onReceivedRequestsClick(ActionEvent actionEvent) {
         try {
-            usersList.setAll(getReceivedRequestsList());
-            initializeVBox(getUserReceivedRequestsFormat());
+            usersReceivedRequestsList.setAll(getReceivedRequestsList());
+            initializeVBox(getUserReceivedRequestsFormat(), usersReceivedRequestsList);
         } catch (ValidatorException ve) {
             usersVBox.getChildren().clear();
             usersVBox.getChildren().add(new Text(ve.getMessage()));
@@ -176,6 +179,7 @@ public class UserUsersController extends AbstractUserController{
     private java.net.URL getUserSentRequestsFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/SentRequestsView.fxml");
     }
+
     private java.net.URL getUserSearchFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/UserSearchView.fxml");
     }
@@ -185,8 +189,36 @@ public class UserUsersController extends AbstractUserController{
         searchUserViewLoader.setLocation(formatURL);
         AnchorPane searchUserView = new AnchorPane();
         searchUserView = searchUserViewLoader.load();
-        AbstractUserController userSearchController = searchUserViewLoader.getController();
+        AbstractController userSearchController = searchUserViewLoader.getController();
         userSearchController.setUserController(user, currentUser, service);
         return searchUserView;
+    }
+
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
+        switch (serviceEvent.getEventType()) {
+            case ADD_FRIEND: {
+                usersFriendsList.add((UserDto) serviceEvent.getData());
+                break;
+            }
+            case DELETE_FRIEND: {
+                usersFriendsList.remove(serviceEvent.getData());
+                break;
+            }
+            case ACCEPT_FRIENDSHIP: {
+                usersReceivedRequestsList.remove(serviceEvent.getOldData());
+                usersFriendsList.add((UserDto) serviceEvent.getData());
+                initializeVBox(getUserFriendFormat(), usersFriendsList);
+                break;
+            }
+            case DECLINE_FRIENDSHIP: {
+                usersReceivedRequestsList.remove(serviceEvent.getData());
+                break;
+            }
+            case CANCEL_FRIENDSHIP: {
+                usersSentRequestsList.remove(serviceEvent.getData());
+                break;
+            }
+        }
     }
 }
