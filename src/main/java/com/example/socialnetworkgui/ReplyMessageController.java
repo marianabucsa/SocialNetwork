@@ -17,15 +17,14 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
+import java.util.*;
 
 public class ReplyMessageController {
     String currentUser;
     Service service;
     MessageDto message;
+    String user_to_reply;
+    List<String> users_send;
 
     @FXML
     protected Label lblTo;
@@ -40,10 +39,14 @@ public class ReplyMessageController {
     @FXML
     protected CheckBox checkBoxReplyAll;
 
-    public void setService(Service service, String user, MessageDto message) {
+    public void setService(Service service, String user, MessageDto message, String user_to_reply,List<String> users_send) {
         this.service=service;
         this.currentUser=user;
         this.message = message;
+        this.user_to_reply = user_to_reply;
+        this.users_send = users_send;
+        textTo.setText(user_to_reply+";");
+
     }
 
     @FXML
@@ -55,6 +58,22 @@ public class ReplyMessageController {
 
     @FXML
     protected void onCheckReplyAllClick(){
+
+       // String text_init = textTo.getText();
+        Integer nr = 0;
+        for(String user:users_send){
+            if(!Objects.equals(user, currentUser)) {
+                if (nr == 0) {
+                    nr++;
+                    String text = textTo.getText() + user;
+                    textTo.setText(text);
+                } else {
+                    String text = textTo.getText() + ";" + user;
+                    textTo.setText(text);
+                }
+            }
+        }
+
         for (ReplyMessage replyMessage : service.getToReplyForUser(currentUser)) {
             System.out.print("Message: "+ replyMessage.getId()+"\n" +
                     "From: " + service.getEmailFromId(replyMessage.getFrom()) + "\n" +
@@ -86,25 +105,10 @@ public class ReplyMessageController {
                 List<String> ccList = Arrays.asList(to_users.split(";"));
                 //ccList.add(cc);
                 if (!ccList.isEmpty() && !to_users.isEmpty()) {
-                    //alls = ccList;
-                    for(String c:ccList) {
-                        //System.out.println(ccList);
-                        //System.out.println(c);
-                        alls.add(c);
-                    }
+                    alls.addAll(ccList);
+                    System.out.println("alls:::"+alls);
                 }
-                /*alls.add(to);
-                String cc = textCC.getText();
-                List<String> ccList = Arrays.asList(cc.split(";"));
-                //ccList.add(cc);
-                if (!ccList.isEmpty() && !cc.isEmpty()) {
-                    //alls = ccList;
-                    for(String c:ccList) {
-                        System.out.println(ccList);
-                        System.out.println(c);
-                        alls.add(c);
-                    }
-                }*/
+
                 String message = textArea.getText();
                 service.sendMessage(currentUser, alls, message);
                 lblErrors.setAlignment(Pos.CENTER);

@@ -21,9 +21,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class MessagesController {
     String currentUser;
@@ -133,7 +131,15 @@ public class MessagesController {
             if (selectedMessage != null) {
                 String from = currentUser;
                // Long idMsg = service.getToReplyForUser(currentUser);
-                showReplyMessageView(currentUser,selectedMessage);
+                Long user_to_reply_id = selectedMessage.getFrom();
+                List<Long> users_send_id = new ArrayList<>();
+                users_send_id = selectedMessage.getTo();
+                List<String> users_send = new ArrayList<>();
+                for(Long id: users_send_id){
+                    users_send.add(service.getEmailFromId(id));
+                }
+                String user_to_reply = service.getEmailFromId(user_to_reply_id);
+                showReplyMessageView(currentUser,selectedMessage,user_to_reply,users_send);
                 Stage stage = (Stage) btnBack.getScene().getWindow();
                 stage.hide();
 
@@ -149,7 +155,7 @@ public class MessagesController {
         }
     }
 
-    public void showReplyMessageView(String user, MessageDto selectedMessage){
+    public void showReplyMessageView(String user, MessageDto selectedMessage,String user_to_reply,List<String> users_send){
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("views/replyMessage-view.fxml"));
         AnchorPane root= null;
@@ -160,7 +166,7 @@ public class MessagesController {
         }
 
         ReplyMessageController replyMessageController = fxmlLoader.getController();
-        replyMessageController.setService(this.service,user,selectedMessage);
+        replyMessageController.setService(this.service,user,selectedMessage,user_to_reply,users_send);
 
         Stage replyMessageStage = new Stage();
         Scene scene = new Scene(root, 600, 400);

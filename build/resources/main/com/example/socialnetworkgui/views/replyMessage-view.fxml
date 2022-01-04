@@ -20,12 +20,12 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <CheckBox fx:id="checkBoxReplyAll" layoutX="46.0" layoutY="62.0" onAction="#onCheckReplyAllClick" mnemonicParsing="false" text="Reply to all">
+                  <CheckBox fx:id="checkBoxReplyAll" layoutX="46.0" layoutY="62.0" mnemonicParsing="false" onAction="#onCheckReplyAllClick" text="Reply to all">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </CheckBox>
-                  <TextField fx:id="textTo" layoutX="83.0" layoutY="24.0" promptText="to.." />
+                  <TextField fx:id="textTo" layoutX="83.0" layoutY="24.0" prefHeight="26.0" prefWidth="489.0" promptText="to.." />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
