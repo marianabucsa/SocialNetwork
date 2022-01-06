@@ -62,7 +62,22 @@ public class UserProfileController extends AbstractController {
     }
 
     public void onMessagesClick(ActionEvent actionEvent) throws IOException {
-        setScene(getClass().getResource("/com/example/socialnetworkgui/views/messages-view.fxml"));
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/messages-view.fxml"));
+
+            AnchorPane root = (AnchorPane) loader.load();
+
+            MessagesController messagesController = loader.getController();
+            messagesController.setService(service,currentUser);
+
+            Stage messageStage = new Stage();
+            Scene scene = new Scene(root, 600, 400);
+            messageStage.setScene(scene);
+            messageStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void onNotificationClick(ActionEvent actionEvent) {
