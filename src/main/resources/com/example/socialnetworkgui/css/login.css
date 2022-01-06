@@ -1,7 +1,8 @@
 .root {
-   /* -fx-background-image: url(../images/logo.gif);*/
+    -fx-background-color: #2A2E37;
 
 }
+/*
 .button {
     -fx-text-fill: white;
     -fx-font-family: "Arial Narrow";
@@ -24,5 +25,5 @@
     -fx-fill: FIREBRICK;
     -fx-font-weight: bold;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-}
+}*/
 
