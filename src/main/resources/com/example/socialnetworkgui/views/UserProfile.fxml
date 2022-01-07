@@ -1,25 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="476.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserProfileController">
+<AnchorPane prefHeight="476.0" prefWidth="710.0" stylesheets="@../css/userProfile.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserProfileController">
    <children>
-      <Circle fx:id="circleProfilePicture" layoutX="69.0" layoutY="62.0" radius="48.0" stroke="BLACK" strokeType="INSIDE" />
-      <Button layoutX="21.0" layoutY="436.0" mnemonicParsing="false" onAction="#onLogOutClick" prefHeight="18.0" prefWidth="96.0" text="Log out" textFill="#d92d0b" />
-      <Button layoutX="21.0" layoutY="201.0" mnemonicParsing="false" onAction="#onMessagesClick" prefHeight="25.0" prefWidth="96.0" text="Messages" />
-      <Button layoutX="21.0" layoutY="164.0" mnemonicParsing="false" onAction="#onNotificationClick" prefHeight="25.0" prefWidth="96.0" text="Notifications" />
-      <Button layoutX="21.0" layoutY="237.0" mnemonicParsing="false" onAction="#onEventsClick" prefHeight="25.0" prefWidth="96.0" text="Events" />
-      <Button layoutX="21.0" layoutY="273.0" mnemonicParsing="false" onAction="#onHistoryClick" prefHeight="25.0" prefWidth="96.0" text="History" />
-      <Button layoutX="21.0" layoutY="307.0" mnemonicParsing="false" onAction="#onCommunityClick" prefHeight="25.0" prefWidth="96.0" text="Community" />
-      <Button layoutX="21.0" layoutY="127.0" mnemonicParsing="false" onAction="#onHomeClick" prefHeight="25.0" prefWidth="96.0" text="Home" />
-      <StackPane fx:id="container" layoutX="150.0"  prefHeight="476.0" prefWidth="555.0">
+      <Circle fx:id="circleProfilePicture" layoutX="80.0" layoutY="68.0" radius="54.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="400.0" mnemonicParsing="false" onAction="#onLogOutClick" prefHeight="28.0" prefWidth="118.0" text="Log out" textFill="#d92d0b">
+         <graphic>
+            <FontAwesomeIcon glyphName="SIGN_OUT" size="15" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="238.0" mnemonicParsing="false" onAction="#onMessagesClick" prefHeight="28.0" prefWidth="118.0" text="Messages">
+         <graphic>
+            <FontAwesomeIcon glyphName="ENVELOPE" size="13" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="201.0" mnemonicParsing="false" onAction="#onNotificationClick" prefHeight="28.0" prefWidth="118.0" text="Notifications">
+         <graphic>
+            <FontAwesomeIcon glyphName="BELL" size="13" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="274.0" mnemonicParsing="false" onAction="#onEventsClick" prefHeight="28.0" prefWidth="118.0" text="Events">
+         <graphic>
+            <FontAwesomeIcon glyphName="CALENDAR_ALT" size="13" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="308.0" mnemonicParsing="false" onAction="#onHistoryClick" prefHeight="28.0" prefWidth="118.0" text="History">
+         <graphic>
+            <FontAwesomeIcon glyphName="HISTORY" size="15" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="343.0" mnemonicParsing="false" onAction="#onCommunityClick" prefHeight="28.0" prefWidth="118.0" text="Community">
+         <graphic>
+            <FontAwesomeIcon glyphName="USERS" size="13" />
+         </graphic></Button>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="162.0" mnemonicParsing="false" onAction="#onHomeClick" prefHeight="28.0" prefWidth="118.0" text="Home">
+         <graphic>
+            <FontAwesomeIcon glyphName="HOME" size="15" />
+         </graphic></Button>
+      <StackPane fx:id="container" layoutX="150.0" prefHeight="476.0" prefWidth="555.0">
          <children>
-            <AnchorPane layoutX="150.0"  prefHeight="473.0" prefWidth="548.0">
+            <AnchorPane layoutX="150.0" prefHeight="473.0" prefWidth="548.0">
             </AnchorPane>
          </children>
       </StackPane>
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="434.0" mnemonicParsing="false" onAction="#onLogOutClick" prefHeight="28.0" prefWidth="118.0" text="Delete Account" textFill="#d92d0b">
+         <graphic>
+            <FontAwesomeIcon glyphName="BAN" size="15" />
+         </graphic>
+      </Button>
+      <Label fx:id="userProfileName" alignment="CENTER" layoutX="21.0" layoutY="121.0" prefHeight="35.0" prefWidth="118.0" text="Mariana Bucsa" textFill="LIME">
+         <font>
+            <Font name="Berlin Sans FB" size="15.0" />
+         </font></Label>
+      <FontAwesomeIcon glyphName="EDIT" layoutX="108.0" layoutY="118.0" size="20" />
    </children>
+   <effect>
+      <Lighting>
+         <bumpInput>
+            <Shadow />
+         </bumpInput>
+         <light>
+            <Light.Distant />
+         </light>
+      </Lighting>
+   </effect>
 </AnchorPane>

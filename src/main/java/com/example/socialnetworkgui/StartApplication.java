@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -47,13 +48,13 @@ public class StartApplication extends Application{
         FXMLLoader startupLoader = new FXMLLoader();
         startupLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/startup-view.fxml"));
         AnchorPane startTaskLayout = startupLoader.load();
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(new Scene(startTaskLayout));
 
         StartupController startupController = startupLoader.getController();
         startupController.setService(service);
 
         primaryStage.setResizable(false);
-
 
     }
 }

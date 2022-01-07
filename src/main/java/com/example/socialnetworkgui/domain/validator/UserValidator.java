@@ -21,6 +21,9 @@ public class UserValidator implements Validator<User> {
         if (!entity.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             err += "Invalid email!\n";
         }
+        if (entity.getPassword().matches("")) {
+            err += "Invalid password!\n";
+        }
         if (!err.equals(""))
             throw new ValidatorException(err);
     }
