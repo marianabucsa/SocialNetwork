@@ -62,7 +62,7 @@ public class UserProfileController extends AbstractController {
     }
 
     public void onMessagesClick(ActionEvent actionEvent) throws IOException {
-        try {
+       /* try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/messages-view.fxml"));
 
@@ -77,7 +77,9 @@ public class UserProfileController extends AbstractController {
             messageStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserMessageView.fxml"));
+
     }
 
     public void onNotificationClick(ActionEvent actionEvent) {

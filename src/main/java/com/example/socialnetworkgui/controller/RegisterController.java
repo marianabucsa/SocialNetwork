@@ -30,7 +30,8 @@ public class RegisterController extends AbstractController{
     User user;
 
     public void setService(Service service,  Stage stage, User u) {
-        super.setUserController(null,u.getEmail(),service);
+      //  super.setUserController(null,u.getEmail(),service);
+        this.service=service;
         this.dialogStage=stage;
         this.user=u;
         if (null != u) {
