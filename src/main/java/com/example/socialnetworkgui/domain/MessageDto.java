@@ -1,6 +1,7 @@
 package com.example.socialnetworkgui.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDto {
@@ -33,4 +34,11 @@ public class MessageDto {
     }
     public void setFrom(Long From){this.from=From;}
     public void setMessage(String Message){this.message=Message;}
+
+    public List<Long> getGroup(){
+        List<Long> member = new ArrayList<>();
+        member.addAll(this.getTo());
+        member.add(from);
+        return member;
+    }
 }

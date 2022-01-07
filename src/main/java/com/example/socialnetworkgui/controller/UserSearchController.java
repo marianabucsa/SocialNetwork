@@ -88,6 +88,7 @@ public class UserSearchController extends UserUsersController {
     }
 
     public void onSendMessageClick(ActionEvent actionEvent) {
+        service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE,workingUser));
 
     }
 

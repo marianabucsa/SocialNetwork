@@ -1,5 +1,7 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.domain.MessageDto;
+import com.example.socialnetworkgui.domain.ReplyMessage;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
@@ -30,6 +32,7 @@ public class UserUsersController extends AbstractController {
     protected ObservableList<UserDto> usersFriendsList = FXCollections.observableArrayList();
     protected ObservableList<UserDto> usersSentRequestsList = FXCollections.observableArrayList();
     protected ObservableList<UserDto> usersReceivedRequestsList = FXCollections.observableArrayList();
+    protected ObservableList<MessageDto> conversationList = FXCollections.observableArrayList();
 
     @FXML
     private TextField textSearchByName;
@@ -45,6 +48,14 @@ public class UserUsersController extends AbstractController {
         usersVBox.getChildren().clear();
         for (UserDto user : usersList) {
             usersVBox.getChildren().add(getSearchFormatView(user, formatURL));
+        }
+    }
+
+    @FXML
+    private void initVBox(URL formatURL, ObservableList<MessageDto> messageList) throws IOException {
+        usersVBox.getChildren().clear();
+        for(MessageDto message : messageList){
+            usersVBox.getChildren().add(getConversationFormatView(message,formatURL));
         }
     }
 
@@ -168,6 +179,20 @@ public class UserUsersController extends AbstractController {
         return users;
     }
 
+    private List<MessageDto> getConversationList(){
+        List<MessageDto> msgs = service.showConversation(currentUser,workingUser.getEmail()).stream()
+                .map(n -> new MessageDto(n.getFrom(),n.getTo(),n.getMessage(),n.getData()))
+                .collect(Collectors.toList());
+        if(msgs.size() == 0)
+            throw new ServiceException("No messages found!");
+        return msgs;
+
+    }
+
+    private java.net.URL getConversationFormat(){
+        return getClass().getResource("/com/example/socialnetworkgui/views/ConversationView.fxml");
+    }
+
     private java.net.URL getUserFriendFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/UserFriendView.fxml");
     }
@@ -192,6 +217,16 @@ public class UserUsersController extends AbstractController {
         AbstractController userSearchController = searchUserViewLoader.getController();
         userSearchController.setUserController(user, currentUser, service);
         return searchUserView;
+    }
+
+    private AnchorPane getConversationFormatView(MessageDto message, URL formatURL) throws IOException {
+        FXMLLoader conversationViewLoader = new FXMLLoader();
+        conversationViewLoader.setLocation(formatURL);
+        AnchorPane conversationView = new AnchorPane();
+        conversationView = conversationViewLoader.load();
+        AbstractController conversationController = conversationViewLoader.getController();
+        conversationController.setMessageController(message, currentUser, service);
+        return conversationView;
     }
 
     @Override
@@ -284,6 +319,15 @@ public class UserUsersController extends AbstractController {
                 } catch (IOException e) {
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(e.getMessage()));
+                }
+            }
+            case SEND_MESSAGE: {
+                try{
+                    conversationList.setAll(getConversationList());
+                    initVBox(getConversationFormat(), conversationList);
+                }catch (ValidatorException ve){
+                    usersVBox.getChildren().clear();
+                    usersVBox.getChildren().add(new Text(ve.getMessage()));
                 }
             }
         }
