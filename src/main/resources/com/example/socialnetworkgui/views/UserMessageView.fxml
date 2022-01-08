@@ -17,7 +17,7 @@
             </content>
         </ScrollPane>
         <TextField fx:id="textSearchByName" layoutX="96.0" layoutY="22.0" prefHeight="25.0" prefWidth="321.0" />
-        <Button layoutX="198.0" layoutY="85.0" mnemonicParsing="false" onAction="#onShowMessages" prefHeight="26.0" prefWidth="131.0" text="Show message" />
+        <Button layoutX="198.0" layoutY="85.0" mnemonicParsing="false" onAction="#onShowMessages" prefHeight="26.0" prefWidth="131.0" text="Show messages" />
     </children>
 
 </AnchorPane>

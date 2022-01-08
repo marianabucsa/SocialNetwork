@@ -4,6 +4,8 @@ import com.example.socialnetworkgui.domain.MessageDto;
 import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.service.Service;
+import com.example.socialnetworkgui.utils.event.EventType;
+import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,6 +18,7 @@ import java.util.Locale;
 
 public class MessageSearchController extends UserMessageController{
     String workingUser;
+    MessageDto message;
 
     @FXML
     private Circle circleProfilePicture;
@@ -31,8 +34,8 @@ public class MessageSearchController extends UserMessageController{
 
     @Override
     public void setUserController(UserDto user, String currentUser, Service service) {
-        Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
-        circleProfilePicture.setFill(new ImagePattern(profilePicture));
+       // Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
+        //circleProfilePicture.setFill(new ImagePattern(profilePicture));
         super.setUserController(user,currentUser, service);
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
@@ -44,6 +47,7 @@ public class MessageSearchController extends UserMessageController{
         circleProfilePicture.setFill(new ImagePattern(profilePicture));
         super.setMessageController(message,currentUser, service);
         workingUser = service.getEmailFromId(message.getFrom());
+        this.message = message;
         ArrayList<String> to = new ArrayList<>();
 
         User current_user = service.findOneUser(service.getIdFromEmail(currentUser));
@@ -61,7 +65,10 @@ public class MessageSearchController extends UserMessageController{
         User current_us = service.findOneUser(message.getFrom());
         String name = current_us.getFirstName()+" "+current_us.getLastName();
         if(!name.equals(current_user_name)) {
-            userFirstLastName.setText(current_us.getFirstName() + " " + to);
+            userFirstLastName.setText(current_us.getFirstName());
+            for (String s:to) {
+                userFirstLastName.setText(userFirstLastName.getText()+" "+s);
+            }
         }
         else
         {
@@ -70,7 +77,10 @@ public class MessageSearchController extends UserMessageController{
     }
 
     @FXML
-    private void onSendMessageClick(){
-        errorUserSearchLabel.setText(currentUser.toLowerCase(Locale.ROOT));
+    private void onSendMessageClick() throws IOException {
+        errorUserSearchLabel.setText(message.getConversation().size()+" messages");
+        service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE,message));
+        //super.createConversationScene(message);
+
     }
 }
