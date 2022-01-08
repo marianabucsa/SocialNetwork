@@ -21,7 +21,7 @@ public abstract class AbstractController implements Observer<ServiceEvent> {
         this.workingUser=workingUser;
     }
 
-    public void setMessageController(MessageDto workingMessage, String currentUser, Service service)  {
+    public void setMessageController(MessageDto workingMessage, String currentUser, Service service) throws IOException {
         this.currentUser = currentUser;
         this.service = service;
         service.addObserver(this);

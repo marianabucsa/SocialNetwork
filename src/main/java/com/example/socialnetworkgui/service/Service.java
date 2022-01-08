@@ -125,6 +125,11 @@ public class Service implements Observable<ServiceEvent> {
                         x.getEmail())).collect(Collectors.toList());
     }
 
+    /**
+     * Find all messages for an user
+     * @param id id of user
+     * @return list of messages
+     */
     public List<MessageDto> findMessages(Long id){
         User us = userRepo.findOne(id);
         List<ReplyMessage> messages = messagesRepo.findMessagesUser(id);

@@ -1,9 +1,6 @@
 package com.example.socialnetworkgui.controller;
 
-import com.example.socialnetworkgui.domain.Message;
-import com.example.socialnetworkgui.domain.MessageDto;
-import com.example.socialnetworkgui.domain.User;
-import com.example.socialnetworkgui.domain.UserDto;
+import com.example.socialnetworkgui.domain.*;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
@@ -12,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -22,13 +20,15 @@ import javafx.scene.shape.Circle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class UserMessageController extends AbstractController{
+public class UserMessageController extends AbstractController {
     protected ObservableList<UserDto> usersSearchList = FXCollections.observableArrayList();
     protected ObservableList<MessageDto> messagesSearchList = FXCollections.observableArrayList();
 
@@ -37,13 +37,51 @@ public class UserMessageController extends AbstractController{
     @FXML
     private VBox usersVBox;
 
-
-    /*public UserMessageController() throws IOException {
+    @FXML
+    private void onShowMessages() throws IOException {
         super.setMessageController(null,currentUser,service);
-        messagesSearchList.setAll(getMessagesList());
+       // messagesSearchList.setAll(getMessagesList());
 
-        initializeVBox(getUserSearchFormat(),messagesSearchList);
-    }*/
+       // initializeVBox(getUserSearchFormat(),messagesSearchList);
+        List<MessageDto> messages = getAllGroupsforUser(currentUser);
+        System.out.println(messages);
+        usersVBox.getChildren().clear();
+        for (MessageDto messageDto: messages){
+            usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto,getUserSearchFormat()));
+        }
+    }
+
+    private boolean verifGroups(List<MessageDto> g1, List<MessageDto> g2){
+        //TODO
+        return false;
+    }
+
+    private List<MessageDto> getAllGroupsforUser(String currentUser){
+        boolean exists = false;
+        List<MessageDto> allMessages= service.findMessages(service.getIdFromEmail(currentUser));
+        List<MessageDto> groups = new ArrayList<>();
+        for(MessageDto msg : allMessages){
+            if(groups.isEmpty()){
+                groups.add(msg);
+            }
+            else{
+                List<Long> group = msg.getGroup();
+                for(MessageDto messageDto:groups){
+                    if(messageDto.getGroup().containsAll(group) && group.containsAll(messageDto.getGroup())){
+                        messageDto.addMessage(msg);
+                        exists=true;
+                    }
+                }
+                if(!exists){
+                    groups.add(msg);
+                }
+                exists = false;
+            }
+        }
+        return groups;
+
+    }
+
 
     @Override
     public void setUserController(UserDto user, String currentUser, Service service){
@@ -52,10 +90,16 @@ public class UserMessageController extends AbstractController{
     }
 
     @Override
-    public void setMessageController(MessageDto user, String currentUser, Service service)  {
+    public void setMessageController(MessageDto user, String currentUser, Service service) throws IOException {
         super.setMessageController(null,currentUser,service);
         //messagesSearchList.setAll(getMessagesList());
        // initializeVBox(getUserSearchFormat(),messagesSearchList);
+       // List<MessageDto> messages = getAllGroupsforUser(currentUser);
+        //System.out.println(messages);
+       // usersVBox.getChildren().clear();
+       // for (MessageDto messageDto: messages){
+          //  usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto,getUserSearchFormat()));
+       // }
     }
 
 
@@ -100,9 +144,9 @@ public class UserMessageController extends AbstractController{
             }
             try {
                 reinitializeVBox(getUserSearchFormat(), usersSearchList);
-               // messagesSearchList.setAll(getMessagesList());
-                initializeVBox(getUserSearchFormat(),messagesSearchList);
-                System.out.println(messagesSearchList);
+
+               // initializeVBox(getUserSearchFormat(),messagesSearchList);
+                //System.out.println(messagesSearchList);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -153,4 +197,25 @@ public class UserMessageController extends AbstractController{
     public void update(ServiceEvent serviceEvent) throws IOException {
 
     }
+
+//    @FXML
+//    public void initialize() {
+//        System.out.println("plm");
+////        try {
+////            super.setMessageController(workingMessage,currentUser,service);
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+//        System.out.println("ok");
+//         List<MessageDto> messages = getAllGroupsforUser(currentUser);
+//        System.out.println(messages);
+//         usersVBox.getChildren().clear();
+//         for (MessageDto messageDto: messages){
+//             try {
+//                 usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto,getUserSearchFormat()));
+//             } catch (IOException e) {
+//                 e.printStackTrace();
+//             }
+//         }
+//    }
 }

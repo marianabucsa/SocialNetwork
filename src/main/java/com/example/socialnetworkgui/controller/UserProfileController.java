@@ -79,7 +79,6 @@ public class UserProfileController extends AbstractController {
             e.printStackTrace();
         }*/
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserMessageView.fxml"));
-
     }
 
     public void onNotificationClick(ActionEvent actionEvent) {
