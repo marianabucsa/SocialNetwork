@@ -101,16 +101,9 @@ public class UserMessageController extends AbstractController {
     }
 
     @Override
-    public void setMessageController(MessageDto user, String currentUser, Service service) throws IOException {
+    public void setMessageController(MessageDto message, String currentUser, Service service) throws IOException {
         super.setMessageController(null, currentUser, service);
-        //messagesSearchList.setAll(getMessagesList());
-        // initializeVBox(getUserSearchFormat(),messagesSearchList);
-        // List<MessageDto> messages = getAllGroupsforUser(currentUser);
-        //System.out.println(messages);
-        // usersVBox.getChildren().clear();
-        // for (MessageDto messageDto: messages){
-        //  usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto,getUserSearchFormat()));
-        // }
+
     }
 
 
@@ -226,6 +219,10 @@ public class UserMessageController extends AbstractController {
         return getClass().getResource("/com/example/socialnetworkgui/views/ReceivedMessageView.fxml");
     }
 
+    public java.net.URL writeMessageFormat(){
+        return getClass().getResource("/com/example/socialnetworkgui/views/WriteMessageView.fxml");
+    }
+
     public AnchorPane getConversationFormatView(MessageDto messageDto, URL formatURL) throws IOException {
         FXMLLoader conversationViewLoader = new FXMLLoader();
         conversationViewLoader.setLocation(formatURL);
@@ -283,6 +280,7 @@ public class UserMessageController extends AbstractController {
                             addToVBox(messageDto,"received");
                         }
                     }
+                    usersVBox.getChildren().add(getConversationFormatView(null,writeMessageFormat()));
                     //initializeVBox(sentMessageFormat(), conversationList);
 
                     //userScrollPane.setVvalue(1.0);
