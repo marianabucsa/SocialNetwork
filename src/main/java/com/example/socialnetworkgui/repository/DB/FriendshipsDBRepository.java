@@ -254,6 +254,58 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
     }
 
     /**
+     * Getter for friend requests
+     *
+     * @param id user id
+     * @return All friend requests for an user
+     */
+    public List<Long> getSentFriendRequests(Long id) {
+        List<Long> friends = new ArrayList<>();
+
+        try (PreparedStatement statement = getConnection().prepareStatement("select * from Friendships where (Id1=?) and status='pending'")) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Long id1 = resultSet.getLong("Id1");
+                    Long id2 = resultSet.getLong("Id2");
+                    if(id1.equals(id))
+                        friends.add(id2);
+                }
+                return friends;
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error getting friend requests form database!\n");
+        }
+    }
+
+    /**
+     * Getter for friend requests
+     *
+     * @param id user id
+     * @return All friend requests for an user
+     */
+    public List<Long> getReceivedFriendRequests(Long id) {
+        List<Long> friends = new ArrayList<>();
+
+        try (PreparedStatement statement = getConnection().prepareStatement("select * from Friendships where (Id2=?) and status='pending'")) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Long id1 = resultSet.getLong("Id1");
+                    Long id2 = resultSet.getLong("Id2");
+                    if(id2.equals(id))
+                        friends.add(id1);
+                }
+                return friends;
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error getting friend requests form database!\n");
+        }
+    }
+
+    /**
      * getter for all friends of a user
      *
      * @param id - user id
