@@ -1,68 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
 <?import javafx.geometry.Insets?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.socialnetworkgui.controller.RegisterController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="406.0" prefWidth="362.0" stylesheets="@../css/register.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.RegisterController">
 
     <children>
-        <GridPane hgap="5.0" layoutX="50.0" prefHeight="207.0" prefWidth="373.0" vgap="5.0"
-                  AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="49.0"
-                  AnchorPane.topAnchor="10.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.5" minWidth="10.0" prefWidth="120.5"/>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="237.5" minWidth="10.0" prefWidth="237.5"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-            <children>
-                <!--<Label prefHeight="47.0" prefWidth="187.0" text="Id Message:"/> !-->
-                <Label prefHeight="47.0" prefWidth="187.0" text="First Name" GridPane.rowIndex="1"/>
-                <Label prefHeight="47.0" prefWidth="187.0" text="Last Name" GridPane.rowIndex="2"/>
-                <Label prefHeight="47.0" prefWidth="187.0" text="Email" GridPane.rowIndex="3"/>
-                <Label prefHeight="47.0" prefWidth="187.0" text="Password" GridPane.rowIndex="4"/>
-
-
-                <!--<TextField fx:id="textFieldId" prefHeight="46.0" prefWidth="186.0" GridPane.columnIndex="1"/>!-->
-                <TextField fx:id="textFirstName" prefHeight="48.0" prefWidth="186.0" GridPane.columnIndex="1"
-                           GridPane.rowIndex="1"/>
-                <TextField fx:id="textLastName" prefHeight="49.0" prefWidth="186.0" GridPane.columnIndex="1"
-                           GridPane.rowIndex="2"/>
-                <TextField fx:id="textEmail" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="1"
-                           GridPane.rowIndex="3"/>
-                <TextField fx:id="textPassword" prefHeight="47.0" prefWidth="186.0" GridPane.columnIndex="1"
-                          GridPane.rowIndex="4"/>
-            </children>
-            <opaqueInsets>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </opaqueInsets>
-        </GridPane>
-        <ButtonBar layoutX="250.0" layoutY="262.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0">
-            <buttons>
-                <Button mnemonicParsing="false" onAction="#handleRegister" text="Register">
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                    </padding>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel"/>
-            </buttons>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </ButtonBar>
+          <Button fx:id="registerButton" layoutX="102.0" layoutY="346.0" mnemonicParsing="false" onAction="#onRegisterClicked" prefHeight="28.0" prefWidth="151.0" stylesheets="@../css/register.css" text="Register">
+              <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </padding>
+          </Button>
+      <FontAwesomeIcon glyphName="USER" layoutX="160.0" layoutY="65.0" size="45" wrappingWidth="37.33333333333326" />
+      <FontAwesomeIcon glyphName="PLUS" layoutX="198.0" layoutY="78.0" size="20" wrappingWidth="14.095258712768555" />
+      <FontAwesomeIcon fx:id="backIcon" glyphName="ARROW_LEFT" layoutX="26.0" layoutY="33.0" onMouseClicked="#onMouseClickedBack" size="20" wrappingWidth="20.0" />
+      <Label fx:id="firstNameLabel" layoutX="110.0" layoutY="93.0" prefHeight="18.0" prefWidth="151.0" stylesheets="@../css/register.css" textFill="#b2b2b2" />
+      <TextField fx:id="firstNameTextField" layoutX="103.0" layoutY="111.0" onMouseClicked="#onMouseClickedFirstName" prefHeight="28.0" prefWidth="151.0" promptText="First Name" />
+      <TextField fx:id="lastNameTextField" layoutX="104.0" layoutY="164.0" onMouseClicked="#onMouseClickedLastName" prefHeight="28.0" prefWidth="151.0" promptText="Last Name" />
+      <TextField fx:id="emailTextField" layoutX="104.0" layoutY="216.0" onMouseClicked="#onMouseClickedEmail" prefHeight="28.0" prefWidth="151.0" promptText="Email" />
+      <Label fx:id="lastNameLabel" layoutX="109.0" layoutY="146.0" prefHeight="18.0" prefWidth="151.0" stylesheets="@../css/register.css" />
+      <Label fx:id="emailLabel" layoutX="112.0" layoutY="198.0" prefHeight="18.0" prefWidth="151.0" stylesheets="@../css/register.css" />
+      <Label fx:id="passwordLabel" layoutX="109.0" layoutY="251.0" prefHeight="18.0" prefWidth="151.0" stylesheets="@../css/register.css" />
+      <PasswordField fx:id="passwordTextField" layoutX="103.0" layoutY="269.0" onMouseClicked="#onMouseClickedPassword" promptText="Password" />
+      <FontAwesomeIcon glyphName="USER" layoutX="75.0" layoutY="132.0" size="20" />
+      <FontAwesomeIcon glyphName="USER" layoutX="75.0" layoutY="185.0" size="20" />
+      <FontAwesomeIcon glyphName="ENVELOPE" layoutX="75.0" layoutY="235.0" size="15" />
+      <FontAwesomeIcon glyphName="KEY" layoutX="76.0" layoutY="289.0" size="17" />
+      <Label fx:id="errorLabel" alignment="CENTER" layoutX="36.0" layoutY="318.0" prefHeight="17.0" prefWidth="296.0" styleClass="label-error" stylesheets="@../css/register.css" />
     </children>
+   <effect>
+      <Lighting>
+         <bumpInput>
+            <Shadow />
+         </bumpInput>
+         <light>
+            <Light.Distant />
+         </light>
+      </Lighting>
+   </effect>
 
 </AnchorPane>
