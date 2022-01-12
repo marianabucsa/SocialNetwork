@@ -29,6 +29,7 @@ public class MessageSearchController extends UserMessageController{
     String workingUser;
     MessageDto message;
 
+
     @FXML
     private Circle circleProfilePicture;
 

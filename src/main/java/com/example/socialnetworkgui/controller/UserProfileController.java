@@ -87,7 +87,8 @@ public class UserProfileController extends AbstractController {
     public void onEventsClick(ActionEvent actionEvent) {
     }
 
-    public void onHistoryClick(ActionEvent actionEvent) {
+    public void onHistoryClick(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserHistoryView.fxml"));
     }
 
     public void onCommunityClick(ActionEvent actionEvent) {

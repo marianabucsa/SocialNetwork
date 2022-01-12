@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserHistoryController">
+
+    <children>
+        <Button fx:id="btnExport" layoutX="438.0" layoutY="22.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" disable="true" onAction="#onExport" text="Export PDF" />
+        <ScrollPane fx:id="usersScrollPane" layoutX="14.0" layoutY="131.0" prefHeight="337.0" prefWidth="536.0">
+            <content>
+                <VBox fx:id="usersVBox" prefHeight="328.0" prefWidth="527.0" />
+            </content>
+        </ScrollPane>
+        <Button fx:id="btnFriends" layoutX="14.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" onAction="#onFriends" text="Show friends" />
+        <Button fx:id="btnMessagesForUser" layoutX="264.0" layoutY="87.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Show messages for user:" />
+        <Button fx:id="btnMessages" layoutX="146.0" layoutY="87.0" mnemonicParsing="false" text="Show messages" />
+      <TextField fx:id="textUser" layoutX="420.0" layoutY="87.0" prefHeight="26.0" prefWidth="130.0" promptText="user_email" />
+      <DatePicker fx:id="dateFrom" layoutX="28.0" layoutY="22.0" promptText="from" />
+      <DatePicker fx:id="dateTo" layoutX="236.0" layoutY="22.0" promptText="to" />
+    </children>
+</AnchorPane>

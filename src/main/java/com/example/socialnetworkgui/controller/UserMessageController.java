@@ -141,6 +141,7 @@ public class UserMessageController extends AbstractController {
         }
     }
 
+
     public void onSearchClick(ActionEvent actionEvent) {
         if (Objects.equals(textSearchByName.getText(), "")) {
             usersSearchList.clear();
