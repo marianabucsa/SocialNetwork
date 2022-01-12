@@ -11,7 +11,7 @@
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="406.0" prefWidth="362.0" stylesheets="@../css/register.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.RegisterController">
+<AnchorPane onMouseClicked="#onMouseClickedPage" onMouseDragged="#onMouseDraggedPage" prefHeight="406.0" prefWidth="362.0" stylesheets="@../css/register.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.RegisterController">
 
     <children>
           <Button fx:id="registerButton" layoutX="102.0" layoutY="346.0" mnemonicParsing="false" onAction="#onRegisterClicked" prefHeight="28.0" prefWidth="151.0" stylesheets="@../css/register.css" text="Register">

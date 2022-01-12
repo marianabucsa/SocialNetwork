@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="476.0" prefWidth="710.0" stylesheets="@../css/userProfile.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserProfileController">
+<AnchorPane onMouseClicked="#onMouseClickedPage" onMouseDragged="#onMouseDraggedPage" prefHeight="476.0" prefWidth="710.0" stylesheets="@../css/userProfile.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserProfileController">
    <children>
       <Circle fx:id="circleProfilePicture" layoutX="80.0" layoutY="68.0" radius="54.0" stroke="BLACK" strokeType="INSIDE" />
       <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="400.0" mnemonicParsing="false" onAction="#onLogOutClick" prefHeight="28.0" prefWidth="118.0" text="Log out" textFill="#d92d0b">
@@ -48,7 +48,7 @@
             </AnchorPane>
          </children>
       </StackPane>
-      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="434.0" mnemonicParsing="false" onAction="#onLogOutClick" prefHeight="28.0" prefWidth="118.0" text="Delete Account" textFill="#d92d0b">
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="434.0" mnemonicParsing="false" onAction="#onDeleteAccountClicked" prefHeight="28.0" prefWidth="118.0" text="Delete Account" textFill="#d92d0b">
          <graphic>
             <FontAwesomeIcon glyphName="BAN" size="15" />
          </graphic>
@@ -57,7 +57,7 @@
          <font>
             <Font name="Berlin Sans FB" size="15.0" />
          </font></Label>
-      <FontAwesomeIcon glyphName="EDIT" layoutX="108.0" layoutY="118.0" size="20" />
+      <FontAwesomeIcon glyphName="EDIT" layoutX="108.0" layoutY="118.0" onMouseClicked="#onEditProfileClicked" size="20" />
    </children>
    <effect>
       <Lighting>
