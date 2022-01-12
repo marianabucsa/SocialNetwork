@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class UserUsersController extends AbstractController {
+public class UserUsersController extends AbstractFriendsController {
     protected ObservableList<UserDto> usersSearchList = FXCollections.observableArrayList();
     protected ObservableList<UserDto> usersFriendsList = FXCollections.observableArrayList();
     protected ObservableList<UserDto> usersSentRequestsList = FXCollections.observableArrayList();
@@ -189,7 +189,7 @@ public class UserUsersController extends AbstractController {
         searchUserViewLoader.setLocation(formatURL);
         AnchorPane searchUserView = new AnchorPane();
         searchUserView = searchUserViewLoader.load();
-        AbstractController userSearchController = searchUserViewLoader.getController();
+        AbstractFriendsController userSearchController = searchUserViewLoader.getController();
         userSearchController.setUserController(user, currentUser, service);
         return searchUserView;
     }

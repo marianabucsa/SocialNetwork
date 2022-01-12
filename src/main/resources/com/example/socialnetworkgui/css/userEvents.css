@@ -25,9 +25,15 @@
 
 .text-field {
     -fx-text-fill: #B2B2B2;
-    -fx-background-color: transparent;
+    -fx-background-color: #2A2E37;
     -fx-border-width: 1;
     -fx-border-color: #00FF00 #00FF00 #00FF00 #00FF00;
+}
+
+.date-picker{
+    -fx-text-fill: #B2B2B2;
+    -fx-background-color: #2A2E37;
+    -fx-border-width: 1;
 }
 
 .scroll-pane{
@@ -38,3 +44,6 @@
     -fx-background-color: #2A2E37;
 }
 
+.page-border{
+    -fx-border-color: #00FF00 #00FF00 #00FF00 #00FF00;
+}

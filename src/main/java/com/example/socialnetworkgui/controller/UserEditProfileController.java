@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class UserEditProfileController extends AbstractController {
+public class UserEditProfileController extends AbstractFriendsController {
     @FXML
     private TextField firstNameTextField;
     @FXML

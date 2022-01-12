@@ -31,7 +31,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 
-public class UserProfileController extends AbstractController {
+public class UserProfileController extends AbstractFriendsController {
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -99,7 +99,8 @@ public class UserProfileController extends AbstractController {
     public void onNotificationClick(ActionEvent actionEvent) {
     }
 
-    public void onEventsClick(ActionEvent actionEvent) {
+    public void onEventsClick(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserEventsView.fxml"));
     }
 
     public void onHistoryClick(ActionEvent actionEvent) {
@@ -121,7 +122,7 @@ public class UserProfileController extends AbstractController {
         sceneLoader.setLocation(formatURL);
         Parent sceneToOpen = sceneLoader.load();
         AbstractController abstractController = sceneLoader.getController();
-        abstractController.setUserController(null, currentUser, service);
+        abstractController.setAbstractController( currentUser, service);
         return sceneToOpen;
     }
 

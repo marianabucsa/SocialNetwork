@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane prefHeight="476.0" prefWidth="564.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserEventsController">
+   <children>
+      <FontAwesomeIcon glyphName="CALENDAR_ALT" layoutX="466.0" layoutY="57.0" size="50" />
+      <Button layoutX="434.0" layoutY="177.0" mnemonicParsing="false" onAction="#onMyEventsClicked" prefHeight="28.0" prefWidth="110.0" text="My Events" />
+      <Button layoutX="434.0" layoutY="99.0" mnemonicParsing="false" onAction="#onCreateEventClicked" prefHeight="28.0" prefWidth="110.0" text="Create Event" />
+      <Button layoutX="434.0" layoutY="256.0" mnemonicParsing="false" onAction="#onFriendsClicked" prefHeight="28.0" prefWidth="110.0" text="Friends " />
+      <Button layoutX="434.0" layoutY="138.0" mnemonicParsing="false" onAction="#onSearchEventClicked" prefHeight="28.0" prefWidth="110.0" text="Search Event" />
+      <Button layoutX="434.0" layoutY="217.0" mnemonicParsing="false" onAction="#onSignedUpEventsClicked" text="Signed up Events" />
+      <StackPane fx:id="container" prefHeight="476.0" prefWidth="425.0">
+         <children>
+            <AnchorPane prefHeight="481.0" prefWidth="433.0" />
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

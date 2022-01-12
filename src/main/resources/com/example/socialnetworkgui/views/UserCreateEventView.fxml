@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="491.0" prefWidth="423.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserCreateEventController">
+   <children>
+      <DatePicker fx:id="startPicker" layoutX="10.0" layoutY="81.0" prefHeight="28.0" prefWidth="176.0" promptText="Start Date" styleClass="date-picker" />
+      <DatePicker fx:id="endPicker" layoutX="237.0" layoutY="81.0" promptText="End Date" styleClass="date-picker" />
+      <Label layoutX="9.0" layoutY="54.0" prefHeight="30.0" prefWidth="91.0" text="Start At" textFill="#b2b2b2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="237.0" layoutY="54.0" prefHeight="30.0" prefWidth="91.0" text="End At" textFill="#b2b2b2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="175.0" layoutY="14.0" text="Event" textFill="LIME">
+         <font>
+            <Font name="Berlin Sans FB" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="9.0" layoutY="158.0" prefHeight="30.0" prefWidth="91.0" text="Name" textFill="#b2b2b2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="nameTextField" layoutX="9.0" layoutY="188.0" prefHeight="28.0" prefWidth="405.0" />
+      <Label layoutX="8.0" layoutY="281.0" prefHeight="30.0" prefWidth="91.0" text="Description" textFill="#b2b2b2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="descriptionTextField" alignment="TOP_LEFT" layoutX="8.0" layoutY="311.0" prefHeight="81.0" prefWidth="405.0" />
+      <Label layoutX="9.0" layoutY="216.0" prefHeight="30.0" prefWidth="91.0" text="Location" textFill="#b2b2b2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="locationTextField" layoutX="8.0" layoutY="246.0" prefHeight="28.0" prefWidth="405.0" />
+      <Label fx:id="errorLabel" layoutX="9.0" layoutY="392.0" prefHeight="17.0" prefWidth="405.0" />
+      <Button layoutX="123.0" layoutY="419.0" mnemonicParsing="false" onAction="#onCreateEventAction" prefHeight="28.0" prefWidth="176.0" text="Create Event" />
+      <TextField fx:id="startTimeTextField" layoutX="10.0" layoutY="122.0" prefHeight="28.0" prefWidth="176.0" promptText="Start Time (HH:MM)" />
+      <TextField fx:id="endTimeTextField" layoutX="237.0" layoutY="122.0" prefHeight="28.0" prefWidth="176.0" promptText="End Time (HH:MM)" />
+   </children>
+</AnchorPane>

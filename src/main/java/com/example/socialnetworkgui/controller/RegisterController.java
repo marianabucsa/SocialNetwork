@@ -19,7 +19,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class RegisterController extends AbstractController {
+public class RegisterController extends AbstractFriendsController {
 
     private double xOffset = 0;
     private double yOffset = 0;

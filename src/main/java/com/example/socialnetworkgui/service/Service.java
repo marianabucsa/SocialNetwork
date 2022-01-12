@@ -6,20 +6,20 @@ import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.domain.*;
 import com.example.socialnetworkgui.domain.validator.EmailValidator;
+import com.example.socialnetworkgui.repository.DB.EventsDBRepository;
 import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
 import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
 import com.example.socialnetworkgui.repository.DB.UserDBRepository;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.utils.NetworkGraph;
 import com.example.socialnetworkgui.utils.Pair;
-import com.example.socialnetworkgui.utils.event.Event;
-import com.example.socialnetworkgui.utils.event.EventType;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import com.example.socialnetworkgui.utils.observer.Observable;
 import com.example.socialnetworkgui.utils.observer.Observer;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,23 +32,46 @@ public class Service implements Observable<ServiceEvent> {
     private final UserDBRepository userRepo;
     private final MessagesDBRepository messagesRepo;
     private final EmailValidator emailValidator;
+    private final EventsDBRepository eventsRepo;
     public List<Observer<ServiceEvent>> observers=new ArrayList<>();
 
     /**
      * service constructor
-     *
-     * @param friendshipsRepo - repository for friendships
+     *  @param friendshipsRepo - repository for friendships
      * @param userRepo        - repository for users
      * @param messagesRepo    - repository for messages
+     * @param eventsRepo
      */
-    public Service(FriendshipsDBRepository friendshipsRepo, UserDBRepository userRepo, MessagesDBRepository messagesRepo, EmailValidator emailValidator) {
+    public Service(FriendshipsDBRepository friendshipsRepo, UserDBRepository userRepo, MessagesDBRepository messagesRepo, EventsDBRepository eventsRepo, EmailValidator emailValidator) {
         this.friendshipsRepo = friendshipsRepo;
         this.userRepo = userRepo;
         this.messagesRepo = messagesRepo;
         this.emailValidator = emailValidator;
         //connectUsersFriendships();
+        this.eventsRepo = eventsRepo;
     }
 
+
+    /**
+     * adds an event
+     *
+     * @param name
+     * @param startDate
+     * @param endDate
+     * @param description
+     * @param location
+     * @param organizer
+     * @param participants
+     * @return
+     */
+    public Event addEvent(String name, LocalDateTime startDate, LocalDateTime endDate, String description, String location, Long organizer, List<Long> participants) {
+        Event event = new Event(name,startDate,endDate,description,location,organizer,participants);
+        event = eventsRepo.save(event);
+        System.out.println(startDate+" "+endDate);
+        if (event != null)
+            throw new ServiceException("Event already exists!\n");
+        return event;
+    }
     /**
      * Find all friend requests for an user
      *
@@ -539,6 +562,11 @@ public class Service implements Observable<ServiceEvent> {
                 ex.printStackTrace();
             }
         });
+    }
+
+    public List<Event> findUserEvents(Long id) {
+        User user = userRepo.findOne(id);
+        return eventsRepo.getEventsUser(id);
     }
 
 
