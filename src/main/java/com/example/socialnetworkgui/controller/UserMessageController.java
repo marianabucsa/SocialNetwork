@@ -37,9 +37,19 @@ public class UserMessageController extends AbstractController {
     @FXML
     private TextField textSearchByName;
     @FXML
-    public VBox usersVBox = new VBox();
+    private VBox usersVBox;// = new VBox();
     @FXML
     private ScrollPane userScrollPane;
+
+    @FXML
+    private Label errorUserSearchLabel;
+    @FXML
+    private Circle circleProfilePicture;
+
+    @FXML
+    private Label userFirstLastName;
+
+
 
     @FXML
     private void onShowMessages() throws IOException {
@@ -96,6 +106,7 @@ public class UserMessageController extends AbstractController {
     @Override
     public void setMessageController(MessageDto message, String currentUser, Service service) throws IOException {
         super.setMessageController(null, currentUser, service);
+       // this.workingMessage = message;
 
     }
 
@@ -112,7 +123,8 @@ public class UserMessageController extends AbstractController {
     private void initializeVBox(URL formatURL, ObservableList<MessageDto> messagesList) throws IOException {
         usersVBox.getChildren().clear();
         for (MessageDto message : messagesList) {
-            usersVBox.getChildren().add(getSearchMessagesFormatView(message, formatURL));
+           // usersVBox.getChildren().add(getSearchMessagesFormatView(message, formatURL));
+            usersVBox.getChildren().add(getConversationFormatView(message,formatURL));
         }
     }
 
@@ -179,11 +191,13 @@ public class UserMessageController extends AbstractController {
         return messages;
     }
 
-    private java.net.URL getUserSearchFormat() {
+    private java.net.URL getUserSearchFormat() throws IOException {
+        super.setMessageController(workingMessage,currentUser,service);
+        super.setUserController(workingUser,currentUser,service);
         return getClass().getResource("/com/example/socialnetworkgui/views/MessageSearchView.fxml");
     }
 
-    private AnchorPane getSearchMessagesFormatView(MessageDto message, URL formatURL) throws IOException {
+    /*private AnchorPane getSearchMessagesFormatView(MessageDto message, URL formatURL) throws IOException {
         FXMLLoader searchMessageViewLoader = new FXMLLoader();
         searchMessageViewLoader.setLocation(formatURL);
         AnchorPane searchMessageView = new AnchorPane();
@@ -191,7 +205,7 @@ public class UserMessageController extends AbstractController {
         AbstractController messageSearchController = searchMessageViewLoader.getController();
         messageSearchController.setMessageController(message, currentUser, service);
         return searchMessageView;
-    }
+    }*/
 
     private AnchorPane getSearchUsersFormatView(UserDto user, URL formatURL) throws IOException {
         FXMLLoader searchUserViewLoader = new FXMLLoader();
@@ -225,12 +239,18 @@ public class UserMessageController extends AbstractController {
         return conversationView;
     }
 
+    @FXML
     public void createConversationScene(MessageDto msg) throws IOException {
         try {
-            usersVBox.getChildren().clear();
+            System.out.println("ooo");
+            if(usersVBox.equals(null)) System.out.println("ofof");
+            this.usersVBox.getChildren().clear();
             workingMessage = msg;
-            conversationList.setAll(workingMessage.getConversation());
-            for(MessageDto messageDto: conversationList){
+            List<MessageDto> conversation = new ArrayList<>();
+            conversation.addAll(workingMessage.getConversation());
+            System.out.println(conversation);
+            //conversationList.setAll(workingMessage.getConversation());
+            for(MessageDto messageDto: conversation){
                 Long id = messageDto.getFrom();
                 if (id.equals(service.getIdFromEmail(currentUser))){
                     addToVBox(messageDto,"sent");
@@ -259,15 +279,24 @@ public class UserMessageController extends AbstractController {
         }
     }
 
-    public MessageDto get_message(){
-        return workingMessage;
+
+    @FXML
+    private void onSendMessageClick() throws IOException {
+        //super.setMessageController(workingMessage,currentUser,service);
+       // super.setUserController(workingUser,currentUser,service);
+        //workingUser = user.getEmail();
+        //usersVBox.
+        userFirstLastName.setText(workingUser.getFirstName() + " " + workingUser.getLastName());
+        usersVBox.getChildren().clear();
+
+        //System.out.println("sdfgfdh"+ workingMessage);
+        errorUserSearchLabel.setText(workingMessage.getConversation().size()+" messages");
+        //super.setMessageController(message,currentUser,service);
+        //service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE, message));
+
+       createConversationScene(workingMessage);
+
     }
-
-    public void set_message(MessageDto msg){
-        workingMessage = msg;
-    }
-
-
 
 
 
@@ -277,6 +306,9 @@ public class UserMessageController extends AbstractController {
             case SEND_MESSAGE: {
                 try {
                     //System.out.println("aaaaa");
+
+                    //createConversationScene(workingMessage);
+
                     usersVBox.getChildren().clear();
                     workingMessage = (MessageDto) serviceEvent.getData();
                     conversationList.setAll(workingMessage.getConversation());
@@ -290,7 +322,8 @@ public class UserMessageController extends AbstractController {
                         }
                     }
                     usersVBox.getChildren().add(getConversationFormatView(null,writeMessageFormat()));
-                    conversationList.clear();
+                    //conversationList.clear();
+
                     break;
                 } catch (ValidatorException ve) {
                     System.out.println("a");

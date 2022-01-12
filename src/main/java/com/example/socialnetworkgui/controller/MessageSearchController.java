@@ -38,10 +38,8 @@ public class MessageSearchController extends UserMessageController{
     @FXML
     private Label errorUserSearchLabel;
 
-    public MessageSearchController() throws IOException {
-    }
 
-  /*  @Override
+    @Override
     public void setUserController(UserDto user, String currentUser, Service service) {
        // Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         //circleProfilePicture.setFill(new ImagePattern(profilePicture));
@@ -49,7 +47,7 @@ public class MessageSearchController extends UserMessageController{
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
-    */
+
     @Override
     public void setMessageController(MessageDto message, String currentUser, Service service) throws IOException {
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
@@ -89,11 +87,11 @@ public class MessageSearchController extends UserMessageController{
     private void onSendMessageClick() throws IOException {
         //super.usersVBox.getChildren().clear();
         errorUserSearchLabel.setText(message.getConversation().size()+" messages");
+       // System.out.println(message);
         //super.setMessageController(message,currentUser,service);
         service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE, message));
 
-        //System.out.println("A notificat:))");
-        //super.createConversationScene(message);
+       // super.createConversationScene(message);
 
     }
 
