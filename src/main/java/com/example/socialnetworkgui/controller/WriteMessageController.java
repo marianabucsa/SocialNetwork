@@ -49,7 +49,7 @@ public class WriteMessageController extends UserMessageController{
         service.notifyObservers(new ServiceEvent(EventType.SENT_MESSAGE,workingMessage));
     }
 
-   /* @Override
+    /*@Override
     public void setMessageController(MessageDto message, String currentUser, Service service) throws IOException {
         super.setMessageController(message,currentUser, service);
         workingUser = service.getEmailFromId(message.getFrom());

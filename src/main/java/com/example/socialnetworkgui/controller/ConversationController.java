@@ -52,8 +52,8 @@ public class ConversationController extends UserMessageController{
     }
 
 
-    @Override
+    /*@Override
     public void update(ServiceEvent serviceEvent) throws IOException {
 
-    }
+    }*/
 }

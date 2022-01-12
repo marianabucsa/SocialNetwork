@@ -37,21 +37,15 @@ public class UserMessageController extends AbstractController {
     @FXML
     private TextField textSearchByName;
     @FXML
-    private VBox usersVBox;
+    public VBox usersVBox = new VBox();
     @FXML
     private ScrollPane userScrollPane;
 
     @FXML
     private void onShowMessages() throws IOException {
-       // super.setMessageController(null, currentUser, service);
-        // messagesSearchList.setAll(getMessagesList());
         messagesSearchList.setAll(getAllGroupsforUser(currentUser));
         initializeVBox(getUserSearchFormat(),messagesSearchList);
-        /*List<MessageDto> messages = getAllGroupsforUser(currentUser);
-        usersVBox.getChildren().clear();
-        for (MessageDto messageDto : messages) {
-            usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto, getUserSearchFormat()));
-        }*/
+
     }
 
     private boolean verifGroups(List<MessageDto> g1, List<MessageDto> g2) {
@@ -67,7 +61,6 @@ public class UserMessageController extends AbstractController {
             if (groups.isEmpty()) {
                 msg.addMessage(msg);
                 groups.add(msg);
-                //msg.addMessage(msg);
             } else {
                 List<Long> group = msg.getGroup();
                 for (MessageDto messageDto : groups) {
@@ -83,11 +76,11 @@ public class UserMessageController extends AbstractController {
                 exists = false;
             }
         }
-        System.out.println("Grups:"+groups);
-        System.out.println("---");
-        for (MessageDto msg: groups){
-            System.out.println("Mess:"+msg.getConversation());
-        }
+//        System.out.println("Grups:"+groups);
+//        System.out.println("---");
+//        for (MessageDto msg: groups){
+//            System.out.println("Mess:"+msg.getConversation());
+//        }
 
         return groups;
 
@@ -162,7 +155,6 @@ public class UserMessageController extends AbstractController {
                 reinitializeVBox(getUserSearchFormat(), usersSearchList);
 
                 // initializeVBox(getUserSearchFormat(),messagesSearchList);
-                //System.out.println(messagesSearchList);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -234,73 +226,90 @@ public class UserMessageController extends AbstractController {
     }
 
     public void createConversationScene(MessageDto msg) throws IOException {
-        workingMessage = msg;
-        //System.out.println("Convers:"+workingMessage.getConversation());
-        conversationList.setAll(workingMessage.getConversation());
-        for(MessageDto messageDto: conversationList) {
-            Long id = messageDto.getFrom();
-            if (id.equals(service.getIdFromEmail(currentUser))) {
-               // this.usersVBox.getChildren().add(getConversationFormatView(messageDto, sentMessageFormat()));
-               // System.out.println("if");
-
-               // initializeVBox(sentMessageFormat(), messageDto);
-               // addToVBox(messageDto,"sent");
-            } else {
-               //  this.usersVBox.getChildren().add(getConversationFormatView(messageDto, receivedMessageFormat()));
-                //System.out.println("else");
-                //initializeVBox(receivedMessageFormat(), messageDto);
-                //addToVBox(messageDto,"received");
+        try {
+            usersVBox.getChildren().clear();
+            workingMessage = msg;
+            conversationList.setAll(workingMessage.getConversation());
+            for(MessageDto messageDto: conversationList){
+                Long id = messageDto.getFrom();
+                if (id.equals(service.getIdFromEmail(currentUser))){
+                    addToVBox(messageDto,"sent");
+                }
+                else{
+                    addToVBox(messageDto,"received");
+                }
             }
-            initializeVBox(sentMessageFormat(),conversationList);
-        }
+            usersVBox.getChildren().add(getConversationFormatView(null,writeMessageFormat()));
 
+        } catch (ValidatorException ve) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(ve.getMessage()));
+        } catch (ServiceException se) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(se.getMessage()));
+        } catch (RepositoryException re) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(re.getMessage()));
+        } catch (InputMismatchException ime) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(ime.getMessage()));
+        } catch (IOException e) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(e.getMessage()));
+        }
     }
+
+    public MessageDto get_message(){
+        return workingMessage;
+    }
+
+    public void set_message(MessageDto msg){
+        workingMessage = msg;
+    }
+
+
+
+
 
     @Override
     public void update(ServiceEvent serviceEvent) throws IOException {
         switch (serviceEvent.getEventType()) {
             case SEND_MESSAGE: {
                 try {
+                    //System.out.println("aaaaa");
                     usersVBox.getChildren().clear();
                     workingMessage = (MessageDto) serviceEvent.getData();
-                   // System.out.println("Convers:"+workingMessage.getConversation());
                     conversationList.setAll(workingMessage.getConversation());
                     for(MessageDto messageDto: conversationList){
                         Long id = messageDto.getFrom();
                         if (id.equals(service.getIdFromEmail(currentUser))){
-                            //usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto, sentMessageFormat()));
-                            //System.out.println("if");
-                           // usersVBox.getChildren().add(getConversationFormatView(messageDto,sentMessageFormat()));
                             addToVBox(messageDto,"sent");
                         }
                         else{
-                            //usersVBox.getChildren().add(getSearchMessagesFormatView(messageDto, receivedMessageFormat()));
-                            //System.out.println("else");
-                            //usersVBox.getChildren().add(getConversationFormatView(messageDto,receivedMessageFormat()));
                             addToVBox(messageDto,"received");
                         }
                     }
                     usersVBox.getChildren().add(getConversationFormatView(null,writeMessageFormat()));
-                    //initializeVBox(sentMessageFormat(), conversationList);
-
-                    //userScrollPane.setVvalue(1.0);
+                    conversationList.clear();
                     break;
-                    // usersSentRequestsList.setAll(getSentRequestsList());
-                    // initializeVBox(getUserSentRequestsFormat(), usersSentRequestsList);
-                    // break;
                 } catch (ValidatorException ve) {
+                    System.out.println("a");
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(ve.getMessage()));
                 } catch (ServiceException se) {
+                    System.out.println("b");
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(se.getMessage()));
                 } catch (RepositoryException re) {
+                    System.out.println("c");
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(re.getMessage()));
                 } catch (InputMismatchException ime) {
+                    System.out.println("d");
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(ime.getMessage()));
                 } catch (IOException e) {
+                    System.out.println("e");
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(e.getMessage()));
                 }
