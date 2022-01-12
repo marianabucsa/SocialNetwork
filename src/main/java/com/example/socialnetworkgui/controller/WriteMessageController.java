@@ -20,7 +20,7 @@ import java.util.List;
 
 public class WriteMessageController extends UserMessageController{
     String workingUser;
-    MessageDto message;
+    //MessageDto message;
 
     @FXML
     private Button btnSend;
@@ -28,6 +28,19 @@ public class WriteMessageController extends UserMessageController{
     private TextArea textArea;
     @FXML
     private Label lblErrors;
+
+    /*public WriteMessageController() throws IOException {
+        super();
+    }*/
+
+
+    /*@Override
+    public void setMessageController(MessageDto messageDto, String currentUser, Service service) throws IOException {
+        super.setMessageController(messageDto,currentUser, service);
+        workingUser = service.getEmailFromId(messageDto.getFrom());
+        System.out.println(workingUser);
+        this.workingMessage = messageDto;
+    }*/
 
     @FXML
     public void onSendClick(){
@@ -37,7 +50,9 @@ public class WriteMessageController extends UserMessageController{
             lblErrors.setText("Cannot send empty message!");
             return;
         }
+        System.out.println("a intrat");
         List<Long> all_members = workingMessage.getGroup();
+        System.out.println(all_members);
         List<String> alls = new ArrayList<>();
         for(Long member: all_members){
             String user = service.getEmailFromId(member);

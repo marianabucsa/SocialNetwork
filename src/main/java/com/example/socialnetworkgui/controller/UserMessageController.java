@@ -314,6 +314,9 @@ public class UserMessageController extends AbstractController {
                     usersVBox.getChildren().add(new Text(e.getMessage()));
                 }
             }
+            case SENT_MESSAGE:{
+                usersVBox.getChildren().clear();
+            }
         }
 
     }
