@@ -13,7 +13,7 @@
       <TextArea fx:id="textToSend" layoutX="175.0" layoutY="351.0" prefHeight="106.0" prefWidth="380.0" />
       <Circle fx:id="userPicture" fill="DODGERBLUE" layoutX="213.0" layoutY="29.0" radius="22.0" stroke="BLACK" strokeType="INSIDE" />
       <Label fx:id="lblName" layoutX="245.0" layoutY="17.0" prefHeight="34.0" prefWidth="164.0" text="Current User Name" textFill="#00000017" />
-      <Button fx:id="btnSend" layoutX="453.0" layoutY="370.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="90.0" text="Send" />
+      <Button fx:id="btnSend" onAction="#onSendMessage" layoutX="453.0" layoutY="370.0" mnemonicParsing="false" prefHeight="78.0" prefWidth="90.0" text="Send" />
       <ScrollPane fx:id="scrMessages" layoutX="1.0" layoutY="53.0" prefHeight="404.0" prefWidth="174.0">
          <content>
             <VBox fx:id="vBoxMessages" prefHeight="402.0" prefWidth="170.0" />
