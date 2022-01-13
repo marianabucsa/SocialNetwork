@@ -589,6 +589,48 @@ public class Service implements Observable<ServiceEvent> {
             throw new ServiceException("Event does not exist!\n");
     }
 
+    public Iterable<Event> findAllEvents() {
+        return eventsRepo.findAll();
+    }
+
+    public void SubscribeEvent(Event event, Long user) {
+        List<Long> participants = event.getParticipants();
+        if (participants == null) {
+            participants = new ArrayList<>();
+            participants.add(user);
+        } else {
+            for (Long id : participants) {
+                if (id == user)
+                    throw new ServiceException("You are already subscribed!");
+            }
+            participants.add(user);
+        }
+        event.setParticipants(participants);
+        eventsRepo.update(event);
+    }
+
+    public void UnsubscribeEvent(Event event, Long user) {
+        List<Long> participants = event.getParticipants();
+        if (participants == null) {
+            throw new ServiceException("You were no subscribed to this event!");
+        } else {
+            List<Long> part = new ArrayList<>();
+            for (Long id : participants) {
+                if (!Objects.equals(id, user)) {
+                    part.add(id);
+                }
+
+            }
+            if (part.size() == participants.size()) {
+                throw new ServiceException("You were not subscribed to this event!");
+            } else {
+                event.setParticipants(part);
+                eventsRepo.update(event);
+            }
+        }
+    }
+
+
 
 /**
  * methode to connect the friendships to the users used for in memory and file repository

@@ -144,7 +144,7 @@ public class UserHistoryController extends AbstractFriendsController{
         File file = chooser.showSaveDialog(btnExport.getScene().getWindow());
         if (file != null) {
             System.out.println(file.getAbsolutePath());
-            PDDocument pdfdoc= new PDDocument();
+            /*PDDocument pdfdoc= new PDDocument();
             pdfdoc.addPage(new PDPage());
             //path where the PDF file will be store
             // pdfdoc.save("C:\\Users\\Dragos\\Desktop\\Java PDF\\Sample.pdf");
@@ -165,7 +165,29 @@ public class UserHistoryController extends AbstractFriendsController{
             //prints the message if the PDF is created successfully
             System.out.println("PDF created");
             //closes the document
-            pdfdoc.close();
+            pdfdoc.close();*/
+            String message = "This is a sample PDF document created using PDFBox.";
+
+            PDDocument doc = new PDDocument();
+            try {
+                PDPage page = new PDPage();
+                doc.addPage(page);
+
+                PDFont font = PDType1Font.HELVETICA_BOLD;
+
+                PDPageContentStream contents = new PDPageContentStream(doc, page);
+                contents.beginText();
+                contents.setFont(font, 30);
+                contents.newLineAtOffset(50, 700);
+                contents.showText(message);
+                contents.endText();
+                contents.close();
+
+                doc.save(file.getAbsolutePath());
+            }
+            finally {
+                doc.close();
+            }
 
         }
     }

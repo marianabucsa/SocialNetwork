@@ -36,6 +36,7 @@ public class MessageSearchController extends UserMessageController{
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         circleProfilePicture.setFill(new ImagePattern(profilePicture));
         super.setMessageController(message,currentUser, service);
+        super.setAbstractController(currentUser,service);
         workingUser = service.getEmailFromId(message.getFrom());
         this.message = message;
         ArrayList<String> to = new ArrayList<>();
@@ -69,7 +70,7 @@ public class MessageSearchController extends UserMessageController{
     @FXML
     private void onSendMessageClick() throws IOException {
         //super.usersVBox.getChildren().clear();
-        errorUserSearchLabel.setText(message.getConversation().size()+" messages");
+       // errorUserSearchLabel.setText(message.getConversation().size()+" messages");
         // System.out.println(message);
         //super.setMessageController(message,currentUser,service);
         service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE, message));
