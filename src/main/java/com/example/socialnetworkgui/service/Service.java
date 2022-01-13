@@ -411,6 +411,11 @@ public class Service implements Observable<ServiceEvent> {
                     messagesRepo.delete(rm.getId());
                 }
             }
+            if(eventsRepo.getEventsUser(id).size()!=0){
+                for (Event event : eventsRepo.getEventsUser(id)) {
+                    eventsRepo.delete(event.getId());
+                }
+            }
             us = userRepo.delete(id);
         }
         return us;
@@ -567,6 +572,21 @@ public class Service implements Observable<ServiceEvent> {
     public List<Event> findUserEvents(Long id) {
         User user = userRepo.findOne(id);
         return eventsRepo.getEventsUser(id);
+    }
+
+    public Event updateEvent(Long id, String name, LocalDateTime startTime, LocalDateTime endTime, String description, String location, Long organizer, List<Long> participants) {
+        Event event = new Event( name,startTime,endTime,description,location,organizer,participants);
+        event.setId(id);
+        event = eventsRepo.update(event);
+        if (event != null)
+            throw new ServiceException("Event does not exist!\n");
+        return event;
+    }
+
+    public void deleteEvent(Event workingEvent) {
+        Event event = eventsRepo.delete(workingEvent.getId());
+        if (event == null)
+            throw new ServiceException("Event does not exist!\n");
     }
 
 

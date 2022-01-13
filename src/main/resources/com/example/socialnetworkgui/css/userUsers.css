@@ -30,6 +30,10 @@
     -fx-border-color: #00FF00 #00FF00 #00FF00 #00FF00;
 }
 
+.label{
+    -fx-text-fill: #B2B2B2;
+}
+
 .scroll-pane{
     -fx-background-color: #2A2E37;
 }

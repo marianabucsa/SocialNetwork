@@ -41,7 +41,12 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
                 String location = resultSet.getString("location");
                 Long organizer = resultSet.getLong("organizer");
                 String participants = resultSet.getString("participants");
-                Event event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                Event event;
+                if (participants != null) {
+                    event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                } else {
+                    event = new Event(name, startDate, endDate, description, location, organizer, null);
+                }
                 event.setId(id);
                 return event;
             }
@@ -65,7 +70,12 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
                 String location = resultSet.getString("location");
                 Long organizer = resultSet.getLong("organizer");
                 String participants = resultSet.getString("participants");
-                Event event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                Event event;
+                if (participants != null) {
+                    event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                } else {
+                    event = new Event(name, startDate, endDate, description, location, organizer, null);
+                }
                 event.setId(id);
                 events.add(event);
             }
@@ -87,7 +97,7 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             ps.setTimestamp(3, Timestamp.valueOf(entity.getEndDate()));
             ps.setString(4, entity.getDescription());
             ps.setString(5, entity.getLocation());
-            ps.setLong(6,entity.getOrganizer());
+            ps.setLong(6, entity.getOrganizer());
             ps.executeUpdate();
             return null;
         } catch (SQLException e) {
@@ -117,19 +127,29 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
         if (entity == null)
             throw new RepositoryException("Entity must not be null!\n");
         validator.validate(entity);
-        String sql = "update Events set (name, startdate, enddate,description,location,participants) values ( ?, ?,?,?,?,?) where id=?";
+        String sql;
+        if (entity.getParticipants() != null) {
+            sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=?,participants=? where id=?";
+        } else {
+            sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=? where id=?";
+        }
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, entity.getName());
             ps.setTimestamp(2, Timestamp.valueOf(entity.getStartDate()));
             ps.setTimestamp(3, Timestamp.valueOf(entity.getEndDate()));
             ps.setString(4, entity.getDescription());
             ps.setString(5, entity.getLocation());
-            ps.setString(6, listToString(entity.getParticipants()));
-            ps.setLong(7, entity.getId());
+            if (entity.getParticipants() != null) {
+                ps.setString(6, listToString(entity.getParticipants()));
+                ps.setLong(7, entity.getId());
+            } else {
+                ps.setLong(6, entity.getId());
+            }
             ps.executeUpdate();
             return null;
         } catch (SQLException e) {
-            throw new RepositoryException("Error saving event in database!\n");
+            e.printStackTrace();
+            throw new RepositoryException("Error updating event in database!\n");
         }
     }
 
@@ -163,7 +183,12 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
                 String location = resultSet.getString("location");
                 Long organizer = resultSet.getLong("organizer");
                 String participants = resultSet.getString("participants");
-                Event event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                Event event;
+                if (participants != null) {
+                    event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                } else {
+                    event = new Event(name, startDate, endDate, description, location, organizer, null);
+                }
                 event.setId(id);
                 events.put(id, event);
             }
@@ -218,7 +243,7 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
                     Long organizer = resultSet.getLong("organizer");
                     String participants = resultSet.getString("participants");
                     Event event = new Event(name, startDate, endDate, description, location, organizer, null);
-                    if(participants!=null)
+                    if (participants != null)
                         event.setParticipants(stringToList(participants));
                     event.setId(id1);
                     events.add(event);
