@@ -2,10 +2,8 @@ package com.example.socialnetworkgui;
 
 
 import com.example.socialnetworkgui.controller.StartupController;
-import com.example.socialnetworkgui.domain.validator.EmailValidator;
-import com.example.socialnetworkgui.domain.validator.FriendshipValidator;
-import com.example.socialnetworkgui.domain.validator.MessageValidator;
-import com.example.socialnetworkgui.domain.validator.UserValidator;
+import com.example.socialnetworkgui.domain.validator.*;
+import com.example.socialnetworkgui.repository.DB.EventsDBRepository;
 import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
 import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
 import com.example.socialnetworkgui.repository.DB.UserDBRepository;
@@ -25,7 +23,9 @@ public class StartApplication extends Application{
     UserDBRepository userDBRepository;
     FriendshipsDBRepository friendshipsDBRepository;
     MessagesDBRepository messagesDBRepository;
+    EventsDBRepository eventsDBRepository;
     Service service;
+
     public static void main(String[] args) {
         launch();
     }
@@ -35,10 +35,14 @@ public class StartApplication extends Application{
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
         MessageValidator messageValidator = new MessageValidator();
+
+        EventValidator eventValidator= new EventValidator();
         userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",userValidator);
         friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",friendshipValidator);
         messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",messageValidator);
-        service = new Service(friendshipsDBRepository,userDBRepository,messagesDBRepository, new EmailValidator());
+        eventsDBRepository=new EventsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",eventValidator);
+        service = new Service(friendshipsDBRepository,userDBRepository,messagesDBRepository,eventsDBRepository, new EmailValidator());
+
         initView(primaryStage);
         primaryStage.show();
     }

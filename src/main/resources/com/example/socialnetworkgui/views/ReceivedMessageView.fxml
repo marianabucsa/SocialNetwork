@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="135.0" prefWidth="522.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.ConversationController">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#feffff" height="86.0" layoutX="1.0" layoutY="44.0" stroke="#0bf642" strokeType="INSIDE" width="517.0" />
+        <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="52.0" layoutY="46.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
+        <Label fx:id="messageSender" alignment="CENTER" layoutX="13.0" layoutY="101.0" prefHeight="18.0" prefWidth="126.0" text="First Last Name" textAlignment="CENTER" />
+        <Label fx:id="messageText" alignment="CENTER" layoutX="137.0" layoutY="54.0" prefHeight="66.0" prefWidth="374.0" text="text">
+            <font>
+                <Font size="16.0" />
+            </font></Label>
+        <Label fx:id="messageDate" layoutX="320.0" layoutY="14.0" prefHeight="25.0" prefWidth="179.0" text="date" />
+    </children>
+</AnchorPane>

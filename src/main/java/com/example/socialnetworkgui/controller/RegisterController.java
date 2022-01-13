@@ -19,8 +19,10 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class RegisterController extends AbstractController {
+public class RegisterController extends AbstractFriendsController {
 
+    private double xOffset = 0;
+    private double yOffset = 0;
     @FXML
     private TextField firstNameTextField;
     @FXML
@@ -151,5 +153,17 @@ public class RegisterController extends AbstractController {
         lastNameLabel.setText("");
         passwordLabel.setText("Password");
         emailLabel.setText("");
+    }
+
+    public void onMouseClickedPage(MouseEvent mouseEvent) {
+        Stage stage = (Stage) passwordLabel.getScene().getWindow();
+        xOffset = stage.getX() - mouseEvent.getScreenX();
+        yOffset = stage.getY() - mouseEvent.getScreenY();
+    }
+
+    public void onMouseDraggedPage(MouseEvent mouseEvent) {
+        Stage stage = (Stage) passwordLabel.getScene().getWindow();
+        stage.setX(mouseEvent.getScreenX() + xOffset);
+        stage.setY(mouseEvent.getScreenY() + yOffset);
     }
 }

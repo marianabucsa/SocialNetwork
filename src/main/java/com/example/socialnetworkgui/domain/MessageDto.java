@@ -9,6 +9,8 @@ public class MessageDto {
     protected List<Long> to;
     protected String message;
     protected LocalDateTime data;
+    protected List<MessageDto> messages = new ArrayList<>();
+    protected String groupName;
 
     public MessageDto(Long from, List<Long> to, String message, LocalDateTime data) {
         this.from = from;
@@ -40,5 +42,28 @@ public class MessageDto {
         member.addAll(this.getTo());
         member.add(from);
         return member;
+    }
+
+    public List<MessageDto> getConversation(){
+        return messages;
+
+    }
+
+    public List<MessageDto> addMessage(MessageDto messageDto){
+        messages.add(messageDto);
+        return messages;
+    }
+
+    public List<MessageDto> setMessages(List<MessageDto> messageDtos){
+        messages = messageDtos;
+        return messages;
+    }
+
+    public String getGroupName(){
+        return groupName;
+    }
+
+    public void setGroupName(String groupName){
+        this.groupName = groupName;
     }
 }

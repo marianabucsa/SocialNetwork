@@ -6,14 +6,14 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane prefHeight="131.0" prefWidth="517.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserSearchController">
+<AnchorPane prefHeight="131.0" prefWidth="517.0" stylesheets="@../css/userUsers.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserSearchController">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#feffff" height="86.0" layoutX="1.0" layoutY="44.0" stroke="#0bf642" strokeType="INSIDE" width="517.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2a2e37" height="86.0" layoutX="1.0" layoutY="44.0" stroke="#0bf642" strokeType="INSIDE" styleClass="rectangle" width="517.0" />
       <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="448.0" layoutY="44.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
       <Label fx:id="userFirstLastName" alignment="CENTER" layoutX="380.0" layoutY="103.0" prefHeight="17.0" prefWidth="136.0" text="First Last Name" textAlignment="CENTER" />
-      <Button layoutX="274.0" layoutY="87.0" mnemonicParsing="false" onAction="#onDeleteFriendClick" prefHeight="25.0" prefWidth="93.0" text="Delete friend" />
-      <Button layoutX="13.0" layoutY="87.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="25.0" prefWidth="93.0" text="Send message" />
-      <Label fx:id="errorUserSearchLabel" alignment="CENTER" layoutX="13.0" layoutY="57.0" prefHeight="17.0" prefWidth="308.0" />
-      <Button layoutX="144.0" layoutY="87.0" mnemonicParsing="false" onAction="#onAddFriendClick" prefHeight="25.0" prefWidth="93.0" text="Add Friend" />
+      <Button layoutX="274.0" layoutY="87.0" mnemonicParsing="false" onAction="#onDeleteFriendClick" prefHeight="28.0" prefWidth="104.0" text="Delete friend" textFill="#b2b2b2" />
+      <Button layoutX="13.0" layoutY="87.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="28.0" prefWidth="104.0" text="Send message" textFill="#b2b2b2" />
+      <Label fx:id="errorUserSearchLabel" alignment="CENTER" layoutX="13.0" layoutY="57.0" prefHeight="17.0" prefWidth="365.0" stylesheets="@../css/userUsers.css" />
+      <Button layoutX="144.0" layoutY="87.0" mnemonicParsing="false" onAction="#onAddFriendClick" prefHeight="28.0" prefWidth="104.0" text="Add Friend" textFill="#b2b2b2" />
    </children>
 </AnchorPane>

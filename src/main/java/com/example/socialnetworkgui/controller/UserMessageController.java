@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class UserMessageController extends AbstractController{
+public class UserMessageController extends AbstractMessagesController{
     protected ObservableList<UserDto> usersSearchList = FXCollections.observableArrayList();
     protected ObservableList<MessageDto> messagesSearchList = FXCollections.observableArrayList();
 
@@ -46,14 +46,14 @@ public class UserMessageController extends AbstractController{
     }*/
 
     @Override
-    public void setUserController(UserDto user, String currentUser, Service service){
-        super.setUserController(null, currentUser, service);
+    public void setAbstractController( String currentUser, Service service){
+        super.setAbstractController(currentUser, service);
 
     }
 
     @Override
-    public void setMessageController(MessageDto user, String currentUser, Service service)  {
-        super.setMessageController(null,currentUser,service);
+    public void setMessageController(MessageDto message, String currentUser, Service service)  {
+        super.setMessageController(message,currentUser,service);
         //messagesSearchList.setAll(getMessagesList());
        // initializeVBox(getUserSearchFormat(),messagesSearchList);
     }
@@ -134,7 +134,7 @@ public class UserMessageController extends AbstractController{
         searchMessageViewLoader.setLocation(formatURL);
         AnchorPane searchMessageView = new AnchorPane();
         searchMessageView = searchMessageViewLoader.load();
-        AbstractController messageSearchController = searchMessageViewLoader.getController();
+        AbstractMessagesController messageSearchController = searchMessageViewLoader.getController();
         messageSearchController.setMessageController(message, currentUser, service);
         return searchMessageView;
     }
@@ -145,7 +145,7 @@ public class UserMessageController extends AbstractController{
         AnchorPane searchUserView = new AnchorPane();
         searchUserView = searchUserViewLoader.load();
         AbstractController messageSearchController = searchUserViewLoader.getController();
-        messageSearchController.setUserController(user, currentUser, service);
+        messageSearchController.setAbstractController(currentUser, service);
         return searchUserView;
     }
 
