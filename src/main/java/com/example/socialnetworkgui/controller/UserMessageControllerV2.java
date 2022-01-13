@@ -11,13 +11,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 //import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -25,6 +30,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -50,6 +56,20 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
     ScrollPane scrMessages;
     @FXML
     ScrollPane scrConversation;
+    @FXML
+    Button btnCompose;
+    @FXML
+    Label lblTo;
+    @FXML
+    TextField textTo;
+    @FXML
+    TextArea composeText;
+    @FXML
+    Button btnSendCompose;
+    @FXML
+    Pane paneCompose;
+    @FXML
+    Label lblErrors;
 
     @FXML
     private void initializeVBox(URL formatURL, ObservableList<MessageDto> messagesList) throws IOException {
@@ -92,6 +112,31 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         textToSend.setVisible(true);
     }
 
+    private  void hideComposeElements(){
+        paneCompose.setVisible(false);
+        lblTo.setVisible(false);
+        textTo.setVisible(false);
+        composeText.setVisible(false);
+        btnSendCompose.setVisible(false);
+        lblErrors.setVisible(false);
+    }
+
+    private void showComposeElements(){
+        vBoxConversation.getChildren().clear();
+        scrConversation.setVisible(false);
+        vBoxConversation.setVisible(false);
+        btnSend.setVisible(false);
+        textToSend.setVisible(false);
+        scrConversation.setVisible(true);
+        vBoxConversation.setVisible(true);
+        paneCompose.setVisible(true);
+        lblTo.setVisible(true);
+        textTo.setVisible(true);
+        composeText.setVisible(true);
+        btnSendCompose.setVisible(true);
+        lblErrors.setVisible(true);
+    }
+
     @Override
     public void setAbstractController(String currentUser, Service service) {
         super.setAbstractController(currentUser, service);
@@ -99,6 +144,9 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         vBoxConversation.setVisible(false);
         btnSend.setVisible(false);
         textToSend.setVisible(false);
+
+        hideComposeElements();
+
         lblName.setText(currentUser);
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         userPicture.setFill(new ImagePattern(profilePicture));
@@ -165,6 +213,87 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         }
     }
 
+
+    public void showComposeMessageView(String user){
+        /*FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/composeMessage-view.fxml"));
+        AnchorPane root= null;
+        try {
+            root = (AnchorPane) fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ComposeMessageController composeMessageController = fxmlLoader.getController();
+        composeMessageController.setService(this.service,user);
+
+        Stage composeMessageStage = new Stage();
+        Scene scene = new Scene(root, 600, 400);
+        composeMessageStage.setScene(scene);
+        composeMessageStage.show();*/
+    }
+    @FXML
+    private void onComposeMessage(){
+        showComposeElements();
+
+    }
+
+    @FXML
+    private void onSendCompose(){
+        try {
+            //String to = textTo.getText();
+            //if (to.isEmpty()){
+            // lblErrors.setAlignment(Pos.CENTER);
+            // lblErrors.setTextFill(Paint.valueOf("red"));
+            // lblErrors.setText("No receiver found!");
+            // }
+            ArrayList<String> alls = new ArrayList<>();
+            String cc = textTo.getText();
+            List<String> ccList = Arrays.asList(cc.split(";"));
+            //ccList.add(cc);
+            if (!ccList.isEmpty() && !cc.isEmpty()) {
+                //alls = ccList;
+                for(String c:ccList) {
+                    // System.out.println(ccList);
+                    //System.out.println(c);
+                    alls.add(c);
+                }
+            }
+            String message = composeText.getText();
+            if(alls.size()==0 || message.isEmpty()){
+                lblErrors.setAlignment(Pos.CENTER);
+                lblErrors.setTextFill(Paint.valueOf("red"));
+                lblErrors.setText("Invalid message!");
+            }
+            else {
+                //System.out.println(alls);
+                //System.out.println(message);
+                service.sendMessage(currentUser, alls, message);
+                lblErrors.setAlignment(Pos.CENTER);
+                lblErrors.setTextFill(Paint.valueOf("green"));
+                lblErrors.setText("Message sent!");
+            }
+
+        }catch (ServiceException se){
+            lblErrors.setAlignment(Pos.CENTER);
+            lblErrors.setTextFill(Paint.valueOf("red"));
+             lblErrors.setText(se.getMessage());
+        }catch (ValidatorException ve){
+            lblErrors.setAlignment(Pos.CENTER);
+            lblErrors.setTextFill(Paint.valueOf("red"));
+             lblErrors.setText(ve.getMessage());
+        }catch (RepositoryException re){
+             lblErrors.setAlignment(Pos.CENTER);
+             lblErrors.setTextFill(Paint.valueOf("red"));
+             lblErrors.setText(re.getMessage());
+        }catch (InputMismatchException ie){
+             lblErrors.setAlignment(Pos.CENTER);
+              lblErrors.setTextFill(Paint.valueOf("red"));
+             lblErrors.setText(ie.getMessage());
+        }
+
+    }
+
     @FXML
     private void onSendMessage()  {
         String text = textToSend.getText();
@@ -192,6 +321,7 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         switch (serviceEvent.getEventType()) {
             case SEND_MESSAGE: {
                 try {
+                    hideComposeElements();
                     System.out.println("Ai apasat butonul send");
                     setConversationBox();
                     //System.out.println("aaaaa");
@@ -236,9 +366,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
                     vBoxConversation.getChildren().add(new Text(e.getMessage()));
                 }
             }
-//            case SENT_MESSAGE:{
-//                usersVBox.getChildren().clear();
-//            }
         }
 
     }

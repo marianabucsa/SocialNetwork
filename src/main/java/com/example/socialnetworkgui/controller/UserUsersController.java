@@ -13,8 +13,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -38,6 +42,17 @@ public class UserUsersController extends AbstractFriendsController {
     private TextField textSearchByName;
     @FXML
     private VBox usersVBox;
+
+    @FXML
+    private Pane paneMessages;
+    @FXML
+    private Button btnSend;
+    @FXML
+    private TextArea textMessage;
+    @FXML
+    private Label lblUserName;
+    @FXML
+    private Label lblErrors;
 
     public void setUserUsersController(Service service, String currentUser) {
         super.setUserController(null, currentUser, service);
@@ -229,6 +244,23 @@ public class UserUsersController extends AbstractFriendsController {
         return conversationView;
     }
 
+    private void showMessageElements(){
+        paneMessages.setVisible(true);
+        btnSend.setVisible(true);
+        textMessage.setVisible(true);
+        lblErrors.setVisible(true);
+        lblUserName.setVisible(true);
+    }
+
+    private void hideMessageElements(){
+        paneMessages.setVisible(false);
+        btnSend.setVisible(false);
+        textMessage.setVisible(false);
+        lblErrors.setVisible(false);
+        lblUserName.setVisible(false);
+
+    }
+
     @Override
     public void update(ServiceEvent serviceEvent) throws IOException {
         switch (serviceEvent.getEventType()) {
@@ -321,11 +353,17 @@ public class UserUsersController extends AbstractFriendsController {
                     usersVBox.getChildren().add(new Text(e.getMessage()));
                 }
             }
-            case SEND_MESSAGE: {
+            case SENT_MESSAGE: {
                 try{
-                    conversationList.setAll(getConversationList());
-                    initVBox(getConversationFormat(), conversationList);
-                }catch (ValidatorException ve){
+                    workingUser = (UserDto) serviceEvent.getData();
+                    showMessageElements();
+                    wait(3000);
+                    hideMessageElements();
+
+                    //System.out.println(workingUser);
+                    //conversationList.setAll(getConversationList());
+                    //initVBox(getConversationFormat(), conversationList);
+                }catch (ValidatorException | InterruptedException ve){
                     usersVBox.getChildren().clear();
                     usersVBox.getChildren().add(new Text(ve.getMessage()));
                 }

@@ -60,6 +60,9 @@ public class UserFriendController extends UserUsersController {
     }
 
     public void onSendMessageClick(ActionEvent actionEvent) {
+        User user = service.findOneUser(service.getIdFromEmail(workingUser));
+        UserDto userDto = new UserDto(user.getFirstName(), user.getLastName(), user.getEmail());
+        service.notifyObservers(new ServiceEvent(EventType.SENT_MESSAGE,userDto));
     }
 
     @Override
