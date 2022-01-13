@@ -140,7 +140,11 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             ps.setString(4, entity.getDescription());
             ps.setString(5, entity.getLocation());
             if (entity.getParticipants() != null) {
-                ps.setString(6, listToString(entity.getParticipants()));
+                if(entity.getParticipants().size()==0)
+                    ps.setString(6,null);
+                else {
+                    ps.setString(6, listToString(entity.getParticipants()));
+                }
                 ps.setLong(7, entity.getId());
             } else {
                 ps.setLong(6, entity.getId());
@@ -255,5 +259,35 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             //throw new RepositoryException("Error getting events for user in database!\n");
         }
         return null;
+    }
+
+    public List<Event> findSubscribedEventsUser(Long idFromEmail) {
+        List<Event> events = new ArrayList<>();
+        try (PreparedStatement statement = getConnection().prepareStatement("SELECT * from Events");
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                String name = resultSet.getString("name");
+                LocalDateTime startDate = resultSet.getObject(3, LocalDateTime.class);
+                LocalDateTime endDate = resultSet.getObject(4, LocalDateTime.class);
+                String description = resultSet.getString("description");
+                String location = resultSet.getString("location");
+                Long organizer = resultSet.getLong("organizer");
+                String participants = resultSet.getString("participants");
+                Event event;
+                if (participants != null) {
+                    event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
+                    event.setId(id);
+                    if(event.getParticipants().contains(idFromEmail)) {
+                        events.add(event);
+                    }
+                }
+
+            }
+            return events;
+        } catch (SQLException e) {
+            throw new RepositoryException("Error finding messages in database!\n");
+        }
     }
 }

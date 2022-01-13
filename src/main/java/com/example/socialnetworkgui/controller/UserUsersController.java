@@ -60,25 +60,41 @@ public class UserUsersController extends AbstractFriendsController {
     }
 
     public void onSearchClick(ActionEvent actionEvent) {
-        if (Objects.equals(textSearchByName.getText(), ""))
-            usersSearchList.clear();
-        else {
-            List<String> names = List.of(textSearchByName.getText().split(" "));
-            for (String name : names) {
-                Predicate<UserDto> p1 = n -> n.getFirstName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
-                Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
-                Predicate<UserDto> p3 = n -> n.getFirstName().startsWith(name.toLowerCase());
-                Predicate<UserDto> p4 = n -> n.getLastName().startsWith(name.toLowerCase());
-                usersSearchList.setAll(getUsersList().stream()
-                        .filter(p1.or(p2).or(p3).or(p4)).collect(Collectors.toList()));
+        try {
+            if (Objects.equals(textSearchByName.getText(), ""))
+                usersSearchList.clear();
+            else {
+                List<String> names = List.of(textSearchByName.getText().split(" "));
+                for (String name : names) {
+                    Predicate<UserDto> p1 = n -> n.getFirstName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
+                    Predicate<UserDto> p2 = n -> n.getLastName().startsWith(name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase());
+                    Predicate<UserDto> p3 = n -> n.getFirstName().startsWith(name.toLowerCase());
+                    Predicate<UserDto> p4 = n -> n.getLastName().startsWith(name.toLowerCase());
+                    usersSearchList.setAll(getUsersList().stream()
+                            .filter(p1.or(p2).or(p3).or(p4)).collect(Collectors.toList()));
+                }
             }
-            try {
-                initializeVBox(getUserSearchFormat(), usersSearchList);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if(usersSearchList.size()==0)
+                throw new ServiceException("No user was found!");
+            initializeVBox(getUserSearchFormat(), usersSearchList);
+        } catch (ValidatorException ve) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(ve.getMessage()));
+        } catch (ServiceException se) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(se.getMessage()));
+        } catch (RepositoryException re) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(re.getMessage()));
+        } catch (InputMismatchException ime) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(ime.getMessage()));
+        } catch (IOException e) {
+            usersVBox.getChildren().clear();
+            usersVBox.getChildren().add(new Text(e.getMessage()));
         }
     }
+
 
     public void onShowFriendsClick(ActionEvent actionEvent) {
         try {

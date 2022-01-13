@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class UserMyEventsController extends AbstractEventsController {
+public class UserFriendsEventsController extends AbstractEventsController{
     protected ObservableList<Event> myEventsList = FXCollections.observableArrayList();
 
     @FXML
@@ -68,14 +68,14 @@ public class UserMyEventsController extends AbstractEventsController {
     }
 
     private List<Event> getMyEventsList() {
-        List<Event> events = service.findUserEvents(service.getIdFromEmail(currentUser));
-        if (events.size() == 0)
+        List<Event> events = service.findFriendsEvents(service.getIdFromEmail(currentUser));
+        if (events == null)
             throw new ServiceException("No events found!");
         return events;
     }
 
     private java.net.URL getMyEventFormat() {
-        return getClass().getResource("/com/example/socialnetworkgui/views/UserMyEventView.fxml");
+        return getClass().getResource("/com/example/socialnetworkgui/views/UserEventSearchView.fxml");
     }
 
     @Override

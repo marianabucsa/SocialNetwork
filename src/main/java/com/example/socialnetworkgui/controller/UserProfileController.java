@@ -105,14 +105,16 @@ public class UserProfileController extends AbstractFriendsController {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserEventsView.fxml"));
     }
 
+/*<<<<<<< HEAD
     public void onHistoryClick(ActionEvent actionEvent) throws IOException {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserHistoryView.fxml"));
+=======*/
+    public void onReportsClick(ActionEvent actionEvent) {
+//>>>>>>> 08072427fc34613a4c9ce7fcd0ee905967b58126
     }
 
-    public void onCommunityClick(ActionEvent actionEvent) {
-    }
 
-    public void onHomeClick(ActionEvent actionEvent) throws IOException {
+    public void onCommunityClick(ActionEvent actionEvent) throws IOException {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserUsersView.fxml"));
     }
 

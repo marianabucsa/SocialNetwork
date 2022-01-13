@@ -30,17 +30,13 @@
          <graphic>
             <FontAwesomeIcon glyphName="CALENDAR_ALT" size="13" />
          </graphic></Button>
-      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="308.0" mnemonicParsing="false" onAction="#onHistoryClick" prefHeight="28.0" prefWidth="118.0" text="History">
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="308.0" mnemonicParsing="false" onAction="#onReportsClick" prefHeight="28.0" prefWidth="118.0" text="Reports">
          <graphic>
-            <FontAwesomeIcon glyphName="HISTORY" size="15" />
+            <FontAwesomeIcon glyphName="BOOK" size="15" />
          </graphic></Button>
-      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="343.0" mnemonicParsing="false" onAction="#onCommunityClick" prefHeight="28.0" prefWidth="118.0" text="Community">
+      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="162.0" mnemonicParsing="false" onAction="#onCommunityClick" prefHeight="28.0" prefWidth="118.0" text="Community">
          <graphic>
             <FontAwesomeIcon glyphName="USERS" size="13" />
-         </graphic></Button>
-      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="162.0" mnemonicParsing="false" onAction="#onHomeClick" prefHeight="28.0" prefWidth="118.0" text="Home">
-         <graphic>
-            <FontAwesomeIcon glyphName="HOME" size="15" />
          </graphic></Button>
       <StackPane fx:id="container" layoutX="150.0" prefHeight="476.0" prefWidth="555.0">
          <children>
