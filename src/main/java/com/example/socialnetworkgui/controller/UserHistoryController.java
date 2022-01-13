@@ -20,6 +20,7 @@ import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
@@ -59,8 +60,8 @@ public class UserHistoryController extends AbstractFriendsController{
                 throw new ServiceException("No friends found!");
             if((date_from ==null) && (date_to==null)) {
                 btnExport.setDisable(false);
-                exportList.clear();
-                exportList.addAll(friends);
+                //exportList.clear();
+                //exportList.addAll(friends);
                 return friends;
             }
             else{
@@ -98,8 +99,8 @@ public class UserHistoryController extends AbstractFriendsController{
                     }
                 }
                 btnExport.setDisable(false);
-                exportList.clear();
-                exportList.addAll(newFriends);
+                //exportList.clear();
+                //exportList.addAll(newFriends);
                 return newFriends;
             }
         }catch (Exception ex){
@@ -130,43 +131,26 @@ public class UserHistoryController extends AbstractFriendsController{
     }
 
     public void onExport(ActionEvent actionEvent) throws IOException {
-        /*PDDocument pdfdoc= new PDDocument();
-        pdfdoc.addPage(new PDPage());
-        //path where the PDF file will be store
-        pdfdoc.save("C:\\Users\\Dragos\\Desktop\\Java PDF\\Sample.pdf");
-        //prints the message if the PDF is created successfully
-        System.out.println("PDF created");
-        //closes the document
-        pdfdoc.close();*/
+
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("PDF Files", "*.pdf");
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(imageFilter);
         File file = chooser.showSaveDialog(btnExport.getScene().getWindow());
         if (file != null) {
             System.out.println(file.getAbsolutePath());
-            /*PDDocument pdfdoc= new PDDocument();
-            pdfdoc.addPage(new PDPage());
-            //path where the PDF file will be store
-            // pdfdoc.save("C:\\Users\\Dragos\\Desktop\\Java PDF\\Sample.pdf");
 
 
-            PDPage firstPage=pdfdoc.getPage(0);
-            PDFont pdfFont= PDType1Font.HELVETICA_BOLD;
-            int fontSize = 14;
-            //PDPageContentStream contentStream = new PDPageContentStream(pdfdoc, firstPage, PDPageContentStream.AppendMode.APPEND,true,true);
-            //contentStream.setFont(pdfFont, fontSize);
-            // contentStream.beginText();
-            //contentStream.newLineAtOffset(200,685);
-            // contentStream.showText("John");
-            //contentStream.endText();
+            List<String> message = new ArrayList<>();
+            //String text ="";
+            System.out.println(exportList);
+            for (UserDto us : exportList){
+                message.add(us.getFirstName()+" "+us.getLastName());
+                //text = text+" "+us.getFirstName()+" "+us.getLastName();
+            }
 
-
-            pdfdoc.save(file.getAbsolutePath());
-            //prints the message if the PDF is created successfully
-            System.out.println("PDF created");
-            //closes the document
-            pdfdoc.close();*/
-            String message = "This is a sample PDF document created using PDFBox.";
+            System.out.println(message);
+            //String text = exportList.toString();
+            //System.out.println(text);
 
             PDDocument doc = new PDDocument();
             try {
@@ -177,9 +161,14 @@ public class UserHistoryController extends AbstractFriendsController{
 
                 PDPageContentStream contents = new PDPageContentStream(doc, page);
                 contents.beginText();
-                contents.setFont(font, 30);
+                contents.setFont(font, 20);
                 contents.newLineAtOffset(50, 700);
-                contents.showText(message);
+                //contents.showText(message.toString());
+                for(var el:message){
+                    contents.showText(el.toString());
+                    contents.newLineAtOffset(0,-30);
+                    System.out.println(el);
+                }
                 contents.endText();
                 contents.close();
 
@@ -194,7 +183,11 @@ public class UserHistoryController extends AbstractFriendsController{
 
     public void onFriends(ActionEvent actionEvent) {
         try {
+            exportList.clear();
+            friendsList.clear();
             friendsList.setAll(getFriendsList());
+            exportList.addAll(friendsList);
+            System.out.println(exportList);
             initializeVBox(getUserFriendFormat(), friendsList);
         } catch (ValidatorException ve) {
             usersVBox.getChildren().clear();
