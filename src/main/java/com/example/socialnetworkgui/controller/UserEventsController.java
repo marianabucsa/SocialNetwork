@@ -65,7 +65,8 @@ public class UserEventsController extends AbstractEventsController {
     public void onFriendsClicked(ActionEvent actionEvent) {
     }
 
-    public void onSearchEventClicked(ActionEvent actionEvent) {
+    public void onSearchEventClicked(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserSearchEventsView.fxml"));
     }
 
     public void onSignedUpEventsClicked(ActionEvent actionEvent) {

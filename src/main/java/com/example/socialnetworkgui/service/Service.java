@@ -33,11 +33,12 @@ public class Service implements Observable<ServiceEvent> {
     private final MessagesDBRepository messagesRepo;
     private final EmailValidator emailValidator;
     private final EventsDBRepository eventsRepo;
-    public List<Observer<ServiceEvent>> observers=new ArrayList<>();
+    public List<Observer<ServiceEvent>> observers = new ArrayList<>();
 
     /**
      * service constructor
-     *  @param friendshipsRepo - repository for friendships
+     *
+     * @param friendshipsRepo - repository for friendships
      * @param userRepo        - repository for users
      * @param messagesRepo    - repository for messages
      * @param eventsRepo
@@ -65,13 +66,14 @@ public class Service implements Observable<ServiceEvent> {
      * @return
      */
     public Event addEvent(String name, LocalDateTime startDate, LocalDateTime endDate, String description, String location, Long organizer, List<Long> participants) {
-        Event event = new Event(name,startDate,endDate,description,location,organizer,participants);
+        Event event = new Event(name, startDate, endDate, description, location, organizer, participants);
         event = eventsRepo.save(event);
-        System.out.println(startDate+" "+endDate);
+        System.out.println(startDate + " " + endDate);
         if (event != null)
             throw new ServiceException("Event already exists!\n");
         return event;
     }
+
     /**
      * Find all friend requests for an user
      *
@@ -148,11 +150,11 @@ public class Service implements Observable<ServiceEvent> {
                         x.getEmail())).collect(Collectors.toList());
     }
 
-    public List<MessageDto> findMessages(Long id){
+    public List<MessageDto> findMessages(Long id) {
         User us = userRepo.findOne(id);
         List<ReplyMessage> messages = messagesRepo.findMessagesUser(id);
         return messages.stream()
-                .map(x->new MessageDto(x.getFrom(),x.getTo(),x.getMessage(),x.getData()))
+                .map(x -> new MessageDto(x.getFrom(), x.getTo(), x.getMessage(), x.getData()))
                 .collect(Collectors.toList());
     }
 
@@ -411,7 +413,7 @@ public class Service implements Observable<ServiceEvent> {
                     messagesRepo.delete(rm.getId());
                 }
             }
-            if(eventsRepo.getEventsUser(id).size()!=0){
+            if (eventsRepo.getEventsUser(id).size() != 0) {
                 for (Event event : eventsRepo.getEventsUser(id)) {
                     eventsRepo.delete(event.getId());
                 }
@@ -490,7 +492,6 @@ public class Service implements Observable<ServiceEvent> {
     }
 
 
-
     /**
      * gets all friendship from repository
      *
@@ -560,7 +561,7 @@ public class Service implements Observable<ServiceEvent> {
 
     @Override
     public void notifyObservers(ServiceEvent e) {
-        observers.stream().forEach(x-> {
+        observers.stream().forEach(x -> {
             try {
                 x.update(e);
             } catch (IOException ex) {
@@ -575,7 +576,7 @@ public class Service implements Observable<ServiceEvent> {
     }
 
     public Event updateEvent(Long id, String name, LocalDateTime startTime, LocalDateTime endTime, String description, String location, Long organizer, List<Long> participants) {
-        Event event = new Event( name,startTime,endTime,description,location,organizer,participants);
+        Event event = new Event(name, startTime, endTime, description, location, organizer, participants);
         event.setId(id);
         event = eventsRepo.update(event);
         if (event != null)
@@ -587,6 +588,47 @@ public class Service implements Observable<ServiceEvent> {
         Event event = eventsRepo.delete(workingEvent.getId());
         if (event == null)
             throw new ServiceException("Event does not exist!\n");
+    }
+
+    public Iterable<Event> findAllEvents() {
+        return eventsRepo.findAll();
+    }
+
+    public void SubscribeEvent(Event event, Long user) {
+        List<Long> participants = event.getParticipants();
+        if (participants == null) {
+            participants = new ArrayList<>();
+            participants.add(user);
+        } else {
+            for (Long id : participants) {
+                if (id == user)
+                    throw new ServiceException("You are already subscribed!");
+            }
+            participants.add(user);
+        }
+        event.setParticipants(participants);
+        eventsRepo.update(event);
+    }
+
+    public void UnsubscribeEvent(Event event, Long user) {
+        List<Long> participants = event.getParticipants();
+        if (participants == null) {
+            throw new ServiceException("You were no subscribed to this event!");
+        } else {
+            List<Long> part = new ArrayList<>();
+            for (Long id : participants) {
+                if (!Objects.equals(id, user)) {
+                    part.add(id);
+                }
+
+            }
+            if (part.size() == participants.size()) {
+                throw new ServiceException("You were not subscribed to this event!");
+            } else {
+                event.setParticipants(part);
+                eventsRepo.update(event);
+            }
+        }
     }
 
 

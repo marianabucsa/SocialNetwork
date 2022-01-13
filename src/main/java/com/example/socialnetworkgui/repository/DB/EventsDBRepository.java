@@ -140,7 +140,11 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             ps.setString(4, entity.getDescription());
             ps.setString(5, entity.getLocation());
             if (entity.getParticipants() != null) {
-                ps.setString(6, listToString(entity.getParticipants()));
+                if(entity.getParticipants().size()==0)
+                    ps.setString(6,null);
+                else {
+                    ps.setString(6, listToString(entity.getParticipants()));
+                }
                 ps.setLong(7, entity.getId());
             } else {
                 ps.setLong(6, entity.getId());
