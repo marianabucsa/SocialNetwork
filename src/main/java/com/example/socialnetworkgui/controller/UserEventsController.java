@@ -1,7 +1,6 @@
 package com.example.socialnetworkgui.controller;
 
 import com.example.socialnetworkgui.domain.Event;
-import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.animation.Interpolator;
@@ -62,14 +61,16 @@ public class UserEventsController extends AbstractEventsController {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserCreateEventView.fxml"));
     }
 
-    public void onFriendsClicked(ActionEvent actionEvent) {
+    public void onFriendsClicked(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserFriendsEventsView.fxml"));
     }
 
     public void onSearchEventClicked(ActionEvent actionEvent) throws IOException {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserSearchEventsView.fxml"));
     }
 
-    public void onSignedUpEventsClicked(ActionEvent actionEvent) {
+    public void onSignedUpEventsClicked(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserSubscribedEventsView.fxml"));
     }
 
     @Override

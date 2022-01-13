@@ -631,6 +631,19 @@ public class Service implements Observable<ServiceEvent> {
         }
     }
 
+    public List<Event> findSubscribedEventsUser(Long idFromEmail) {
+        return eventsRepo.findSubscribedEventsUser(idFromEmail);
+    }
+
+    public List<Event> findFriendsEvents(Long user) {
+        List<Long> friends=friendshipsRepo.getFriendsUser(user);
+        List<Event> events=new ArrayList<>();
+        for (Long id: friends){
+            events.addAll(eventsRepo.getEventsUser(id));
+        }
+        return events;
+    }
+
 
 /**
  * methode to connect the friendships to the users used for in memory and file repository
