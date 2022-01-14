@@ -60,7 +60,6 @@ public class ComposeMessageController {
     @FXML
     protected void onSendClick(){
         try {
-            //List<String> alls = null;
             String to = textTo.getText();
             if (to.isEmpty()){
                 lblErrors.setAlignment(Pos.CENTER);
@@ -72,12 +71,8 @@ public class ComposeMessageController {
                 alls.add(to);
                 String cc = textCC.getText();
                 List<String> ccList = Arrays.asList(cc.split(";"));
-                //ccList.add(cc);
                 if (!ccList.isEmpty() && !cc.isEmpty()) {
-                    //alls = ccList;
                     for(String c:ccList) {
-                        // System.out.println(ccList);
-                        //System.out.println(c);
                         alls.add(c);
                     }
                 }

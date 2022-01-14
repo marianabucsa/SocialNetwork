@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 //import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,7 +76,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
     private void initializeVBox(URL formatURL, ObservableList<MessageDto> messagesList) throws IOException {
         vBoxMessages.getChildren().clear();
         for (MessageDto message : messagesList) {
-            // usersVBox.getChildren().add(getSearchMessagesFormatView(message, formatURL));
             vBoxMessages.getChildren().add(getConversationFormatView(message,formatURL));
         }
     }
@@ -182,11 +182,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
                 exists = false;
             }
         }
-//        System.out.println("Grups:"+groups);
-//        System.out.println("---");
-//        for (MessageDto msg: groups){
-//            System.out.println("Mess:"+msg.getConversation());
-//        }
 
         return groups;
 
@@ -214,24 +209,7 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
     }
 
 
-    public void showComposeMessageView(String user){
-        /*FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/composeMessage-view.fxml"));
-        AnchorPane root= null;
-        try {
-            root = (AnchorPane) fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        ComposeMessageController composeMessageController = fxmlLoader.getController();
-        composeMessageController.setService(this.service,user);
-
-        Stage composeMessageStage = new Stage();
-        Scene scene = new Scene(root, 600, 400);
-        composeMessageStage.setScene(scene);
-        composeMessageStage.show();*/
-    }
     @FXML
     private void onComposeMessage(){
         showComposeElements();
@@ -241,21 +219,12 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
     @FXML
     private void onSendCompose(){
         try {
-            //String to = textTo.getText();
-            //if (to.isEmpty()){
-            // lblErrors.setAlignment(Pos.CENTER);
-            // lblErrors.setTextFill(Paint.valueOf("red"));
-            // lblErrors.setText("No receiver found!");
-            // }
+
             ArrayList<String> alls = new ArrayList<>();
             String cc = textTo.getText();
             List<String> ccList = Arrays.asList(cc.split(";"));
-            //ccList.add(cc);
             if (!ccList.isEmpty() && !cc.isEmpty()) {
-                //alls = ccList;
                 for(String c:ccList) {
-                    // System.out.println(ccList);
-                    //System.out.println(c);
                     alls.add(c);
                 }
             }
@@ -266,8 +235,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
                 lblErrors.setText("Invalid message!");
             }
             else {
-                //System.out.println(alls);
-                //System.out.println(message);
                 service.sendMessage(currentUser, alls, message);
                 lblErrors.setAlignment(Pos.CENTER);
                 lblErrors.setTextFill(Paint.valueOf("green"));
@@ -297,6 +264,7 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
     @FXML
     private void onSendMessage()  {
         String text = textToSend.getText();
+        textToSend.setText("");
         Long from = service.getIdFromEmail(currentUser);
         List<Long> to = new ArrayList<>();
         LocalDateTime date = LocalDateTime.now();
@@ -324,9 +292,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
                     hideComposeElements();
                     System.out.println("Ai apasat butonul send");
                     setConversationBox();
-                    //System.out.println("aaaaa");
-
-                    //createConversationScene(workingMessage);
 
                     vBoxConversation.getChildren().clear();
                     workingMessage = (MessageDto) serviceEvent.getData();
@@ -340,8 +305,6 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
                             addToVBox(messageDto,"received");
                         }
                     }
-                    //vBoxConversation.getChildren().add(getConversationFormatView(null,writeMessageFormat()));
-                    //conversationList.clear();
 
                     break;
                 } catch (ValidatorException ve) {

@@ -12,7 +12,7 @@
       <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="448.0" layoutY="44.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
       <Label fx:id="userFirstLastName" alignment="CENTER" layoutX="380.0" layoutY="103.0" prefHeight="17.0" prefWidth="136.0" text="First Last Name" textAlignment="CENTER" />
       <Button layoutX="274.0" layoutY="87.0" mnemonicParsing="false" onAction="#onDeleteFriendClick" prefHeight="28.0" prefWidth="104.0" text="Delete friend" textFill="#b2b2b2" />
-      <Button layoutX="13.0" layoutY="87.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="28.0" prefWidth="104.0" text="Send message" textFill="#b2b2b2" />
+      <Button layoutX="13.0" visible="false" layoutY="87.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="28.0" prefWidth="104.0" text="Send message" textFill="#b2b2b2" />
       <Label fx:id="errorUserSearchLabel" alignment="CENTER" layoutX="13.0" layoutY="57.0" prefHeight="17.0" prefWidth="365.0" stylesheets="@../css/userUsers.css" />
       <Button layoutX="144.0" layoutY="87.0" mnemonicParsing="false" onAction="#onAddFriendClick" prefHeight="28.0" prefWidth="104.0" text="Add Friend" textFill="#b2b2b2" />
    </children>

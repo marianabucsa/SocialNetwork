@@ -69,13 +69,8 @@ public class MessageSearchController extends UserMessageController{
 
     @FXML
     private void onSendMessageClick() throws IOException {
-        //super.usersVBox.getChildren().clear();
-       // errorUserSearchLabel.setText(message.getConversation().size()+" messages");
-        // System.out.println(message);
-        //super.setMessageController(message,currentUser,service);
         service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE, message));
 
-        // super.createConversationScene(message);
 
     }
 }

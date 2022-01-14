@@ -12,7 +12,7 @@
         <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="448.0" layoutY="44.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
         <Label fx:id="userFirstLastName" alignment="CENTER" layoutX="380.0" layoutY="103.0" prefHeight="17.0" prefWidth="136.0" text="First Last Name" textAlignment="CENTER" />
         <Button layoutX="201.0" layoutY="90.0" mnemonicParsing="false" onAction="#onCancelClick" prefHeight="28.0" prefWidth="100.0" text="Cancel " />
-        <Button layoutX="83.0" layoutY="90.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="28.0" prefWidth="100.0" text="Send message" />
+        <Button layoutX="83.0" layoutY="90.0" mnemonicParsing="false" onAction="#onSendMessageClick" prefHeight="28.0" prefWidth="100.0" text="Send message" visible="false" />
         <Label fx:id="errorUserSearchLabel" alignment="CENTER" layoutX="13.0" layoutY="57.0" prefHeight="17.0" prefWidth="381.0" />
     </children>
 </AnchorPane>

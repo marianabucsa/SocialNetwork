@@ -13,8 +13,8 @@
 <AnchorPane prefHeight="456.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserMessageControllerV2">
    <children>
       <TextArea fx:id="textToSend" layoutX="175.0" layoutY="351.0" prefHeight="106.0" prefWidth="380.0" />
-      <Circle fx:id="userPicture" fill="DODGERBLUE" layoutX="213.0" layoutY="29.0" radius="22.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="lblName" layoutX="245.0" layoutY="17.0" prefHeight="34.0" prefWidth="164.0" text="Current User Name" textFill="#00000017" />
+      <Circle fx:id="userPicture" fill="DODGERBLUE" layoutX="213.0" layoutY="29.0" radius="22.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
+      <Label fx:id="lblName" layoutX="245.0" layoutY="17.0" prefHeight="34.0" prefWidth="164.0" text="Current User Name" textFill="#00000017"  visible="false"/>
       <Button fx:id="btnSend" layoutX="453.0" layoutY="370.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="78.0" prefWidth="90.0" text="Send" />
       <ScrollPane fx:id="scrMessages" layoutX="1.0" layoutY="53.0" prefHeight="404.0" prefWidth="174.0">
          <content>

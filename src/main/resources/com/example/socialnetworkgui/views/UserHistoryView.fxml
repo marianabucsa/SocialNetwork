@@ -17,8 +17,8 @@
             </content>
         </ScrollPane>
         <Button fx:id="btnFriends" layoutX="14.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" onAction="#onFriends" text="Show friends" />
-        <Button fx:id="btnMessagesForUser" layoutX="264.0" layoutY="87.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Show messages for user:" />
-        <Button fx:id="btnMessages" layoutX="146.0" layoutY="87.0" mnemonicParsing="false" text="Show messages" />
+        <Button fx:id="btnMessagesForUser" onAction="#onConversation" layoutX="264.0" layoutY="87.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="148.0" text="Show messages for user:" />
+        <Button fx:id="btnMessages" onAction="#onMessages" layoutX="146.0" layoutY="87.0" mnemonicParsing="false" text="Show messages" />
         <TextField fx:id="textUser" layoutX="420.0" layoutY="87.0" prefHeight="26.0" prefWidth="130.0" promptText="user_email" />
         <DatePicker fx:id="dateFrom" layoutX="28.0" layoutY="22.0" promptText="from" />
         <DatePicker fx:id="dateTo" layoutX="236.0" layoutY="22.0" promptText="to" />
