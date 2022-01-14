@@ -5,6 +5,7 @@ import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
+import com.example.socialnetworkgui.utils.event.EventType;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,7 +26,7 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class UserModifyMyEventController extends AbstractEventsController {
+public class UserModifyMyEventController extends UserEventsController {
     @FXML
     private TextField nameTextField;
     @FXML
@@ -60,6 +63,7 @@ public class UserModifyMyEventController extends AbstractEventsController {
                 List<String> endTime = Arrays.asList(endTimeTextField.getText().split(":"));
                 if (Integer.parseInt(startTime.get(0)) < 24 && Integer.parseInt(startTime.get(0)) >= 0 && Integer.parseInt(startTime.get(1)) < 60 && Integer.parseInt(startTime.get(1)) >= 0 && Integer.parseInt(endTime.get(0)) < 24 && Integer.parseInt(endTime.get(0)) >= 0 && Integer.parseInt(endTime.get(1)) < 60 && Integer.parseInt(endTime.get(1)) >= 0) {
                     service.updateEvent(workingEvent.getId(), nameTextField.getText(), startPicker.getValue().atTime(Integer.parseInt(startTime.get(0)), Integer.parseInt(startTime.get(1))), endPicker.getValue().atTime(Integer.parseInt(endTime.get(0)), Integer.parseInt(endTime.get(1))), descriptionTextField.getText(), locationTextField.getText(), service.getIdFromEmail(currentUser), null);
+                    service.notifyObservers(new ServiceEvent(EventType.MODIFY_EVENT,workingEvent));
                     errorLabel.setAlignment(Pos.CENTER);
                     errorLabel.setTextFill(Paint.valueOf("green"));
                     errorLabel.setText("Event modified!");
@@ -90,7 +94,51 @@ public class UserModifyMyEventController extends AbstractEventsController {
 
     @Override
     public void update(ServiceEvent serviceEvent) throws IOException {
+        switch (serviceEvent.getEventType()) {
+            case DELETE_EVENT,
+                    MODIFY_EVENT:{
+                try {
+                    userMyEventsController.myEventsList.setAll(userMyEventsController.getMyEventsList());
+                    userMyEventsController.initializeVBox(userMyEventsController.getMyEventFormat(), userMyEventsController.myEventsList);
+                } catch (ValidatorException ve) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
 
+        }
     }
 
     @Override

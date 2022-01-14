@@ -129,6 +129,7 @@ public class UserProfileController extends AbstractFriendsController {
         Node sceneToRemove = container.getChildren().get(0);
 
         sceneToAdd.setTranslateX(container.getWidth());
+        container.getChildren().remove(sceneToRemove);
         container.getChildren().add(sceneToAdd);
 
         Timeline timeline = new Timeline();
@@ -136,7 +137,6 @@ public class UserProfileController extends AbstractFriendsController {
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), keyValue);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setOnFinished(event -> {
-            container.getChildren().remove(sceneToRemove);
         });
         timeline.play();
     }

@@ -32,7 +32,7 @@ public class UserMyEventsController extends AbstractEventsController {
     @FXML
     private ScrollPane eventsSPane;
     @FXML
-    private VBox eventsVBox;
+    public VBox eventsVBox;
 
     Pagination pagination;
 
@@ -81,7 +81,7 @@ public class UserMyEventsController extends AbstractEventsController {
     }
 
     @FXML
-    private void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
+    public void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
         eventsVBox.getChildren().clear();
         if (eventsList.size()==0)
             throw new ServiceException("No events found!");
@@ -115,19 +115,20 @@ public class UserMyEventsController extends AbstractEventsController {
         eventsViewLoader.setLocation(formatURL);
         AnchorPane eventsView = new AnchorPane();
         eventsView = eventsViewLoader.load();
-        AbstractEventsController eventsController = eventsViewLoader.getController();
+        UserEventsController eventsController = eventsViewLoader.getController();
         eventsController.setAbstractEventController(currentUser, service, event);
+        eventsController.setUserMyEventsController(this);
         return eventsView;
     }
 
-    private List<Event> getMyEventsList() {
+    public List<Event> getMyEventsList() {
         List<Event> events = service.findUserEvents(service.getIdFromEmail(currentUser));
         if (events.size() == 0)
             throw new ServiceException("No events found!");
         return events;
     }
 
-    private java.net.URL getMyEventFormat() {
+    public java.net.URL getMyEventFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/UserMyEventView.fxml");
     }
 
