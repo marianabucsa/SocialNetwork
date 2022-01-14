@@ -22,10 +22,6 @@
          <graphic>
             <FontAwesomeIcon glyphName="ENVELOPE" size="13" />
          </graphic></Button>
-      <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="201.0" mnemonicParsing="false" onAction="#onNotificationClick" prefHeight="28.0" prefWidth="118.0" text="Notifications">
-         <graphic>
-            <FontAwesomeIcon glyphName="BELL" size="13" />
-         </graphic></Button>
       <Button alignment="TOP_LEFT" layoutX="21.0" layoutY="274.0" mnemonicParsing="false" onAction="#onEventsClick" prefHeight="28.0" prefWidth="118.0" text="Events">
          <graphic>
             <FontAwesomeIcon glyphName="CALENDAR_ALT" size="13" />
