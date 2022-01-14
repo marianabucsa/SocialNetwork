@@ -23,7 +23,7 @@
          <content>
             <VBox fx:id="vBoxConversation" prefHeight="294.0" prefWidth="377.0" styleClass="scroll-pane">
                <children>
-                  <Pane fx:id="paneCompose" prefHeight="271.0" prefWidth="375.0" styleClass="scroll-pane">
+                  <Pane fx:id="paneCompose" prefHeight="295.0" prefWidth="377.0" styleClass="scroll-pane">
                      <children>
                         <Label fx:id="lblTo" layoutX="34.0" layoutY="27.0" prefHeight="26.0" prefWidth="50.0" text="To:" />
                         <TextArea fx:id="composeText" layoutX="14.0" layoutY="81.0" prefHeight="91.0" prefWidth="243.0" promptText="text..." style="-fx-border-color: #00FF00;" />
@@ -35,7 +35,7 @@
                </children></VBox>
          </content>
       </ScrollPane>
-      <Label fx:id="lblMessages" layoutX="44.0" layoutY="26.0" prefHeight="26.0" prefWidth="74.0" text="MESSAGES" textFill="#00000026" />
+      <Label fx:id="lblMessages" layoutX="44.0" layoutY="26.0" prefHeight="26.0" prefWidth="74.0" text="MESSAGES" textFill="#ffffff26" />
       <Button fx:id="btnCompose" layoutX="375.0" layoutY="22.0" mnemonicParsing="false" onAction="#onComposeMessage" text=" Compose message" />
       <TextArea fx:id="textToSend" layoutX="180.0" layoutY="359.0" prefHeight="97.0" prefWidth="373.0" promptText="text..." style="-fx-border-color: #00FF00;" />
       <Button fx:id="btnSend" layoutX="453.0" layoutY="370.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="78.0" prefWidth="90.0" text="Send" />

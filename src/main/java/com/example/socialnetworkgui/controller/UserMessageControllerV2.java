@@ -130,6 +130,7 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         scrConversation.setVisible(true);
         vBoxConversation.setVisible(true);
         paneCompose.setVisible(true);
+        vBoxConversation.getChildren().add(paneCompose);
         lblTo.setVisible(true);
         textTo.setVisible(true);
         composeText.setVisible(true);
