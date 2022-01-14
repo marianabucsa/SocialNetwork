@@ -2,6 +2,7 @@ package com.example.socialnetworkgui;
 
 
 import com.example.socialnetworkgui.controller.StartupController;
+import com.example.socialnetworkgui.domain.Event;
 import com.example.socialnetworkgui.domain.validator.*;
 import com.example.socialnetworkgui.repository.DB.EventsDBRepository;
 import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
@@ -16,6 +17,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import static java.lang.Thread.sleep;
+import static java.time.LocalDate.now;
 
 
 public class StartApplication extends Application{
@@ -26,7 +34,7 @@ public class StartApplication extends Application{
     EventsDBRepository eventsDBRepository;
     Service service;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         launch();
     }
 

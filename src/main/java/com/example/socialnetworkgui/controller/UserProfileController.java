@@ -36,6 +36,7 @@ public class UserProfileController extends AbstractFriendsController {
     private double xOffset = 0;
     private double yOffset = 0;
 
+
     @FXML
     private Circle circleProfilePicture;
 
@@ -75,6 +76,7 @@ public class UserProfileController extends AbstractFriendsController {
         loginStage.setScene(scene);
         loginStage.initStyle(StageStyle.TRANSPARENT);
         loginStage.show();
+        super.threadNotifications.stop();
     }
 
     public void onMessagesClick(ActionEvent actionEvent) throws IOException {
@@ -136,6 +138,7 @@ public class UserProfileController extends AbstractFriendsController {
         Node sceneToRemove = container.getChildren().get(0);
 
         sceneToAdd.setTranslateX(container.getWidth());
+        container.getChildren().remove(sceneToRemove);
         container.getChildren().add(sceneToAdd);
 
         Timeline timeline = new Timeline();
@@ -143,7 +146,6 @@ public class UserProfileController extends AbstractFriendsController {
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), keyValue);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setOnFinished(event -> {
-            container.getChildren().remove(sceneToRemove);
         });
         timeline.play();
     }
@@ -188,6 +190,7 @@ public class UserProfileController extends AbstractFriendsController {
             loginStage.setScene(scene);
             loginStage.initStyle(StageStyle.TRANSPARENT);
             loginStage.show();
+            super.threadNotifications.stop();
         } catch (ServiceException se) {
             se.printStackTrace();
         } catch (ValidatorException ve) {

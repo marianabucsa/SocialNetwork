@@ -23,6 +23,12 @@ public class UserEventsController extends AbstractEventsController {
     @FXML
     private StackPane container;
 
+    UserMyEventsController userMyEventsController;
+
+    public void setUserMyEventsController(UserMyEventsController userMyEventsController) {
+        this.userMyEventsController = userMyEventsController;
+    }
+
     public void setEventsController(Event event, String userEmail, Service service) {
         super.setAbstractEventController(userEmail, service,event);
     }
@@ -41,14 +47,13 @@ public class UserEventsController extends AbstractEventsController {
         Node sceneToRemove = container.getChildren().get(0);
 
         sceneToAdd.setTranslateX(container.getWidth());
+        container.getChildren().remove(sceneToRemove);
         container.getChildren().add(sceneToAdd);
-
         Timeline timeline = new Timeline();
         KeyValue keyValue = new KeyValue(sceneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), keyValue);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setOnFinished(event -> {
-            container.getChildren().remove(sceneToRemove);
         });
         timeline.play();
     }

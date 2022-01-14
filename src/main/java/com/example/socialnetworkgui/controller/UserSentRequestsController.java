@@ -13,13 +13,16 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 
-public class UserSentRequestsController extends UserUsersController {
+public class UserSentRequestsController extends AbstractFriendsController {
     String workingUser;
 
     @FXML
@@ -35,7 +38,7 @@ public class UserSentRequestsController extends UserUsersController {
     public void setUserController(UserDto user, String currentUser, Service service) {
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         circleProfilePicture.setFill(new ImagePattern(profilePicture));
-        super.setUserUsersController(service,currentUser);
+        super.setUserController(user,currentUser,service);
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
@@ -71,4 +74,179 @@ public class UserSentRequestsController extends UserUsersController {
     public void onSendMessageClick(ActionEvent actionEvent) {
     }
 
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
+        switch (serviceEvent.getEventType()) {
+            case ADD_FRIEND: {
+                try {
+                    userUsersController.usersSentRequestsList.setAll(userUsersController.getSentRequestsList());
+                    userUsersController.initializeVBox(userUsersController.getUserSentRequestsFormat(), userUsersController.usersSentRequestsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
+            case DELETE_FRIEND: {
+                try {
+                    userUsersController.usersFriendsList.setAll(userUsersController.getFriendsList());
+                    userUsersController.initializeVBox(userUsersController.getUserFriendFormat(), userUsersController.usersFriendsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
+            case ACCEPT_FRIENDSHIP:
+            case DECLINE_FRIENDSHIP: {
+                try {
+                    userUsersController.usersReceivedRequestsList.setAll(userUsersController.getReceivedRequestsList());
+                    userUsersController.initializeVBox(userUsersController.getUserReceivedRequestsFormat(), userUsersController.usersReceivedRequestsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
+            case CANCEL_FRIENDSHIP: {
+                try {
+                    userUsersController.usersSentRequestsList.setAll(userUsersController.getSentRequestsList());
+                    userUsersController.initializeVBox(userUsersController.getUserFriendFormat(), userUsersController.usersFriendsList);
+                    break;
+                } catch (ValidatorException ve) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userUsersController.usersVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userUsersController.usersVBox.getChildren().add(text);
+                    userUsersController.usersVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
+        }
+
+    }
 }

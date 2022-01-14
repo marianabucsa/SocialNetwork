@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-public class UserEditProfileController extends AbstractFriendsController {
+public class UserEditProfileController extends AbstractController {
     @FXML
     private TextField firstNameTextField;
     @FXML
@@ -30,8 +30,8 @@ public class UserEditProfileController extends AbstractFriendsController {
     private CheckBox showPasswordCheckBox;
 
     @Override
-    public void setUserController(UserDto user, String currentUser, Service service) {
-        super.setUserController(user, currentUser, service);
+    public void setAbstractController(String currentUser, Service service) {
+        super.setAbstractController( currentUser, service);
         User userInfo = service.findOneUser(service.getIdFromEmail(currentUser));
         firstNameTextField.setText(userInfo.getFirstName());
         lastNameTextField.setText(userInfo.getLastName());

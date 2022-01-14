@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="476.0" prefWidth="564.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserShowParticipantsController">
+<AnchorPane prefHeight="490.0" prefWidth="564.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserShowParticipantsController">
     <children>
-        <ScrollPane fx:id="participantsScrollPane" hbarPolicy="NEVER" layoutX="14.0" layoutY="8.0" prefHeight="413.0" prefWidth="536.0">
-            <content>
-                <VBox fx:id="participantsVBox" prefHeight="411.0" prefWidth="533.0" styleClass="scroll-pane" stylesheets="@../css/userUsers.css" />
-            </content>
-        </ScrollPane>
-      <Button layoutX="159.0" layoutY="434.0" mnemonicParsing="false" onAction="#onExitClicked" prefHeight="28.0" prefWidth="246.0" text="Exit" />
+          <VBox fx:id="participantsVBox" layoutX="18.0" prefHeight="400.0" prefWidth="528.0" styleClass="scroll-pane" stylesheets="@../css/userUsers.css" />
+      <Button layoutX="159.0" layoutY="441.0" mnemonicParsing="false" onAction="#onExitClicked" prefHeight="28.0" prefWidth="246.0" text="Exit" />
     </children>
    <effect>
       <Lighting>

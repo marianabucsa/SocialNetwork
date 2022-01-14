@@ -43,26 +43,8 @@ public class RegisterController extends AbstractFriendsController {
     private Label errorLabel;
 
 
-/*<<<<<<< HEAD
-    public void setService(Service service,  Stage stage, User u) {
-      //  super.setUserController(null,u.getEmail(),service);
-        this.service=service;
-        this.dialogStage=stage;
-        this.user=u;
-        if (null != u) {
-            setFields(u);
-        }
-    }
-    private void setFields(User us)
-    {
-        textFirstName.setText(us.getFirstName());
-        textLastName.setText(us.getLastName());
-        textEmail.setText(us.getEmail());
-        textPassword.setText(us.getPassword());
-=======*/
     public void setRegisterController(Service service) {
-        super.setUserController(null, null, service);
-//>>>>>>> f98fd1d897e3834f4fb984ce886feeeff79294e6
+        super.setAbstractController(null,  service);
     }
 
     @FXML

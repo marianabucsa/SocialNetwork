@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="298.0" prefWidth="424.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserEventSearchController">
+<AnchorPane prefHeight="415.0" prefWidth="424.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserEventSearchController">
     <children>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2a2e37" height="250.0" layoutX="11.0" layoutY="8.0" stroke="LIME" strokeType="INSIDE" width="401.0" />
         <Label fx:id="nameLabel" alignment="CENTER" layoutX="162.0" layoutY="14.0" prefHeight="17.0" prefWidth="97.0" text="Name" textFill="LIME">

@@ -17,7 +17,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -25,7 +27,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
 
-public class UserMyEventController extends UserMyEventsController{
+public class UserMyEventController extends UserEventsController{
     @FXML
     private Label nameLabel;
     @FXML
@@ -43,6 +45,51 @@ public class UserMyEventController extends UserMyEventsController{
 
     @Override
     public void update(ServiceEvent serviceEvent) throws IOException {
+        switch (serviceEvent.getEventType()) {
+            case DELETE_EVENT,
+                MODIFY_EVENT:{
+                try {
+                    userMyEventsController.myEventsList.setAll(userMyEventsController.getMyEventsList());
+                    userMyEventsController.initializeVBox(userMyEventsController.getMyEventFormat(), userMyEventsController.myEventsList);
+                } catch (ValidatorException ve) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(ve.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ve.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (ServiceException se) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(se.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(se.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (RepositoryException re) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(re.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(re.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (InputMismatchException ime) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(ime.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(ime.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                } catch (IOException e) {
+                    userMyEventsController.eventsVBox.getChildren().clear();
+                    Text text= new Text(e.getMessage());
+                    text.setFill(Color.valueOf("#B2B2B2"));
+                    text.setText(e.getMessage());
+                    userMyEventsController.eventsVBox.getChildren().add(text);
+                    userMyEventsController.eventsVBox.setAlignment(Pos.valueOf("CENTER"));
+                }
+            }
+
+        }
 
     }
 
@@ -68,9 +115,9 @@ public class UserMyEventController extends UserMyEventsController{
             e.printStackTrace();
         }
 
-        AbstractEventsController abstractController = fxmlLoader.getController();
-        abstractController.setAbstractEventController(currentUser, this.service, workingEvent);
-
+        UserEventsController abstractController = fxmlLoader.getController();
+        abstractController.setAbstractEventController(currentUser, service, workingEvent);
+        abstractController.setUserMyEventsController(this.userMyEventsController);
         Stage userStage = new Stage();
         Scene scene = new Scene(root);
         userStage.initStyle(StageStyle.TRANSPARENT);
@@ -81,7 +128,7 @@ public class UserMyEventController extends UserMyEventsController{
     public void onDeleteClicked(ActionEvent actionEvent) {
         try {
             service.deleteEvent(workingEvent);
-            //service.notifyObservers(new ServiceEvent(EventType.DELETE_FRIEND,userDto));
+            service.notifyObservers(new ServiceEvent(EventType.DELETE_EVENT,workingEvent));
             errorLabel.setAlignment(Pos.CENTER);
             errorLabel.setTextFill(Paint.valueOf("green"));
             errorLabel.setText("Event deleted!");

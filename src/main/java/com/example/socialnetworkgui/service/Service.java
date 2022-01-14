@@ -11,6 +11,10 @@ import com.example.socialnetworkgui.repository.DB.FriendshipsDBRepository;
 import com.example.socialnetworkgui.repository.DB.MessagesDBRepository;
 import com.example.socialnetworkgui.repository.DB.UserDBRepository;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 import com.example.socialnetworkgui.utils.NetworkGraph;
 import com.example.socialnetworkgui.utils.Pair;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
@@ -20,10 +24,7 @@ import com.example.socialnetworkgui.utils.observer.Observer;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,7 +33,7 @@ public class Service implements Observable<ServiceEvent> {
     private final UserDBRepository userRepo;
     private final MessagesDBRepository messagesRepo;
     private final EmailValidator emailValidator;
-    private final EventsDBRepository eventsRepo;
+    public final EventsDBRepository eventsRepo;
     public List<Observer<ServiceEvent>> observers = new ArrayList<>();
 
     /**
@@ -644,6 +645,72 @@ public class Service implements Observable<ServiceEvent> {
         return events;
     }
 
+    public Set<Event> getAllEventsOnPage(int pageIndex,int size) {
+        PageableInterface pageable = new Pageable(pageIndex, size);
+        Page<Event> eventPage = eventsRepo.findAll(pageable);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<Event> getSubscribedEventsUserOnPage(int pageIndex,int size,Long id) {
+        PageableInterface pageable = new Pageable(pageIndex, size);
+        Page<Event> eventPage = eventsRepo.findSubscribedEventsUser(pageable,id);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<Event> getEventsUserOnPage(int pageIndex,int size,Long id) {
+        PageableInterface pageable = new Pageable(pageIndex, size);
+        Page<Event> eventPage = eventsRepo.getEventsUser(pageable,id);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<Event> getFriendsEventsOnPage(int pageIndex,int size,Long id) {
+        PageableInterface pageable = new Pageable(pageIndex, size);
+        List<Long> friends=friendshipsRepo.getFriendsUser(id);
+        List<Event> events=new ArrayList<>();
+        for (Long id1: friends){
+            events.addAll(eventsRepo.getEventsUser(id1));
+        }
+        Paginator<Event> paginator = new Paginator<Event>(pageable, events);
+        Page<Event> eventPage = paginator.paginate();
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+/*
+    public Set<User> getNextUsers() {
+        this.page++;
+        return getUsersOnPage(this.page);
+    }
+
+    public Set<User> getUsersOnPage(int page) {
+        this.page=page;
+        PageableInterface pageable = new Pageable(page, this.size);
+        Page<User> eventPage = userRepo.findAll(pageable);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<Friendship> getNextFriendship() {
+        this.page++;
+        return getFriendshipsOnPage(this.page);
+    }
+
+    public Set<Friendship> getFriendshipsOnPage(int page) {
+        this.page=page;
+        PageableInterface pageable = new Pageable(page, this.size);
+        Page<Friendship> eventPage = friendshipsRepo.findAll(pageable);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+
+    public Set<ReplyMessage> getNextMessages() {
+        this.page++;
+        return getMessagesOnPage(this.page);
+    }
+
+    public Set<ReplyMessage> getMessagesOnPage(int page) {
+        this.page=page;
+        PageableInterface pageable = new Pageable(page, this.size);
+        Page<ReplyMessage> eventPage = messagesRepo.findAll(pageable);
+        return eventPage.getContent().collect(Collectors.toSet());
+    }
+*/
 
 /**
  * methode to connect the friendships to the users used for in memory and file repository

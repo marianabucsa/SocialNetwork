@@ -5,12 +5,13 @@ import com.example.socialnetworkgui.domain.Entity;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.repository.Repository;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.PagingRepository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public abstract class AbstractRepoDatabase<ID, E extends Entity<ID>> implements Repository<ID, E> {
+public abstract class AbstractRepoDatabase<ID, E extends Entity<ID>> implements PagingRepository<ID, E> {
     private String url;
     private String username;
     private String password;
