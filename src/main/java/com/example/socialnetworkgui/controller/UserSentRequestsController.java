@@ -17,9 +17,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 
-public class UserSentRequestsController extends UserUsersController {
+public class UserSentRequestsController extends AbstractFriendsController {
     String workingUser;
 
     @FXML
@@ -35,7 +36,7 @@ public class UserSentRequestsController extends UserUsersController {
     public void setUserController(UserDto user, String currentUser, Service service) {
         Image profilePicture = new Image("/com/example/socialnetworkgui/pictures/defaultPicture.png");
         circleProfilePicture.setFill(new ImagePattern(profilePicture));
-        super.setUserUsersController(service,currentUser);
+        super.setUserController(user,currentUser,service);
         workingUser = user.getEmail();
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
@@ -71,4 +72,8 @@ public class UserSentRequestsController extends UserUsersController {
     public void onSendMessageClick(ActionEvent actionEvent) {
     }
 
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
+
+    }
 }

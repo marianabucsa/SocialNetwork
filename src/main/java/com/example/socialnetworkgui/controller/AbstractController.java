@@ -14,4 +14,5 @@ public abstract class AbstractController implements Observer<ServiceEvent> {
         this.currentUser = currentUser;
         this.service = service;
     }
+
 }

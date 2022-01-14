@@ -18,9 +18,10 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 
-public class UserSearchController extends UserUsersController {
+public class UserSearchController extends AbstractFriendsController {
     String workingUser;
 
     @FXML
@@ -100,4 +101,8 @@ public class UserSearchController extends UserUsersController {
         userFirstLastName.setText(user.getFirstName() + " " + user.getLastName());
     }
 
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
+
+    }
 }

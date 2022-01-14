@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="491.0" prefWidth="423.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserFriendsEventsController">
     <children>
-        <ScrollPane layoutX="-1.0" prefHeight="491.0" prefWidth="423.0" stylesheets="@../css/userEvents.css">
-            <content>
-                <VBox fx:id="eventsVBox" prefHeight="488.0" prefWidth="420.0" styleClass="vertical-box" stylesheets="@../css/userEvents.css" />
-            </content>
-        </ScrollPane>
+          <VBox fx:id="eventsVBox" prefHeight="488.0" prefWidth="420.0" styleClass="vertical-box" stylesheets="@../css/userEvents.css" />
     </children>
 </AnchorPane>

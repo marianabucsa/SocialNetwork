@@ -4,6 +4,10 @@ import com.example.socialnetworkgui.domain.ReplyMessage;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -390,5 +394,11 @@ public class MessagesDBRepository extends AbstractRepoDatabase<Long, ReplyMessag
         } catch (SQLException e) {
             throw new RepositoryException("Error getting conversation in database!\n");
         }
+    }
+
+    @Override
+    public Page<ReplyMessage> findAll(PageableInterface pageable) {
+        Paginator<ReplyMessage> paginator = new Paginator<ReplyMessage>(pageable, this.findAll());
+        return paginator.paginate();
     }
 }

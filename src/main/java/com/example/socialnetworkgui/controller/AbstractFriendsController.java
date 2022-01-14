@@ -15,4 +15,5 @@ public abstract class AbstractFriendsController extends AbstractController {
         this.workingUser=workingUser;
     }
 
+
 }

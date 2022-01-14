@@ -4,6 +4,10 @@ import com.example.socialnetworkgui.domain.Friendship;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 import com.example.socialnetworkgui.utils.Pair;
 
 import java.sql.PreparedStatement;
@@ -381,5 +385,11 @@ public class FriendshipsDBRepository extends AbstractRepoDatabase<Pair, Friendsh
         } catch (SQLException e) {
             throw new RepositoryException("Error getting friendship date in database!\n");
         }
+    }
+
+    @Override
+    public Page<Friendship> findAll(PageableInterface pageable) {
+        Paginator<Friendship> paginator = new Paginator<Friendship>(pageable, this.findAll());
+        return paginator.paginate();
     }
 }

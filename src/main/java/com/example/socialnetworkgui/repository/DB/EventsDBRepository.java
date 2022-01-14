@@ -3,6 +3,10 @@ package com.example.socialnetworkgui.repository.DB;
 import com.example.socialnetworkgui.domain.Event;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -290,4 +294,21 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             throw new RepositoryException("Error finding messages in database!\n");
         }
     }
+
+    @Override
+    public Page<Event> findAll(PageableInterface pageable) {
+        Paginator<Event> paginator = new Paginator<Event>(pageable, this.findAll());
+        return paginator.paginate();
+    }
+
+    public Page<Event> findSubscribedEventsUser(PageableInterface pageable,Long id) {
+        Paginator<Event> paginator = new Paginator<Event>(pageable, this.findSubscribedEventsUser(id));
+        return paginator.paginate();
+    }
+
+    public Page<Event> getEventsUser(PageableInterface pageable,Long id) {
+        Paginator<Event> paginator = new Paginator<Event>(pageable, this.getEventsUser(id));
+        return paginator.paginate();
+    }
+
 }
