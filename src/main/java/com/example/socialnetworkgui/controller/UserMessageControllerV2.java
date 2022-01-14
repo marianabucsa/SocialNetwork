@@ -268,13 +268,30 @@ public class UserMessageControllerV2 extends AbstractMessagesController{
         Long from = service.getIdFromEmail(currentUser);
         List<Long> to = new ArrayList<>();
         LocalDateTime date = LocalDateTime.now();
-        to = workingMessage.getTo();
+        /*to = workingMessage.getTo();
         List<String> to_emails = new ArrayList<>();
         for(Long id: to){
             String email = service.getEmailFromId(id);
             to_emails.add(email);
+        }*/
+        to = workingMessage.getTo();
+        List<String> to_emails = new ArrayList<>();
+
+        Long from2 = workingMessage.getFrom();
+        String from2_2 = service.getEmailFromId(from2);
+        if(!from2_2.equals(currentUser)){
+            to_emails.add(from2_2);
         }
+        for(Long id: to){
+            String email = service.getEmailFromId(id);
+            if(!email.equals(currentUser)){
+                to_emails.add(email);
+            }
+        }
+
+
         MessageDto messageDto = new MessageDto(from,to,text,date);
+        //service.sendMessage(currentUser,to_emails,text);
         service.sendMessage(currentUser,to_emails,text);
         try {
             addToVBox(messageDto, "sent");

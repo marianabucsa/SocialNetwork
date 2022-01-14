@@ -60,9 +60,11 @@ public class MessageSearchController extends UserMessageController{
             for (String s:to) {
                 userFirstLastName.setText(userFirstLastName.getText()+" "+s);
             }
+            //to.add(name);
         }
         else
         {
+            //to.add(name);
             userFirstLastName.setText(to.toString());
         }
     }
