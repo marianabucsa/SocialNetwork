@@ -33,7 +33,7 @@ public class Service implements Observable<ServiceEvent> {
     private final UserDBRepository userRepo;
     private final MessagesDBRepository messagesRepo;
     private final EmailValidator emailValidator;
-    private final EventsDBRepository eventsRepo;
+    public final EventsDBRepository eventsRepo;
     public List<Observer<ServiceEvent>> observers = new ArrayList<>();
 
     /**

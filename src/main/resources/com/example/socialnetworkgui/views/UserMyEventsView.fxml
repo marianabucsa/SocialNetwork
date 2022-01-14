@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+        <?import javafx.scene.layout.AnchorPane?>
+        <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="491.0" prefWidth="423.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserMyEventsController">
-   <children>
-      <VBox fx:id="eventsVBox" prefHeight="488.0" prefWidth="420.0" styleClass="vertical-box" stylesheets="@../css/userEvents.css" />
-   </children>
+<children>
+   <VBox fx:id="eventsVBox" prefHeight="488.0" prefWidth="420.0" styleClass="vertical-box" stylesheets="@../css/userEvents.css" />
+</children>
 </AnchorPane>

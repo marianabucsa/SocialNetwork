@@ -9,6 +9,11 @@ import com.example.socialnetworkgui.utils.observer.Observer;
 public abstract class AbstractFriendsController extends AbstractController {
     protected UserDto workingUser;
     UserUsersController userUsersController=null;
+    protected Thread threadNotifications;
+
+    public void setThreadNotifications(Thread thread){
+        this.threadNotifications=thread;
+    }
 
     public void setUserController(UserDto workingUser,String currentUser, Service service) {
         super.setAbstractController(currentUser,service);

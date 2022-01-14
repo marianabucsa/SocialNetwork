@@ -36,6 +36,7 @@ public class UserProfileController extends AbstractFriendsController {
     private double xOffset = 0;
     private double yOffset = 0;
 
+
     @FXML
     private Circle circleProfilePicture;
 
@@ -75,6 +76,7 @@ public class UserProfileController extends AbstractFriendsController {
         loginStage.setScene(scene);
         loginStage.initStyle(StageStyle.TRANSPARENT);
         loginStage.show();
+        super.threadNotifications.stop();
     }
 
     public void onMessagesClick(ActionEvent actionEvent) throws IOException {
@@ -181,6 +183,7 @@ public class UserProfileController extends AbstractFriendsController {
             loginStage.setScene(scene);
             loginStage.initStyle(StageStyle.TRANSPARENT);
             loginStage.show();
+            super.threadNotifications.stop();
         } catch (ServiceException se) {
             se.printStackTrace();
         } catch (ValidatorException ve) {

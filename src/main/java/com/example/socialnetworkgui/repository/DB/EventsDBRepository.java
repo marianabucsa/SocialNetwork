@@ -4,7 +4,6 @@ import com.example.socialnetworkgui.domain.Event;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.repository.paging.Page;
-import com.example.socialnetworkgui.repository.paging.Pageable;
 import com.example.socialnetworkgui.repository.paging.PageableInterface;
 import com.example.socialnetworkgui.repository.paging.Paginator;
 
@@ -131,10 +130,17 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
         if (entity == null)
             throw new RepositoryException("Entity must not be null!\n");
         validator.validate(entity);
-        String sql;
-        if (entity.getParticipants() != null) {
+        String sql = "";
+        if (entity.getParticipants() != null && entity.getNotifiedParticipants() != null) {
+            sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=?,participants=?, notified=? where id=?";
+        }
+        if (entity.getParticipants() != null && entity.getNotifiedParticipants() == null) {
             sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=?,participants=? where id=?";
-        } else {
+        }
+        if (entity.getParticipants() == null && entity.getNotifiedParticipants() != null) {
+            sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=?, notified=? where id=?";
+        }
+        if (entity.getParticipants() == null && entity.getNotifiedParticipants() == null) {
             sql = "update Events set name=?, startdate=?, enddate=?,description=?,location=? where id=?";
         }
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
@@ -143,14 +149,37 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
             ps.setTimestamp(3, Timestamp.valueOf(entity.getEndDate()));
             ps.setString(4, entity.getDescription());
             ps.setString(5, entity.getLocation());
-            if (entity.getParticipants() != null) {
-                if(entity.getParticipants().size()==0)
-                    ps.setString(6,null);
+            if (entity.getParticipants() != null && entity.getNotifiedParticipants() != null) {
+                if (entity.getParticipants().size() == 0)
+                    ps.setString(6, null);
+                else {
+                    ps.setString(6, listToString(entity.getParticipants()));
+                }
+                if (entity.getNotifiedParticipants().size() == 0)
+                    ps.setString(7, null);
+                else {
+                    ps.setString(7, listToString(entity.getNotifiedParticipants()));
+                }
+                ps.setLong(8, entity.getId());
+
+            }
+            if (entity.getParticipants() != null && entity.getNotifiedParticipants() == null) {
+                if (entity.getParticipants().size() == 0)
+                    ps.setString(6, null);
                 else {
                     ps.setString(6, listToString(entity.getParticipants()));
                 }
                 ps.setLong(7, entity.getId());
-            } else {
+            }
+            if (entity.getParticipants() == null && entity.getNotifiedParticipants() != null) {
+                if (entity.getNotifiedParticipants().size() == 0)
+                    ps.setString(6, null);
+                else {
+                    ps.setString(6, listToString(entity.getNotifiedParticipants()));
+                }
+                ps.setLong(7, entity.getId());
+            }
+            if (entity.getParticipants() == null && entity.getNotifiedParticipants() == null) {
                 ps.setLong(6, entity.getId());
             }
             ps.executeUpdate();
@@ -279,11 +308,15 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
                 String location = resultSet.getString("location");
                 Long organizer = resultSet.getLong("organizer");
                 String participants = resultSet.getString("participants");
+                String notifiedParticipants = resultSet.getString("notified");
                 Event event;
                 if (participants != null) {
                     event = new Event(name, startDate, endDate, description, location, organizer, stringToList(participants));
                     event.setId(id);
-                    if(event.getParticipants().contains(idFromEmail)) {
+                    if (notifiedParticipants != null) {
+                        event.setNotifiedParticipants(stringToList(notifiedParticipants));
+                    }
+                    if (event.getParticipants().contains(idFromEmail)) {
                         events.add(event);
                     }
                 }
@@ -301,12 +334,12 @@ public class EventsDBRepository extends AbstractRepoDatabase<Long, Event> {
         return paginator.paginate();
     }
 
-    public Page<Event> findSubscribedEventsUser(PageableInterface pageable,Long id) {
+    public Page<Event> findSubscribedEventsUser(PageableInterface pageable, Long id) {
         Paginator<Event> paginator = new Paginator<Event>(pageable, this.findSubscribedEventsUser(id));
         return paginator.paginate();
     }
 
-    public Page<Event> getEventsUser(PageableInterface pageable,Long id) {
+    public Page<Event> getEventsUser(PageableInterface pageable, Long id) {
         Paginator<Event> paginator = new Paginator<Event>(pageable, this.getEventsUser(id));
         return paginator.paginate();
     }
