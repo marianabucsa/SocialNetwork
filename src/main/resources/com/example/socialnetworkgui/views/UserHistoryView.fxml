@@ -10,7 +10,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.UserHistoryController">
 
     <children>
-        <Button fx:id="btnExport" layoutX="438.0" layoutY="22.0" mnemonicParsing="false" onAction="#onExport" prefHeight="25.0" prefWidth="112.0" text="Export PDF" />
+        <Button fx:id="btnExport" disable="true" layoutX="438.0" layoutY="22.0" mnemonicParsing="false" onAction="#onExport" prefHeight="25.0" prefWidth="112.0" text="Export PDF" />
         <ScrollPane fx:id="usersScrollPane" layoutX="14.0" layoutY="130.0" prefHeight="337.0" prefWidth="537.0" style="-fx-background-color: #2A2E37;">
             <content>
                 <VBox fx:id="usersVBox" prefHeight="334.0" prefWidth="534.0" styleClass="scroll-pane" />
