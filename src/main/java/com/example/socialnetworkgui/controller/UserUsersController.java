@@ -16,12 +16,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,16 +44,17 @@ public class UserUsersController extends AbstractFriendsController {
     @FXML
     private TextField textSearchByName;
     @FXML
-    private VBox usersVBox;
+    public  VBox usersVBox;
 
     private Pagination pagination;
 
     public void setUserUsersController(Service service, String currentUser) {
         super.setUserController(null, currentUser, service);
+        super.setUserUsersController(this);
     }
 
     @FXML
-    private void initializeVBox(URL formatURL, ObservableList<UserDto> participantsList) throws IOException {
+    public void initializeVBox(URL formatURL, ObservableList<UserDto> participantsList) throws IOException {
         usersVBox.getChildren().clear();
         if (participantsList.size()==0)
             throw new ServiceException("No participants yet!");
@@ -275,28 +278,28 @@ public class UserUsersController extends AbstractFriendsController {
 
     }
 
-    private List<UserDto> getReceivedRequestsList() {
+    public List<UserDto> getReceivedRequestsList() {
         List<UserDto> friendRequests = service.findReceivedFriendRequests(service.getIdFromEmail(currentUser));
         if (friendRequests.size() == 0)
             throw new ServiceException("No friends requests found!");
         return friendRequests;
     }
 
-    private List<UserDto> getSentRequestsList() {
+    public List<UserDto> getSentRequestsList() {
         List<UserDto> friendRequests = service.findSentFriendRequests(service.getIdFromEmail(currentUser));
         if (friendRequests.size() == 0)
             throw new ServiceException("No friends requests found!");
         return friendRequests;
     }
 
-    private List<UserDto> getFriendsList() {
+    public List<UserDto> getFriendsList() {
         List<UserDto> friends = service.findFriends(service.getIdFromEmail(currentUser));
         if (friends.size() == 0)
             throw new ServiceException("No friends found!");
         return friends;
     }
 
-    private List<UserDto> getUsersList() {
+    public List<UserDto> getUsersList() {
         List<UserDto> users = StreamSupport.stream(service.findAllUsers().spliterator(), false)
                 .map(n -> new UserDto(n.getFirstName(), n.getLastName(), n.getEmail()))
                 .collect(Collectors.toList());
@@ -305,19 +308,19 @@ public class UserUsersController extends AbstractFriendsController {
         return users;
     }
 
-    private java.net.URL getUserFriendFormat() {
+    public java.net.URL getUserFriendFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/UserFriendView.fxml");
     }
 
-    private java.net.URL getUserReceivedRequestsFormat() {
+    public java.net.URL getUserReceivedRequestsFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/ReceivedRequestsView.fxml");
     }
 
-    private java.net.URL getUserSentRequestsFormat() {
+    public java.net.URL getUserSentRequestsFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/SentRequestsView.fxml");
     }
 
-    private java.net.URL getUserSearchFormat() {
+    public java.net.URL getUserSearchFormat() {
         return getClass().getResource("/com/example/socialnetworkgui/views/UserSearchView.fxml");
     }
 
@@ -328,181 +331,11 @@ public class UserUsersController extends AbstractFriendsController {
         searchUserView = searchUserViewLoader.load();
         AbstractFriendsController userSearchController = searchUserViewLoader.getController();
         userSearchController.setUserController(user, currentUser, service);
+        userSearchController.setUserUsersController(this);
         return searchUserView;
     }
 
     @Override
     public void update(ServiceEvent serviceEvent) throws IOException {
-        switch (serviceEvent.getEventType()) {
-            case ADD_FRIEND: {
-                try {
-                    usersSentRequestsList.setAll(getSentRequestsList());
-                    initializeVBox(getUserSentRequestsFormat(), usersSentRequestsList);
-                    break;
-                } catch (ValidatorException ve) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ve.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ve.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (ServiceException se) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(se.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(se.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (RepositoryException re) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(re.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(re.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (InputMismatchException ime) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ime.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ime.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (IOException e) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(e.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(e.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                }
-            }
-            case DELETE_FRIEND: {
-                try {
-                    usersFriendsList.setAll(getFriendsList());
-                    initializeVBox(getUserFriendFormat(), usersFriendsList);
-                    break;
-                } catch (ValidatorException ve) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ve.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ve.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (ServiceException se) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(se.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(se.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (RepositoryException re) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(re.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(re.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (InputMismatchException ime) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ime.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ime.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (IOException e) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(e.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(e.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                }
-            }
-            case ACCEPT_FRIENDSHIP:
-            case DECLINE_FRIENDSHIP: {
-                try {
-                    usersReceivedRequestsList.setAll(getReceivedRequestsList());
-                    initializeVBox(getUserReceivedRequestsFormat(), usersReceivedRequestsList);
-                    break;
-                } catch (ValidatorException ve) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ve.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ve.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (ServiceException se) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(se.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(se.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (RepositoryException re) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(re.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(re.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (InputMismatchException ime) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ime.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ime.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (IOException e) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(e.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(e.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                }
-            }
-            case CANCEL_FRIENDSHIP: {
-                try {
-                    usersSentRequestsList.setAll(getSentRequestsList());
-                    initializeVBox(getUserFriendFormat(), usersFriendsList);
-                    break;
-                } catch (ValidatorException ve) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ve.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ve.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (ServiceException se) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(se.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(se.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (RepositoryException re) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(re.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(re.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (InputMismatchException ime) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(ime.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(ime.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                } catch (IOException e) {
-                    usersVBox.getChildren().clear();
-                    Text text= new Text(e.getMessage());
-                    text.setFill(Color.valueOf("#B2B2B2"));
-                    text.setText(e.getMessage());
-                    usersVBox.getChildren().add(text);
-                    usersVBox.setAlignment(Pos.valueOf("CENTER"));
-                }
-            }
-        }
     }
 }

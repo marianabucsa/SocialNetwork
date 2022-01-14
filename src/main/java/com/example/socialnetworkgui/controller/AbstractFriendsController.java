@@ -8,6 +8,7 @@ import com.example.socialnetworkgui.utils.observer.Observer;
 
 public abstract class AbstractFriendsController extends AbstractController {
     protected UserDto workingUser;
+    UserUsersController userUsersController=null;
 
     public void setUserController(UserDto workingUser,String currentUser, Service service) {
         super.setAbstractController(currentUser,service);
@@ -15,5 +16,8 @@ public abstract class AbstractFriendsController extends AbstractController {
         this.workingUser=workingUser;
     }
 
+    public void setUserUsersController(UserUsersController userUsersController){
+        this.userUsersController=userUsersController;
+    }
 
 }

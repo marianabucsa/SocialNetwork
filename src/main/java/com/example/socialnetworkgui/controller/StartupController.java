@@ -21,10 +21,10 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class StartupController extends AbstractFriendsController {
+public class StartupController extends AbstractController {
 
     public void setService(Service serv) {
-        super.setUserController(null, null, serv);
+        super.setAbstractController(null, serv);
     }
 
     private double xOffset = 0;
@@ -111,7 +111,7 @@ public class StartupController extends AbstractFriendsController {
         }
 
         AbstractFriendsController userProfileController = fxmlLoader.getController();
-        userProfileController.setUserController(null, user.getEmail(), this.service);
+        userProfileController.setUserController(null,user.getEmail(), this.service);
 
         Stage userStage = new Stage();
         Scene scene = new Scene(root);
