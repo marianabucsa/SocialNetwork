@@ -70,7 +70,5 @@ public class MessageSearchController extends UserMessageController{
     @FXML
     private void onSendMessageClick() throws IOException {
         service.notifyObservers(new ServiceEvent(EventType.SEND_MESSAGE, message));
-
-
     }
 }

@@ -6,15 +6,15 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="133.0" prefWidth="525.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.ConversationController">
+<AnchorPane prefHeight="133.0" prefWidth="368.0" stylesheets="@../css/userEvents.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.socialnetworkgui.controller.ConversationController">
     <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#feffff" height="86.0" layoutX="1.0" layoutY="44.0" stroke="#0bf642" strokeType="INSIDE" width="517.0" />
-        <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="448.0" layoutY="44.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
-        <Label fx:id="messageSender" alignment="CENTER" layoutX="380.0" layoutY="103.0" prefHeight="17.0" prefWidth="136.0" text="First Last Name" textAlignment="CENTER" />
-        <Label fx:id="messageText" alignment="CENTER" layoutX="13.0" layoutY="51.0" prefHeight="66.0" prefWidth="358.0" text="text">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#036b6b" height="86.0" layoutX="1.0" layoutY="40.0" stroke="#0bf642" strokeType="INSIDE" width="368.0" />
+        <Circle fx:id="circleProfilePicture" fill="#1d1d1d" layoutX="314.0" layoutY="39.0" radius="39.0" stroke="#22f207" strokeType="INSIDE" />
+        <Label fx:id="messageSender" alignment="CENTER" layoutX="231.0" layoutY="101.0" prefHeight="17.0" prefWidth="131.0" text="First Last Name" textAlignment="CENTER" textFill="#b2b2b2" />
+        <Label fx:id="messageText" alignment="CENTER" layoutX="14.0" layoutY="47.0" prefHeight="71.0" prefWidth="238.0" text="text" textFill="#b2b2b2">
             <font>
                 <Font size="16.0" />
             </font></Label>
-        <Label fx:id="messageDate" layoutX="14.0" layoutY="7.0" prefHeight="25.0" prefWidth="179.0" text="date" />
+        <Label fx:id="messageDate" layoutX="5.0" layoutY="14.0" prefHeight="25.0" prefWidth="179.0" text="date" textFill="#b2b2b2" />
     </children>
 </AnchorPane>

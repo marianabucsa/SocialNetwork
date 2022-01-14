@@ -45,10 +45,10 @@ public class StartApplication extends Application{
         MessageValidator messageValidator = new MessageValidator();
 
         EventValidator eventValidator= new EventValidator();
-        userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",userValidator);
-        friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",friendshipValidator);
-        messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",messageValidator);
-        eventsDBRepository=new EventsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","postgres",eventValidator);
+        userDBRepository = new UserDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",userValidator);
+        friendshipsDBRepository = new FriendshipsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",friendshipValidator);
+        messagesDBRepository = new MessagesDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",messageValidator);
+        eventsDBRepository=new EventsDBRepository("jdbc:postgresql://localhost:5432/Network","postgres","luceafarul1",eventValidator);
         service = new Service(friendshipsDBRepository,userDBRepository,messagesDBRepository,eventsDBRepository, new EmailValidator());
 
         initView(primaryStage);
