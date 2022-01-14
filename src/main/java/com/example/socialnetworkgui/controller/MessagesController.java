@@ -204,8 +204,8 @@ public class MessagesController {
             e.printStackTrace();
         }
 
-        UserUsersController userController = fxmlLoader.getController();
-        userController.setUserController(null,user,this.service);
+        AbstractController userController = fxmlLoader.getController();
+        userController.setAbstractController(user,this.service);
 
         Stage userStage = new Stage();
         Scene scene = new Scene(root, 600, 400);

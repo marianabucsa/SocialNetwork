@@ -4,6 +4,10 @@ import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.validator.Validator;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 import com.example.socialnetworkgui.utils.AES256;
 
 import java.sql.PreparedStatement;
@@ -261,5 +265,11 @@ public class UserDBRepository extends AbstractRepoDatabase<Long, User> {
         } catch (SQLException e) {
             throw new RepositoryException("Error finding user in database!\n");
         }
+    }
+
+    @Override
+    public Page<User> findAll(PageableInterface pageable) {
+        Paginator<User> paginator = new Paginator<User>(pageable, this.findAll());
+        return paginator.paginate();
     }
 }

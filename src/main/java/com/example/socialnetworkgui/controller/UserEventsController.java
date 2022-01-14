@@ -1,7 +1,6 @@
 package com.example.socialnetworkgui.controller;
 
 import com.example.socialnetworkgui.domain.Event;
-import com.example.socialnetworkgui.domain.UserDto;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.animation.Interpolator;
@@ -24,6 +23,12 @@ public class UserEventsController extends AbstractEventsController {
     @FXML
     private StackPane container;
 
+    UserMyEventsController userMyEventsController;
+
+    public void setUserMyEventsController(UserMyEventsController userMyEventsController) {
+        this.userMyEventsController = userMyEventsController;
+    }
+
     public void setEventsController(Event event, String userEmail, Service service) {
         super.setAbstractEventController(userEmail, service,event);
     }
@@ -42,14 +47,13 @@ public class UserEventsController extends AbstractEventsController {
         Node sceneToRemove = container.getChildren().get(0);
 
         sceneToAdd.setTranslateX(container.getWidth());
+        container.getChildren().remove(sceneToRemove);
         container.getChildren().add(sceneToAdd);
-
         Timeline timeline = new Timeline();
         KeyValue keyValue = new KeyValue(sceneToAdd.translateXProperty(), 0, Interpolator.EASE_IN);
         KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), keyValue);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setOnFinished(event -> {
-            container.getChildren().remove(sceneToRemove);
         });
         timeline.play();
     }
@@ -62,14 +66,16 @@ public class UserEventsController extends AbstractEventsController {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserCreateEventView.fxml"));
     }
 
-    public void onFriendsClicked(ActionEvent actionEvent) {
+    public void onFriendsClicked(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserFriendsEventsView.fxml"));
     }
 
     public void onSearchEventClicked(ActionEvent actionEvent) throws IOException {
         setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserSearchEventsView.fxml"));
     }
 
-    public void onSignedUpEventsClicked(ActionEvent actionEvent) {
+    public void onSignedUpEventsClicked(ActionEvent actionEvent) throws IOException {
+        setScene(getClass().getResource("/com/example/socialnetworkgui/views/UserSubscribedEventsView.fxml"));
     }
 
     @Override

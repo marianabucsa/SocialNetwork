@@ -1,11 +1,13 @@
 package com.example.socialnetworkgui.controller;
 
+import com.example.socialnetworkgui.domain.Event;
 import com.example.socialnetworkgui.domain.User;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
 import com.example.socialnetworkgui.service.Service;
 import com.example.socialnetworkgui.service.ServiceException;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,15 +22,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StartupController extends AbstractFriendsController {
+import static java.lang.Thread.sleep;
+import static java.time.LocalDateTime.now;
+
+public class StartupController extends AbstractController {
 
     public void setService(Service serv) {
-        super.setUserController(null, null, serv);
+        super.setAbstractController(null, serv);
     }
 
     private double xOffset = 0;
     private double yOffset = 0;
+    public Thread thread;
 
     @FXML
     private Label appName;
@@ -47,6 +57,15 @@ public class StartupController extends AbstractFriendsController {
     @FXML
     private Button btnLogin;
 
+
+    private  boolean eventStartsInMinutes(LocalDateTime eventDate){
+        LocalDateTime nowTime = LocalDateTime.now();
+        long diff = Math.abs(ChronoUnit.MINUTES.between(eventDate, nowTime));
+        if (diff <= 10) {
+            return true;
+        }
+        return false;
+    }
     @FXML
     protected void onLoginButtonClick() {
         String id = textEmail.getText();
@@ -63,9 +82,60 @@ public class StartupController extends AbstractFriendsController {
 
             //Check if the passwords are the same
             if (u_password.equals(password)) {
+                this.thread = new Thread(() -> {
+                    while (true) {
+                        try {
+                            sleep(60000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        List<Event> events = service.findSubscribedEventsUser(user.getId());
+                        LocalDateTime nowTime = now();
+                        for (Event event : events) {
+                            if (eventStartsInMinutes(event.getStartDate())) {
+                                if (!event.isNotified(user.getId())) {
+                                    List<Long> list = event.getNotifiedParticipants();
+                                    if(list == null)
+                                        list=new ArrayList<>();
+                                    list.add(user.getId());
+                                    event.setNotifiedParticipants(list);
+                                    service.eventsRepo.update(event);
+                                    Platform.runLater(()->{
+                                        FXMLLoader loader = new FXMLLoader();
+                                        loader.setLocation(
+
+                                                getClass().
+
+                                                        getResource("/com/example/socialnetworkgui/views/EventNotificationView.fxml"));
+
+                                        AnchorPane root = null;
+                                        try {
+                                            root = (AnchorPane) loader.load();
+                                        } catch (
+                                                IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        Stage dialogStage = new Stage();
+
+                                        Scene scene = new Scene(root);
+                                        dialogStage.setScene(scene);
+
+                                        EventNotificationController controller = loader.getController();
+                                        controller.setEventNotificationController(event.getName());
+                                        dialogStage.initStyle(StageStyle.TRANSPARENT);
+                                        dialogStage.show();
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
                 showUserView(user);
                 Stage stage = (Stage) appName.getScene().getWindow();
                 stage.close();
+                thread.start();
             } else {
                 appName.setText("Incorrect password!");
                 passwordLabel.setText("");
@@ -112,7 +182,7 @@ public class StartupController extends AbstractFriendsController {
 
         AbstractFriendsController userProfileController = fxmlLoader.getController();
         userProfileController.setUserController(null, user.getEmail(), this.service);
-
+        userProfileController.setThreadNotifications(this.thread);
         Stage userStage = new Stage();
         Scene scene = new Scene(root);
         userStage.initStyle(StageStyle.TRANSPARENT);
@@ -120,10 +190,11 @@ public class StartupController extends AbstractFriendsController {
         userStage.show();
     }
 
-    public void setAppName(String string){
+    public void setAppName(String string) {
         appName.setTextFill(Paint.valueOf("green"));
         appName.setText(string);
     }
+
     public void showRegisterDialog(User user) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/com/example/socialnetworkgui/views/register-view.fxml"));

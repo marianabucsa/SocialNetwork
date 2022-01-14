@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Pagination;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,14 +25,11 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Set;
 
-public class UserMyEventsController extends AbstractEventsController {
+public class UserFriendsEventsController extends AbstractEventsController{
     protected ObservableList<Event> myEventsList = FXCollections.observableArrayList();
 
     @FXML
-    private ScrollPane eventsSPane;
-    @FXML
-    public VBox eventsVBox;
-
+    private VBox eventsVBox;
     Pagination pagination;
 
     @Override
@@ -81,7 +77,7 @@ public class UserMyEventsController extends AbstractEventsController {
     }
 
     @FXML
-    public void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
+    private void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
         eventsVBox.getChildren().clear();
         if (eventsList.size()==0)
             throw new ServiceException("No events found!");
@@ -103,33 +99,33 @@ public class UserMyEventsController extends AbstractEventsController {
 
     private VBox createPage(int pageIndex,URL formatURL) throws IOException {
         VBox vb= new VBox(5);
-        Set<Event> events = service.getEventsUserOnPage(pageIndex,1, service.getIdFromEmail(currentUser));
+        Set<Event> events = service.getFriendsEventsOnPage(pageIndex,1, service.getIdFromEmail(currentUser));
         for (Event event : events) {
             vb.getChildren().add(getMyEventFormatView(event, formatURL));
         }
         return vb;
     }
 
+
     private AnchorPane getMyEventFormatView(Event event, URL formatURL) throws IOException {
         FXMLLoader eventsViewLoader = new FXMLLoader();
         eventsViewLoader.setLocation(formatURL);
         AnchorPane eventsView = new AnchorPane();
         eventsView = eventsViewLoader.load();
-        UserEventsController eventsController = eventsViewLoader.getController();
+        AbstractEventsController eventsController = eventsViewLoader.getController();
         eventsController.setAbstractEventController(currentUser, service, event);
-        eventsController.setUserMyEventsController(this);
         return eventsView;
     }
 
-    public List<Event> getMyEventsList() {
-        List<Event> events = service.findUserEvents(service.getIdFromEmail(currentUser));
-        if (events.size() == 0)
+    private List<Event> getMyEventsList() {
+        List<Event> events = service.findFriendsEvents(service.getIdFromEmail(currentUser));
+        if (events == null)
             throw new ServiceException("No events found!");
         return events;
     }
 
-    public java.net.URL getMyEventFormat() {
-        return getClass().getResource("/com/example/socialnetworkgui/views/UserMyEventView.fxml");
+    private java.net.URL getMyEventFormat() {
+        return getClass().getResource("/com/example/socialnetworkgui/views/UserEventSearchView.fxml");
     }
 
     @Override

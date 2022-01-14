@@ -3,16 +3,21 @@ package com.example.socialnetworkgui.controller;
 import com.example.socialnetworkgui.domain.Event;
 import com.example.socialnetworkgui.domain.validator.ValidatorException;
 import com.example.socialnetworkgui.repository.RepositoryException;
-import com.example.socialnetworkgui.service.Service;
+import com.example.socialnetworkgui.repository.paging.Page;
+import com.example.socialnetworkgui.repository.paging.Pageable;
+import com.example.socialnetworkgui.repository.paging.PageableInterface;
+import com.example.socialnetworkgui.repository.paging.Paginator;
 import com.example.socialnetworkgui.service.ServiceException;
 import com.example.socialnetworkgui.utils.event.ServiceEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Pagination;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,26 +27,42 @@ import javafx.scene.text.TextAlignment;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class UserMyEventsController extends AbstractEventsController {
+public class UserSearchEventsController extends AbstractEventsController {
+
+    @FXML
+    private TextField searchTextField;
+
     protected ObservableList<Event> myEventsList = FXCollections.observableArrayList();
 
     @FXML
-    private ScrollPane eventsSPane;
-    @FXML
-    public VBox eventsVBox;
+    private VBox eventsVBox;
 
-    Pagination pagination;
+    private Pagination pagination;
 
     @Override
-    public void setAbstractController(String currentUser, Service service) {
-        super.setAbstractController(currentUser, service);
+    public void update(ServiceEvent serviceEvent) throws IOException {
+
+    }
+
+    public void onSearchAction(ActionEvent actionEvent) {
         try {
-            myEventsList.setAll(getMyEventsList());
-            initializeVBox(getMyEventFormat(), myEventsList);
+            if (Objects.equals(searchTextField.getText(), ""))
+                myEventsList.clear();
+            else {
+                Predicate<Event> p1 = n -> n.getName().startsWith(searchTextField.getText().substring(0, 1).toUpperCase() + searchTextField.getText().substring(1).toLowerCase());
+                Predicate<Event> p2 = n -> n.getName().startsWith(searchTextField.getText().toLowerCase());
+
+                myEventsList.setAll(getSearchEventsList().stream()
+                        .filter(p1.or(p2)).collect(Collectors.toList()));
+            }
+            if(myEventsList.size()==0)
+                throw new ServiceException("No event found!");
+            initializeVBox(getUserSearchFormat(), myEventsList);
         } catch (ValidatorException ve) {
             eventsVBox.getChildren().clear();
             Text text= new Text(ve.getMessage());
@@ -80,8 +101,20 @@ public class UserMyEventsController extends AbstractEventsController {
         }
     }
 
+    private URL getUserSearchFormat() {
+        return getClass().getResource("/com/example/socialnetworkgui/views/UserEventSearchView.fxml");
+    }
+
+    private List<Event> getSearchEventsList() {
+        List<Event> events = StreamSupport.stream(service.findAllEvents().spliterator(), false)
+                .collect(Collectors.toList());
+        if (events.size() == 0)
+            throw new ServiceException("No event with that name!");
+        return events;
+    }
+
     @FXML
-    public void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
+    private void initializeVBox(URL formatURL, ObservableList<Event> eventsList) throws IOException {
         eventsVBox.getChildren().clear();
         if (eventsList.size()==0)
             throw new ServiceException("No events found!");
@@ -91,7 +124,7 @@ public class UserMyEventsController extends AbstractEventsController {
                 return null;
             } else {
                 try {
-                    return createPage(pageIndex,formatURL);
+                    return createPage(pageIndex,formatURL,eventsList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -101,39 +134,28 @@ public class UserMyEventsController extends AbstractEventsController {
         eventsVBox.getChildren().add(pagination);
     }
 
-    private VBox createPage(int pageIndex,URL formatURL) throws IOException {
+    private VBox createPage(int pageIndex,URL formatURL,ObservableList<Event> eventsList) throws IOException {
         VBox vb= new VBox(5);
-        Set<Event> events = service.getEventsUserOnPage(pageIndex,1, service.getIdFromEmail(currentUser));
+        PageableInterface pageable = new Pageable(pageIndex, 1);
+        Paginator<Event> paginator = new Paginator<Event>(pageable, eventsList);
+        Page<Event> eventPage = paginator.paginate();
+        Set<Event> events = eventPage.getContent().collect(Collectors.toSet());
         for (Event event : events) {
-            vb.getChildren().add(getMyEventFormatView(event, formatURL));
+            vb.getChildren().add(getSearchFormatView(event, formatURL));
         }
         return vb;
     }
 
-    private AnchorPane getMyEventFormatView(Event event, URL formatURL) throws IOException {
-        FXMLLoader eventsViewLoader = new FXMLLoader();
-        eventsViewLoader.setLocation(formatURL);
-        AnchorPane eventsView = new AnchorPane();
-        eventsView = eventsViewLoader.load();
-        UserEventsController eventsController = eventsViewLoader.getController();
-        eventsController.setAbstractEventController(currentUser, service, event);
-        eventsController.setUserMyEventsController(this);
-        return eventsView;
+    private Node getSearchFormatView(Event event, URL formatURL) throws IOException {
+        FXMLLoader searchEventViewLoader = new FXMLLoader();
+        searchEventViewLoader.setLocation(formatURL);
+        AnchorPane searchEventView = new AnchorPane();
+        searchEventView = searchEventViewLoader.load();
+        AbstractEventsController eventsSearchController = searchEventViewLoader.getController();
+        eventsSearchController.setAbstractEventController(currentUser, service, event);
+        return searchEventView;
     }
 
-    public List<Event> getMyEventsList() {
-        List<Event> events = service.findUserEvents(service.getIdFromEmail(currentUser));
-        if (events.size() == 0)
-            throw new ServiceException("No events found!");
-        return events;
-    }
 
-    public java.net.URL getMyEventFormat() {
-        return getClass().getResource("/com/example/socialnetworkgui/views/UserMyEventView.fxml");
-    }
-
-    @Override
-    public void update(ServiceEvent serviceEvent) throws IOException {
-
-    }
 }
+

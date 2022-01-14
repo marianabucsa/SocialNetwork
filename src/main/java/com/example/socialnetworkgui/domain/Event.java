@@ -3,6 +3,7 @@ package com.example.socialnetworkgui.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class Event extends Entity<Long>{
     private String name;
@@ -12,6 +13,7 @@ public class Event extends Entity<Long>{
     private String location;
     private Long organizer;
     private List<Long> participants;
+    private List<Long> notifiedParticipants;
 
     public Event(String name, LocalDateTime startDate, LocalDateTime endDate, String description, String location, Long organizer, List<Long> participants) {
         this.name = name;
@@ -21,6 +23,7 @@ public class Event extends Entity<Long>{
         this.location = location;
         this.organizer = organizer;
         this.participants = participants;
+        this.notifiedParticipants=null;
     }
 
     public String getName() {
@@ -77,5 +80,23 @@ public class Event extends Entity<Long>{
 
     public void setParticipants(List<Long> participants) {
         this.participants = participants;
+    }
+
+    public boolean isNotified(Long id) {
+        if (notifiedParticipants==null)
+            return false;
+        for(Long user:notifiedParticipants){
+            if(Objects.equals(user, id))
+                return true;
+        }
+        return false;
+    }
+
+    public void setNotifiedParticipants(List<Long> notifiedParticipants) {
+        this.notifiedParticipants = notifiedParticipants;
+    }
+
+    public List<Long> getNotifiedParticipants() {
+        return notifiedParticipants;
     }
 }

@@ -22,14 +22,4 @@ public abstract class AbstractController implements Observer<ServiceEvent> {
         this.currentUser = currentUser;
         this.service = service;
     }
-
-
-    /*public void setMessageController(MessageDto workingMessage, String currentUser, Service service)  {
-        this.currentUser = currentUser;
-        this.service = service;
-        service.addObserver(this);
-        this.workingMessage = workingMessage;
-    }*/
-
-
 }

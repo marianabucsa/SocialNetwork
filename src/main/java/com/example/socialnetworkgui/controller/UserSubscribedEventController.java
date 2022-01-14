@@ -19,11 +19,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 
-public class UserEventSearchController extends AbstractEventsController {
+public class UserSubscribedEventController extends AbstractEventsController{
     @FXML
     private Label nameLabel;
     @FXML
@@ -51,30 +49,9 @@ public class UserEventSearchController extends AbstractEventsController {
         organizerLabel.setText(us.getFirstName()+" "+ us.getLastName());
     }
 
-    public void onSubscribeClicked(ActionEvent actionEvent) {
-        try {
-            service.SubscribeEvent(workingEvent,service.getIdFromEmail(currentUser));
-            errorLabel.setAlignment(Pos.CENTER);
-            errorLabel.setTextFill(Paint.valueOf("green"));
-            errorLabel.setText("You are subscribed!");
+    @Override
+    public void update(ServiceEvent serviceEvent) throws IOException {
 
-        } catch (ValidatorException ve) {
-            errorLabel.setAlignment(Pos.CENTER);
-            errorLabel.setTextFill(Paint.valueOf("red"));
-            errorLabel.setText(ve.getMessage());
-        } catch (ServiceException se) {
-            errorLabel.setAlignment(Pos.CENTER);
-            errorLabel.setTextFill(Paint.valueOf("red"));
-            errorLabel.setText(se.getMessage());
-        } catch (RepositoryException re) {
-            errorLabel.setAlignment(Pos.CENTER);
-            errorLabel.setTextFill(Paint.valueOf("red"));
-            errorLabel.setText(re.getMessage());
-        } catch (InputMismatchException ime) {
-            errorLabel.setAlignment(Pos.CENTER);
-            errorLabel.setTextFill(Paint.valueOf("red"));
-            errorLabel.setText(ime.getMessage());
-        }
     }
 
     public void onUnsubscribeClicked(ActionEvent actionEvent) {
@@ -101,11 +78,6 @@ public class UserEventSearchController extends AbstractEventsController {
             errorLabel.setTextFill(Paint.valueOf("red"));
             errorLabel.setText(ime.getMessage());
         }
-    }
-
-    @Override
-    public void update(ServiceEvent serviceEvent) throws IOException {
-
     }
 
     public void onShowParticipantsClicked(ActionEvent actionEvent) {
